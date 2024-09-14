@@ -40,16 +40,16 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        
+
         $firstColumns  = FooterLink::where('column', 1)->get();
         $secondColumns = FooterLink::where('column', 2)->get();
         $thirdColumns  = FooterLink::where('column', 3)->get();
         $title         = Footer::first();
 
         $product = Product::with('variantItems', 'category', 'subCategory', 'childCategory', 'brand', 'gallery', 'variations', 'p_stock')
-                            
+
                             ->findOrFail($id);
-                          
+
         $Specification = DB::table('product_specifications')
                             ->join('products', 'products.id', 'product_specifications.product_id' )
                             ->join('product_specification_keys', 'product_specification_keys.id', 'product_specifications.product_specification_key_id')
@@ -82,41 +82,41 @@ class ProductController extends Controller
     public function get_variation_price(Request $request)
     {
         $price_value = ProductVariant::find($request->value)->sell_price;
-        
+
         return response()->json([
             'success' => true,
             'price'  =>  $price_value
         ]);
     }
-  
-  
+
+
   	 public function get_color_price(Request $request)
     {
-        
+
         $variant_data = productColorVariation::where(['product_id' => $request->product_id, 'color_id' => $request->variation_color_id])->first();
        	$image_array = $variant_data->var_images;
-       	
+
        	$check_stock = ProductStock::where('size_id', $request->variation_size_id)->where('color_id', $request->variation_color_id)
        	                            ->where('product_id', $request->product_id)
        	                            ->first();
-       	                            
+
        	$stockQty = $check_stock->quantity;
        	$html = view('frontend.product.var_img', compact('image_array'))->render();
-       	
+
        	return response()->json([
         	'stock' => $stockQty,
         	'pro_img' => $image_array,
         	'var_images' => $html
         ]);
     }
-    
+
     public function get_product_details(Request $request) {
         $product = Product::find($request->productId);
         $html = view('frontend.product.get_details',compact('product'))->render();
-        
+
         return response()->json([
             'success' => true,
-            'html' => $html    
+            'html' => $html
         ]);
     }
 
@@ -137,13 +137,15 @@ class ProductController extends Controller
 
     public function searchProduct(Request $request)
     {
+
+        $feateuredCategories = FeaturedCategory::with('category')->orderBy('serial', 'DESC')->get();
         $products = Product::with('category', 'subCategory', 'childCategory')
                                 ->where('name', 'like', '%'.$request->get('query').'%')
                                 ->orWhere('slug','like', '%'.$request->get('query').'%')
                                 ->get();
 
 
-        return view('frontend.shop.search', compact('products'));
+        return view('frontend2.pages.search', compact('products' , 'feateuredCategories'));
 
     }
 

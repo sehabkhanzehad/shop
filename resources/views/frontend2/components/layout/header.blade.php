@@ -105,8 +105,9 @@
                                 </ul>
                             </div>
                             <div class="brand-logo">
-                                <a href="#">
-                                    <img src="{{ asset('assets') }}/images/layout-1/logo/logo.png" class="img-fluid  " alt="logo-header">
+                                <a href="{{ route('front.home') }}">
+                                    {{-- <img src="{{ asset('assets') }}/images/layout-1/logo/logo.png" class="img-fluid  " alt="logo-header"> --}}
+                                    <img src="{{ asset(siteInfo()->logo) }}" class="img-fluid  " alt="logo-header">
                                 </a>
                             </div>
                         </div>
@@ -118,17 +119,18 @@
                                         <li>
                                             <div class="mobile-back text-right">Back<i class="fa fa-angle-right pl-2" aria-hidden="true"></i></div>
                                         </li>
+
                                         <!--HOME-->
                                         <li>
-                                            <a href="#">Home</a>
-                                            <ul>
+                                            <a href="{{ route('front.home') }}">Home</a>
+                                            {{-- <ul>
                                                 <li><a target="_blank" href="index.html">layout 1</a></li>
                                                 <li><a target="_blank" href="layout-2.html">layout 2</a></li>
                                                 <li><a target="_blank" href="layout-3.html">layout 3</a></li>
                                                 <li><a target="_blank" href="layout-4.html">layout 4</a></li>
                                                 <li><a target="_blank" href="layout-5.html">layout 5</a></li>
                                                 <li><a target="_blank" href="layout-6.html">layout 6</a></li>
-                                            </ul>
+                                            </ul> --}}
                                         </li>
                                         <!--HOME-END-->
 
@@ -447,6 +449,7 @@
             </div>
         </div>
     </div>
+
     <div class="category-header">
         <div class="custom-container">
             <div class="row">
@@ -463,57 +466,57 @@
                                     </nav>
                                     <div class="collapse show nav-desk" id="navbarToggleExternalContent">
                                         <ul class="nav-cat title-font">
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/01.png " alt="catergory-product"> <a>western ware</a></li>
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/02.png " alt="catergory-product"> <a>TV, Appliances</a></li>
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/03.png " alt="catergory-product"> <a>Pets Products</a></li>
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/04.png " alt="catergory-product"> <a>Car, Motorbike</a></li>
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/05.png " alt="catergory-product"> <a>Industrial Products</a></li>
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/06.png " alt="catergory-product"> <a>Beauty, Health Products</a></li>
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/07.png " alt="catergory-product"> <a>Grocery Products </a></li>
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/08.png " alt="catergory-product"> <a>Sports</a></li>
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/09.png " alt="catergory-product"> <a>Bags, Luggage</a></li>
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/10.png " alt="catergory-product"> <a>Movies, Music </a></li>
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/11.png " alt="catergory-product"> <a>Video Games</a></li>
-                                            <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/08.png " alt="catergory-product"> <a>Sports</a></li>
-                                            <li class="mor-slide-open">
-                                                <ul>
-                                                    <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/08.png " alt="catergory-product"> <a>Sports</a></li>
-                                                    <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/09.png " alt="catergory-product"> <a>Bags, Luggage</a></li>
-                                                    <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/10.png " alt="catergory-product"> <a>Movies, Music </a></li>
-                                                    <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/11.png " alt="catergory-product"> <a>Video Games</a></li>
-                                                    <li> <img src="{{ asset('assets') }}/images/layout-1/nav-img/12.png " alt="catergory-product"> <a>Toys, Baby Products</a></li>
-                                                </ul>
-                                            </li>
-                                            <li> <a class="mor-slide-click">mor category <i class="fa fa-angle-down pro-down"></i><i class="fa fa-angle-up pro-up"></i></a></li>
+                                            @foreach ($feateuredCategories as $item)
+
+                                            <li> <img src="{{ asset('uploads/custom-images2/' . $item->category->image) }}" alt="catergory-product"> <a>{{ $item->category->name }}</a></li>
+                                            @endforeach
                                         </ul>
                                     </div>
                                 </div>
                             </div>
                             <div class="input-block">
                                 <div class="input-box">
-                                    <form class="big-deal-form">
+                                    <form class="big-deal-form" action="{{ route('front.product.search') }}">
                                         <div class="input-group ">
-                                            <div class="input-group-prepend">
-                                                <span class="search"><i class="fa fa-search"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" placeholder="Search a Product" >
-                                            <div class="input-group-prepend">
-                                                <select>
-                                                    <option>All Category</option>
-                                                    <option>indurstrial</option>
-                                                    <option>sports</option>
-                                                </select>
+                                            <input type="text" class="form-control" placeholder="Search a Product" name="query">
+                                            <div class="input-group-append">
+                                                <button style="border: 1px solid white" type="submit" class="btn btn-normal"><i class="fa fa-search"></i>Search</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
+
+
+
+                        {{-- <section class="authentication-page section-big-pt-space bg-light">
+                            <div class="custom-containe">
+                                <section class="search-block">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div class="col-lg-6 offset-lg-3">
+                                                <form class="form-header">
+                                                    <div class="input-group">
+                                                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="Search Products......">
+                                                        <div class="input-group-append">
+                                                            <button class="btn btn-normal"><i class="fa fa-search"></i>Search</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+                        </section> --}}
+                        @php $footer = DB::table('footers')->first(); @endphp
+
                         <div class="category-right">
                             <div class="contact-block">
                                 <div>
                                     <i class="fa fa-volume-control-phone"></i>
-                                    <span>call us<span>123-456-76890</span></span>
+                                    <span>call us<span>{{ $footer->phone }}</span></span>
                                 </div>
                             </div>
                             <div class="btn-group">

@@ -27,7 +27,7 @@ class HomeController extends Controller
         $offer = AboutUs::find('2');
         $feateuredCategories = featuredCategories();
         $popularCats = popularCategories();
-        
+
         $popularProducts = [];
 
         foreach ($popularCats as $pCats) {
@@ -40,7 +40,7 @@ class HomeController extends Controller
                                         ->take(25)
                                         ->get();
         $comp_pro = Product::latest()->get();
-        
+
         $products = Product::with('category', 'subCategory', 'childCategory', 'brand')
                                 ->whereHas('brand', function($q){
                                     $q->whereSlug(request('slug'));
@@ -51,9 +51,9 @@ class HomeController extends Controller
                             ->where('status', 1)
                             ->latest()
                             ->get();
-                           
+
         $about = DB::table('about_us')->first();
-      
+
         $flashSell = FlashSaleProduct::with('product')->limit(10)->where('status', 1)->latest()->get();
         $firstColumns  = FooterLink::where('column', 1)->get();
         $secondColumns = FooterLink::where('column', 2)->get();
@@ -61,10 +61,11 @@ class HomeController extends Controller
 
         $title  = Footer::first();
         $brands = Brand::where('status', 1)->get();
-        
+
         $cart = session()->get('cart', []);
 
-        return view('frontend.home.index', compact(
+        // return view('frontend.home.index', compact(
+        return view('frontend2.pages.index', compact(
                 'slider', 'feateuredCategories', 'products',
                 'firstColumns',
                 'secondColumns',
@@ -82,7 +83,7 @@ class HomeController extends Controller
                 'home_bottom_settings'
         ));
     }
-    
+
     public function showProModal(){
         $productId=request()->productId;
         $product = Product::find($productId);
@@ -192,7 +193,7 @@ public function shop(Request $request, $slug = null)
     $products = Product::with(['category', 'subCategory', 'childCategory'])->take(30)->get();
        //dd($flashProd);
     // Apply price range filter
-       
+
    $minPrice = $products->min('price');
     $maxPrice = $products->max('price');
 
@@ -217,10 +218,10 @@ public function shop(Request $request, $slug = null)
 
         return view('frontend.shop.flash-sell', compact('flashSell', 'filteredProducts', 'minPrice', 'maxPrice'));
     }
-    
+
      public function customPages($slug){
         $customPage=CustomPage::where('slug', $slug)->first();
-        
+
         // dd($customPage);
         return view('frontend.pages', compact('customPage'));
     }
