@@ -1,3 +1,6 @@
+@php
+    $feateuredCategories = \App\Models\FeaturedCategory::with('category')->orderBy('serial', 'DESC')->get();
+@endphp
 <header>
     <div class="mobile-fix-option"></div>
     <div class="top-header">
