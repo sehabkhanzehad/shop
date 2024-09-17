@@ -411,10 +411,35 @@
                                     </ul>
                                 </nav>
                             </div>
+
+
                             <div>
                                 <div class="icon-nav">
                                     <ul>
+                                        @if(Auth::check())
+                                        {{-- show a nav with user icon with a dropdown menu --}}
+                                        <li class="mobile-user onhover-dropdown">
+                                            <span style="cursor: pointer" href="#"><i class="icon-user"></i></span>
+                                            <ul class="onhover-show-div">
+                                                {{-- // show user name and email with align center and color --}}
+                                                <li style="text-align: center;"><a style="color: orange" href="">{{ Auth::user()->name }}</a></li>
+                                                <li style="text-align: center;"><a style="color: orange" href="">{{ Auth::user()->email }}</a></li>
+
+
+                                                {{-- <li ><a href="">{{ Auth::user()->name }}</a></li>
+                                                <li><a href="">{{ Auth::user()->email }}</a></li> --}}
+
+                                                <li class="border-top border-bottom"><a href="">Profile</a></li>
+                                                <li class="border-bottom"><a href="">Logout</a></li>
+
+                                            </ul>
+                                        </li>
+
+
+
+                                        @else
                                         <li class="mobile-user onhover-dropdown" onclick="openAccount()"><a href="#"><i class="icon-user"></i></a>
+                                        @endif
                                         </li>
                                         <li class="mobile-wishlist" onclick="openWishlist()">
                                             <a href="#">

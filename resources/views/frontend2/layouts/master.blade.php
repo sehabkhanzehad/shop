@@ -267,14 +267,17 @@
                     <button class="btn btn-rounded btn-block" type="submit">Login</button>
                 </div>
                 <div>
-                    <h5 class="forget-class"><a href="forget-pwd.html" class="d-block">forget password?</a></h5>
-                    <h6 class="forget-class"><a href="{{ route("front.user-reg") }}" class="d-block">new to store? Signup now</a>
+                    <h5 class="forget-class"><a href="forget-pwd.html" class="d-block">forget password?</a>
+                    </h5>
+                    <h6 class="forget-class"><a href="{{ route('front.user-reg') }}" class="d-block">new to
+                            store? Signup now</a>
                     </h6>
                 </div>
             </form>
         </div>
     </div>
     <!-- Add to account bar end-->
+
 
     <!-- Add to wishlist bar -->
     <div id="wishlist_side" class="add_to_cart right">

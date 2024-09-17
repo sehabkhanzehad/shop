@@ -36,28 +36,22 @@
                             <div class="form-row">
                                 <div class="col-md-12 form-group">
                                     <label for="">Name</label>
-                                    <input type="text" id="usrname" name="name" required class="form-control"
+                                    <input type="text" id="" name="name" required class="form-control"
                                         placeholder="Name">
+                                        @error('name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                 </div>
-                                @error('name')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
-                                {{-- @if ($errors->has('name'))
-                                    <span class="text-danger">{{ $errors->first('name') }}</span>
-                                @endif --}}
                             </div>
 
                             <div class="form-row">
                                 <div class="col-md-12 form-group">
                                     <label for="">email</label>
-                                    <input type="text" class="form-control" placeholder="Email" id="usrname"
+                                    <input type="text" class="form-control" placeholder="Email" id=""
                                         name="email" required>
                                     @error('email')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                    {{-- @if ($errors->has('email'))
-                                        <span class="text-danger">{{ $errors->first('email') }}</span>
-                                    @endif --}}
                                 </div>
 
                                 <div class="col-md-12 form-group">
@@ -67,9 +61,6 @@
                                     @error('phone')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
-                                    {{-- @if ($errors->has('phone'))
-                                        <span class="text-danger">{{ $errors->first('phone') }}</span>
-                                    @endif --}}
                                 </div>
                             </div>
                             <div class="form-row">
@@ -83,9 +74,6 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                {{-- @if ($errors->has('password'))
-                                    <span class="text-danger">{{ $errors->first('password') }}</span>
-                                @endif --}}
                             </div>
 
                             <div class="form-row">
@@ -100,9 +88,6 @@
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
-                                {{-- @if ($errors->has('password_confirmation'))
-                                    <span class="text-danger">{{ $errors->first('password_confirmation') }}</span>
-                                @endif --}}
                             </div>
 
                             <div class="form-row">

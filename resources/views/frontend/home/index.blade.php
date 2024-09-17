@@ -756,17 +756,17 @@
                                     <h4 class="p-1 m-0 prodCatcus" style="text-align:center"><span style="width: auto;">
                                             {{ $products->first()->category->name }}</span></h4>
                                 </a>
-                                <!--<a href="{{ url('shop', $products->first()->category->slug) }}" -->
-                                <!--      style="float: right; -->
-        <!--             text-decoration: none; -->
-        <!--             background-color: #F85606; -->
-        <!--             color: white; -->
-        <!--             padding: 5px 10px; -->
-        <!--             border-radius: 0px 22px; -->
-        <!--             display: inline-block; -->
-        <!--             margin-top: -35px;">-->
-                                <!--        See More-->
-                                <!--    </a>   -->
+                                                            {{-- <!--<a href="{{ url('shop', $products->first()->category->slug) }}" -->
+                                                            <!--      style="float: right; -->
+                                    <!--             text-decoration: none; -->
+                                    <!--             background-color: #F85606; -->
+                                    <!--             color: white; -->
+                                    <!--             padding: 5px 10px; -->
+                                    <!--             border-radius: 0px 22px; -->
+                                    <!--             display: inline-block; -->
+                                    <!--             margin-top: -35px;">-->
+                                                            <!--        See More-->
+                                                            <!--    </a>   --> --}}
                             @endif
                         </div>
                     </div>

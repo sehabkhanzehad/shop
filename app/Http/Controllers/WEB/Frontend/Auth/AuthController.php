@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Auth, Hash, Image, File, Str;
+use Illuminate\Support\Facades\Auth as FacadesAuth;
+use Illuminate\Support\Facades\Hash as FacadesHash;
 
 class AuthController extends Controller
 {
@@ -247,33 +249,22 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $data = $request->validate([
-           'name' => "required, min:3",
-
+        $request->validate([
+            "name" => "required|string|min:3|max:255",
+            "email" => "required|email|unique:users",
+            "phone" => "required|numeric|unique:users|min:11",
+            'password' => 'required|min:6|confirmed|',
+            'password_confirmation' => 'required|min:6',
         ]);
 
+        $data = $request->all();
+        $data['password'] = FacadesHash::make($request->password);
+        $user = User::create($data);
 
-        $data['password'] = Hash::make($request->password);
-        // $user =
-        User::create($data);
-        // if ($user) {
-        //     Auth::login($user);
-
-        //     // return response()->json([
-        //     //     'status' => true,
-        //     //     'msg' => 'Register success',
-        //     //     'url' => route('front.home'),
-        //     // ], 200);
-
-        //     return redirect()->route('front.home');
-        // }
-
-        // return response()->json([
-        //     'status' => false,
-        //     'msg' => 'Something went wrong!',
-        // ], 422);
-        // return back()->route('front.home');
-
+        if ($user) {
+            FacadesAuth::login($user);
+            return redirect()->route('front.home');
+        }
     }
 
     public function changePassword(Request $request)

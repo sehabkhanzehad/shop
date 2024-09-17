@@ -9,14 +9,16 @@
                         @forelse($filteredProducts  as $key => $product)
                             <div class="product-box">
                                 <div class="product-imgbox">
-                                    <div class="product-front">
-                                        <img src="{{ asset('uploads/custom-images2/' . $product->thumb_image) }}"
-                                            class="img-fluid" alt="product">
-                                    </div>
-                                    <div class="product-back">
-                                        <img src="{{ asset('uploads/custom-images2/' . $product->thumb_image) }}"
-                                            class="img-fluid" alt="product">
-                                    </div>
+                                    <a href="{{ route('front.product.show', [$product->id]) }}">
+                                        <div class="product-front">
+                                            <img src="{{ asset('uploads/custom-images2/' . $product->thumb_image) }}"
+                                                class="img-fluid" alt="product">
+                                        </div>
+                                        <div class="product-back">
+                                            <img src="{{ asset('uploads/custom-images2/' . $product->thumb_image) }}"
+                                                class="img-fluid" alt="product">
+                                        </div>
+                                    </a>
                                     <div class="product-icon">
                                         <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
                                             <i class="ti-bag"></i>
