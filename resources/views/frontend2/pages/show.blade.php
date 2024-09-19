@@ -139,6 +139,83 @@
                                             <li><a href="#">xl</a></li>
                                         </ul>
                                     </div>
+
+
+                                    @if ($product->type == 'variable')
+                                    <h6 id="select_size">Select Size : </h6>
+                                    @else
+                                    @endif
+
+                                @if ($product->type == 'variable')
+
+                                    @if (count($product->variations))
+
+                                        <div class="size-box" >
+                                            <ul id="sizes" class="sizes">
+                                            @foreach ($product->variations as $v)
+
+                                                @if (!empty($v->size->title))
+                                                    <span data-proid="{{ $v->product_id }}"
+                                                        data-varprice="{{ $v->sell_price }}"
+                                                        data-varsize="{{ $v->size->title }}" value="{{ $v->id }}"
+                                                        data-varSizeId="{{ $v->size_id }}">
+                                                        @if ($v->size->title == 'free')
+                                                            <li class="active size"><a>{{ $v->size->title }}</a></li>
+                                                            <input type="hidden" id="size_value" name="variation_id">
+                                                            <input type="hidden" id="size_variation_id"
+                                                                name="size_variation_id">
+                                                            <input type="hidden" name="pro_price" id="pro_price">
+                                                            <input type="hidden" name="variation_size_id"
+                                                                id="variation_size_id">
+                                                        @else
+                                                        <li class="active size"><a>{{ $v->size->title }}</a></li>
+                                                            <input type="hidden" id="size_value" name="variation_id">
+                                                            <input type="hidden" id="size_variation_id"
+                                                                name="size_variation_id">
+                                                            <input type="hidden" name="pro_price" id="pro_price">
+                                                            <input type="hidden" name="variation_size_id"
+                                                                id="variation_size_id">
+                                                        @endif
+                                                    </span>
+                                                @else
+                                                    Size Not Available
+                                                @endif
+
+                                            @endforeach
+                                        </ul>
+                                        </div>
+
+
+
+
+                                    @else
+                                        <input type="hidden" id="size_value" name="variation_id" value="free">
+                                        <input type="hidden" name="variation_size_id" id="variation_size_id" value="1">
+                                    @endif
+                                @else
+                                    <input type="hidden" id="size_value" name="variation_id" value="free">
+                                    <input type="hidden" name="variation_size_id" id="variation_size_id" value="1">
+                                @endif
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                     <h6 class="product-title">quantity</h6>
                                     <div class="qty-box">
                                         <div class="input-group"><span class="input-group-prepend"><button type="button"

@@ -92,7 +92,7 @@ use App\Http\Controllers\User\AddressCotroller;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-
+use App\Http\Controllers\FrontUserController;
 use App\Http\Controllers\WEB\Seller\Auth\SellerLoginController;
 use App\Http\Controllers\WEB\Seller\Auth\SellerForgotPasswordController;
 
@@ -823,8 +823,27 @@ Route::group(['middleware' => ['demo', 'XSS']], function () {
 Auth::routes();
 
 
-// Frontend Routes
+
+
+
+
+
+
 Route::group(['as' => 'front.'], function () {
+
+
+Route::middleware(['FrontUser'])->group(function () {
+   Route::get("/user-profile", [FrontUserController::class, 'profile'])->name('profile');
+    // Route::get("/profile-edit", [FrontUserController::class, 'profileEdit'])->name('profile-edit');
+    Route::get("/dashboard", [FrontUserController::class, 'dashboard'])->name('dashboard');
+
+});
+
+
+
+
+
+
     Route::controller(FrontHomeController::class)->group(function () {
         Route::get('/', 'index')->name('home');
         Route::get('/flash-selling-product', 'flashSellProducts')->name('flash-sell');
@@ -882,7 +901,7 @@ Route::group(['as' => 'front.'], function () {
 
     Route::controller(FrontAuthController::class)->group(function () {
         Route::get('register-user', 'regpage')->name('user-reg');
-        Route::get('login-user', 'logpage')->name('user-log');
+        Route::get('user-login', 'logpage')->name('user-log');
         Route::post('login', 'login')->name('login');
         Route::get('logout', 'logout')->name('logout');
         Route::post('register', 'register')->name('register');

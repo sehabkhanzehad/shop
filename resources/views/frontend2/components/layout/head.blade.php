@@ -30,4 +30,10 @@
 
     <!-- Theme css -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/color1.css') }}" media="screen" id="color">
+
+     <!-- include css -->
+     <link rel="stylesheet" href="{{ asset('assets/css/include/progress.css') }}">
+     <link rel="stylesheet" href="{{ asset('assets/css/include/toastify.min.css') }}">
+
+
 </head>

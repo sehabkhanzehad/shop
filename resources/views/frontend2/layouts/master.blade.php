@@ -3,6 +3,12 @@
 @include('frontend2.components.layout.head')
 
 <body class="bg-light ">
+    <!-- progress bar -->
+    <div id="loader" class="LoadingOverlay d-none">
+        <div class="Line-Progress">
+            <div class="indeterminate"></div>
+        </div>
+    </div>
 
     <!-- loader start -->
     <div class="loader-wrapper">
@@ -125,7 +131,7 @@
 
 
     <!--Newsletter modal popup start-->
-    <div class="modal fade bd-example-modal-lg theme-modal" id="exampleModal" tabindex="-1" role="dialog"
+    {{-- <div class="modal fade bd-example-modal-lg theme-modal" id="exampleModal" tabindex="-1" role="dialog"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -157,12 +163,12 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!--Newsletter Modal popup end-->
 
 
     <!-- Quick-view modal popup start-->
-    <div class="modal fade bd-example-modal-lg theme-modal" id="quick-view" tabindex="-1" role="dialog"
+    <div class="modal fade bd-example-modal-lg theme-modal" id="quickViewModal" tabindex="-1" role="dialog"
         aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content quick-view-modal">
@@ -171,14 +177,14 @@
                             aria-hidden="true">&times;</span></button>
                     <div class="row">
                         <div class="col-lg-6 col-xs-12">
-                            <div class="quick-view-img"><img
-                                    src="{{ asset('assets') }}/images/layout-1/product/a4.jpg" alt="quick"
+                            <div class="quick-view-img"><img id="quickViewImage"
+                                     alt="quick"
                                     class="img-fluid "></div>
                         </div>
                         <div class="col-lg-6 rtl-text">
                             <div class="product-right">
-                                <h2>Women Pink Shirt</h2>
-                                <h3>$32.96</h3>
+                                <h2 id="productName"></h2>
+                                <h3 id="productPrice"></h3>
                                 <ul class="color-variant">
                                     <li class="bg-light0"></li>
                                     <li class="bg-light1"></li>
@@ -186,8 +192,7 @@
                                 </ul>
                                 <div class="border-product">
                                     <h6 class="product-title">product details</h6>
-                                    <p>Sed ut perspiciatis, unde omnis iste natus error sit voluptatem accusantium
-                                        doloremque laudantium</p>
+                                    <p id="ProductDetails"></p>
                                 </div>
                                 <div class="product-description border-product">
                                     <div class="size-box">
@@ -236,27 +241,16 @@
                 </div>
             </div>
 
-            <form class="theme-form" action="{{ url('login') }}" method="POST">
-                @csrf
+            <form class="theme-form">
                 <div class="form-group">
                     <label for="">Email</label>
-                    <input type="email" class="form-control" id="" name="email" required
+                    <input type="email" class="form-control" id="userEmail" name="email" required
                         placeholder="Email or mobile">
-                    @if ($errors->has('email'))
-                        <div>
-                            <span>{{ $errors->first('email') }}</span>
-                        </div>
-                    @endif
                 </div>
                 <div class="form-group">
                     <label for="">Password</label>
-                    <input type="password" class="form-control" id="" placeholder="Enter your password"
-                        required id="psw">
-                    @if ($errors->has('password'))
-                        <div>
-                            <span>{{ $errors->first('password') }}</span>
-                        </div>
-                    @endif
+                    <input type="password" name="password" class="form-control" id="userPassword"
+                        placeholder="Enter your password" required>
                 </div>
 
                 {{-- <div class="form-group">
@@ -264,10 +258,10 @@
                 </div> --}}
 
                 <div class="form-group">
-                    <button class="btn btn-rounded btn-block" type="submit">Login</button>
+                    <button onclick="login()" class="btn btn-rounded btn-block" type="button">Login</button>
                 </div>
                 <div>
-                    <h5 class="forget-class"><a href="forget-pwd.html" class="d-block">forget password?</a>
+                    <h5 class="forget-class"><a href="" class="d-block">forget password?</a>
                     </h5>
                     <h6 class="forget-class"><a href="{{ route('front.user-reg') }}" class="d-block">new to
                             store? Signup now</a>
@@ -431,6 +425,17 @@
 
     <!-- latest jquery-->
     <script src="{{ asset('assets/js/jquery-3.3.1.min.js') }}"></script>
+
+    <!-- script -->
+    <script src="{{ asset('assets/js/include/config.js') }}"></script>
+    <script src="{{ asset('assets/js/include/axios.min.js') }}"></script>
+    <script src="{{ asset('assets/js/include/toastify-js.js') }}"></script>
+    <script src="{{ asset('assets/js/include/custom.js') }}"></script>
+
+
+
+
+    @yield('script')
 
     <!-- slick js-->
     <script src="{{ asset('assets/js/slick.js') }}"></script>

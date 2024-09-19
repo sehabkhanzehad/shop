@@ -5,8 +5,10 @@ namespace App\Http\Controllers\WEB\Frontend\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Auth, Hash, Image, File, Str;
-use Illuminate\Support\Facades\Auth as FacadesAuth;
+use GrahamCampbell\ResultType\Success;
+use Image, File, Str;
+// use Illuminate\Support\Facades\Auth as FacadesAuth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash as FacadesHash;
 
 class AuthController extends Controller
@@ -222,25 +224,34 @@ class AuthController extends Controller
 
     public function logpage()
     {
-        return view('frontend.cart.user-log');
+        return view('frontend2.pages.login');
     }
 
     public function login(Request $request)
     {
+        try {
+            $email = $request->input('email');
+            $password = $request->input('password');
 
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            return redirect('/admin/dashboard');
+            if (Auth::attempt(['email' => $email, 'password' => $password])) {
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Login Success',
+                    'data' => Auth::user(),
+                    'url' => route('front.home')
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Invalid Email or Password'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong'
+            ]);
         }
-
-        return response()->json([
-            'status' => false,
-            'msg' => 'Invalid credentials',
-        ], 422);
     }
     public function regpage()
     {
@@ -262,7 +273,7 @@ class AuthController extends Controller
         $user = User::create($data);
 
         if ($user) {
-            FacadesAuth::login($user);
+            Auth::login($user);
             return redirect()->route('front.home');
         }
     }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Auth;
 use App\Models\Country;
 use App\Models\CountryState;
 use App\Models\City;
@@ -26,6 +25,8 @@ use File;
 use Str;
 use Hash;
 use Slug;
+use Illuminate\Support\Facades\Auth;
+
 
 use App\Events\SellerToUser;
 use App\Models\OrderAddress;
@@ -37,11 +38,19 @@ use App\Models\ShoppingCartVariant;
 
 class UserProfileController extends Controller
 {
-
-    public function __construct()
+   public function __construct()
     {
         $this->middleware('auth:api');
     }
+
+    public function profile(){
+        // Login user information
+        $user = Auth::guard('api')->user();
+        return view('frontend2.pages.profile', compact('user'));
+    }
+
+
+
 
     public function remove_account(){
         $user = Auth::guard('api')->user();

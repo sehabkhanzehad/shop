@@ -9,6 +9,7 @@
     <!-- Add the slick-theme.css if you want default styling -->
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" href="{{ asset('frontend/css/food.css') }}">
+    
     <style>
         .product-item .product_content h4 {
             line-height: 20px;
@@ -619,7 +620,7 @@
                                 src="{{ asset('uploads/custom-images/' . $product->thumb_image) }}" alt=""
                                 class=""
                                 onclick="changeImage('{{ asset('uploads/custom-images/' . $product->thumb_image) }}')">
-                                
+
                             @forelse($product->gallery as $key => $img_gals)
                                 <img class="thumbnail img-thumbnail" src="{{ asset($img_gals->image) }}"
                                     onclick="changeImage('{{ asset($img_gals->image) }}')">
@@ -845,6 +846,7 @@
                             <h6 id="select_size">Select Size : </h6>
                         @else
                         @endif
+
                         @if ($product->type == 'variable')
 
                             @if (count($product->variations))
@@ -1226,6 +1228,8 @@
     </div>
     </div>
 @endsection
+
+
 @push('js')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="

@@ -38,7 +38,7 @@ class Kernel extends HttpKernel
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
+            // \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
@@ -72,5 +72,6 @@ class Kernel extends HttpKernel
         'demo' => \App\Http\Middleware\DemoHandler::class,
         'XSS' => \App\Http\Middleware\XSSProtection::class,
         'HtmlSpecialchars' => \App\Http\Middleware\HtmlSpecialchars::class,
+        'FrontUser' => \App\Http\Middleware\FrontUserMiddleWare::class,
     ];
 }

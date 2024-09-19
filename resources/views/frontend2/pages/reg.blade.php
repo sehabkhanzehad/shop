@@ -1,4 +1,4 @@
-@extends('frontend2.layouts.master')
+    @extends('frontend2.layouts.master')
 @section('content')
     <!-- breadcrumb start -->
     <div class="breadcrumb-main ">

@@ -117,8 +117,8 @@ class ProductController extends Controller
         $html = view('frontend.product.get_details', compact('product'))->render();
 
         return response()->json([
-            'success' => true,
-            'html' => $html
+            'status' => "success",
+            "data" => $product,
         ]);
     }
 
