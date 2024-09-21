@@ -18,7 +18,9 @@ use App\Models\productStock;
 use App\Models\variationStock;
 use Validator;
 use Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
+
+
 class CartController extends Controller
 {
     /**
@@ -28,35 +30,37 @@ class CartController extends Controller
      */
 
 
-    public function pc_builder(Request $request) {
-    $carts = session()->get('cart', []);
+    public function pc_builder(Request $request)
+    {
+        $carts = session()->get('cart', []);
 
-    // Extract category IDs from the cart items
-    $categoryIdsInCart = [];
-    foreach ($carts as $cartItem) {
-        $categoryIdsInCart[] = $cartItem['category_id'];
+        // Extract category IDs from the cart items
+        $categoryIdsInCart = [];
+        foreach ($carts as $cartItem) {
+            $categoryIdsInCart[] = $cartItem['category_id'];
+        }
+
+        $PC_Builder = PcBuilder::with('category')->orderBy('serial', 'ASC')->latest()->get();
+
+        return view('frontend.pc_builder.index', compact('PC_Builder', 'carts', 'categoryIdsInCart'));
     }
 
-    $PC_Builder = PcBuilder::with('category')->orderBy('serial', 'ASC')->latest()->get();
-
-    return view('frontend.pc_builder.index', compact('PC_Builder', 'carts', 'categoryIdsInCart'));
-}
-
-    public function view_pc_builder(Request $request, $id){
+    public function view_pc_builder(Request $request, $id)
+    {
         $products = Product::join('categories', 'categories.id', 'products.category_id')
-                        ->select('products.*', 'categories.name as cat_name')
-                        ->where('products.category_id', $id)
-                        ->get();
-         $carts = session()->get('cart', []);
+            ->select('products.*', 'categories.name as cat_name')
+            ->where('products.category_id', $id)
+            ->get();
+        $carts = session()->get('cart', []);
 
 
 
-	   $view = view('frontend.pc_builder.product', compact('products','carts'))->render();
+        $view = view('frontend.pc_builder.product', compact('products', 'carts'))->render();
 
-	         return response()->json([
-	      'view' => $view,
-	      'id'  => $id
-	    ]);
+        return response()->json([
+            'view' => $view,
+            'id'  => $id
+        ]);
 
         // return view('frontend.pc_builder.product', compact('products', 'carts'));
 
@@ -65,10 +69,9 @@ class CartController extends Controller
     public function index()
     {
         $cart = session()->get('cart', []);
-    //   dd($cart);
+        //   dd($cart);
 
         return view('frontend.cart.index', compact('cart'));
-
     }
 
     /**
@@ -76,10 +79,7 @@ class CartController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-
-    }
+    public function create() {}
 
     /**
      * Store a newly created resource in storage.
@@ -98,37 +98,30 @@ class CartController extends Controller
         $cart = session()->get('cart', []);
 
         $stock = $item->qty - $item->sold_qty;
-        if($stock <= 0 || $stock < $request->quantity)
-        {
+        if ($stock <= 0 || $stock < $request->quantity) {
             return response()->json([
                 'status' => false,
                 'msg' => 'Stock not available!'
-                ], 200);
+            ], 200);
         }
 
-        if(isset($cart[$request->id]))
-        {
-            if($cart[$request->id]['quantity'] < $stock)
-            {
+        if (isset($cart[$request->id])) {
+            if ($cart[$request->id]['quantity'] < $stock) {
                 $cart[$request->id]['quantity'] += 1;
                 $cart[$request->id]['variation'] = $request->variation;
-            }
-            else {
+            } else {
                 return response()->json([
                     'status' => false,
                     'msg' => 'Stock not available!'
-                    ], 200);
+                ], 200);
             }
-
-        }
-
-        else{
+        } else {
             $price = !empty($item->offer_price) ? $item->offer_price : $item->price;
             $cart[$request->id] = [
-                'name' => $item ->name,
-                'is_free_shipping' => $item ->is_free_shipping,
-                'category_id' => $item ->category_id,
-                'image' => $item ->thumb_image,
+                'name' => $item->name,
+                'is_free_shipping' => $item->is_free_shipping,
+                'category_id' => $item->category_id,
+                'image' => $item->thumb_image,
                 'quantity' => $request->quantity,
                 'price' => $price,
                 'coupon_name' => '',
@@ -141,22 +134,22 @@ class CartController extends Controller
 
 
 
-       return Redirect::route('front.cart.pc.builders');
+        return Redirect::route('front.cart.pc.builders');
     }
 
     public function store(Request $request)
     {
         $item = Product::findOrFail($request->id);
-        if($item->type != 'single') {
+        if ($item->type != 'single') {
             $customMessages = [
-            'varColor.required' => 'The color is required.',
-            'varSize.required' => 'The variation is required.',
-        ];
+                'varColor.required' => 'The color is required.',
+                'varSize.required' => 'The variation is required.',
+            ];
 
-        $validator = Validator::make($request->all(), [
-            'varColor' => 'required',
-            'varSize' => 'required',
-        ], $customMessages);
+            $validator = Validator::make($request->all(), [
+                'varColor' => 'required',
+                'varSize' => 'required',
+            ], $customMessages);
 
             if ($validator->fails()) {
                 return response()->json([
@@ -167,53 +160,50 @@ class CartController extends Controller
         }
 
         $cart = session()->get('cart', []);
-            $chekckVarSingle = Product::where('id',  $request->id)->first();
-                    if($item->type=='single'){
-                        $stockCheck = DB::table('product_stocks')
-                                    ->where('color_id', 1)
-                                    ->where('size_id', 1)
-                                    ->where('product_id', $request->id)->first();
-                    
-                    $ultimate_stock = $stockCheck->quantity - $request->quantity;
-                    }else{ 
-                         $stockCheck = DB::table('product_stocks')
-                                    ->where('color_id', $request->variation_color_id)
-                                    ->where('size_id', $request->variation_size_id)
-                                    ->where('product_id', $request->id)->first();
-                                    
-                    $ultimate_stock = $stockCheck->quantity - $request->quantity;
-                    
-                    }
-                    
-                    if($ultimate_stock != 0) {
-                        if($ultimate_stock < 0) {
-                          return response()->json([
-                            'status' => false,
-                            'msg' => 'Stock not available!'
-                            ], 200); 
-                        }
-                    }   else {
-                        
-                    }
+        $chekckVarSingle = Product::where('id',  $request->id)->first();
+        if ($item->type == 'single') {
+            $stockCheck = DB::table('product_stocks')
+                ->where('color_id', 1)
+                ->where('size_id', 1)
+                ->where('product_id', $request->id)->first();
+
+            $ultimate_stock = $stockCheck->quantity - $request->quantity;
+        } else {
+            $stockCheck = DB::table('product_stocks')
+                ->where('color_id', $request->variation_color_id)
+                ->where('size_id', $request->variation_size_id)
+                ->where('product_id', $request->id)->first();
+
+            $ultimate_stock = $stockCheck->quantity - $request->quantity;
+        }
+
+        if ($ultimate_stock != 0) {
+            if ($ultimate_stock < 0) {
+                return response()->json([
+                    'status' => false,
+                    'msg' => 'Stock not available!'
+                ], 200);
+            }
+        } else {
+        }
 
         $selectedVariationPrice = null;
 
         if (!empty($request->variation_price)) {
             $price = $request->variation_price;
-
         } else {
             $price = !empty($item->offer_price) ? $item->offer_price : $item->price;
         }
 
-         if($item->type == 'single') {
+        if ($item->type == 'single') {
 
             if (isset($cart[$request->id])) {
-                
-                if($ultimate_stock != 0) {
-                    if($ultimate_stock < 0) {
+
+                if ($ultimate_stock != 0) {
+                    if ($ultimate_stock < 0) {
                         return response()->json([
-                        'status' => false,
-                        'msg' => 'Stock not available!',
+                            'status' => false,
+                            'msg' => 'Stock not available!',
                         ], 200);
                     }
                 } else {
@@ -223,105 +213,103 @@ class CartController extends Controller
                             'msg' => 'Stock not available!',
                         ], 200);
                     }
-                    
+
                     $cart[$request->id]['quantity'] += 1;
                     $cart[$request->id]['variation'] = $request->variation;
                     $cart[$request->id]['price'] = $selectedVariationPrice ?? $cart[$request->id]['price'];
-                }  
+                }
+            } else {
+
+                $thumbnail_image = 'uploads/custom-images/' . $item->thumb_image;
+
+                $cart[$request->id] = [
+                    'name' => $item->name,
+                    'is_free_shipping' => $item->is_free_shipping,
+                    'category_id' => $item->category_id,
+                    'category_name' => $item->category->name,
+                    'image' => $thumbnail_image,
+                    'quantity' => $request->quantity,
+                    'price' => $price,
+                    // 'discount_price' => $item->discount_price,
+                    'discount_price'       => (int)$request->retrieve_discount,
+                    'coupon_name' => '',
+                    'offer_type' => 0,
+                    'variation_size' => null,
+                    'variation' => $request->variation,
+                    'variation_color' => $request->varColor,
+                    'variation_id' => $request->varSize,
+                    'size_id' => $request->size_id,
+                    'color_id' => $request->color_id,
+                    'variation_size_id' => $request->variation_size_id,
+                    'variation_color_id' => $request->variation_color_id,
+                    'type' => $request->pro_type,
+                    'product_id'   => $request->id,
+                    'stock_qty'   => $stockCheck->quantity,
+                ];
+                // dd($cart);
+            }
         } else {
-            
-            $thumbnail_image = 'uploads/custom-images/'.$item->thumb_image;
-            
-            $cart[$request->id] = [
-                'name' => $item->name,
-                'is_free_shipping' => $item->is_free_shipping,
-                'category_id' => $item->category_id,
-                'category_name' => $item->category->name,
-                'image' => $thumbnail_image,
-                'quantity' => $request->quantity,
-                'price' => $price,
-                // 'discount_price' => $item->discount_price,
-                'discount_price'       => (int)$request->retrieve_discount,
-                'coupon_name' => '',
-                'offer_type' => 0,
-                'variation_size' => null,
-                'variation' => $request->variation,
-                'variation_color' => $request->varColor,
-              	'variation_id' => $request->varSize,
-              	'size_id' => $request->size_id,
-              	'color_id' => $request->color_id,
-                'variation_size_id' => $request->variation_size_id,
-                'variation_color_id' =>$request->variation_color_id,
-                'type' => $request->pro_type,
-              	'product_id'   => $request->id,
-              	'stock_qty'   => $stockCheck->quantity,
-            ];
-            // dd($cart);
-        }
-        } else {
-            
+
             $variation_id = $request->variation_id;
             if (isset($cart[$variation_id])) {
-                
-            if($ultimate_stock != 0) {
-                if($ultimate_stock < 0) {
-                    return response()->json([
-                    'status' => false,
-                    'msg' => 'Stock not available!',
-                ], 200);
-                }
-            }  else {
-                
-                if ($cart[$variation_id]['quantity'] > $ultimate_stock) {
-                    return response()->json([
-                        'status' => false,
-                        'msg' => 'Stock not available!',
-                    ], 200);
-                }
-                
-                $cart[$variation_id]['quantity'] += 1;
-                $cart[$variation_id]['variation'] = $request->variation;
-                $cart[$variation_id]['price'] = $selectedVariationPrice ?? $cart[$variation_id]['price'];
-            }  
-            
-        } else {
 
-                $thumbnail_image = 'uploads/custom-images/'.$item->thumb_image;
+                if ($ultimate_stock != 0) {
+                    if ($ultimate_stock < 0) {
+                        return response()->json([
+                            'status' => false,
+                            'msg' => 'Stock not available!',
+                        ], 200);
+                    }
+                } else {
+
+                    if ($cart[$variation_id]['quantity'] > $ultimate_stock) {
+                        return response()->json([
+                            'status' => false,
+                            'msg' => 'Stock not available!',
+                        ], 200);
+                    }
+
+                    $cart[$variation_id]['quantity'] += 1;
+                    $cart[$variation_id]['variation'] = $request->variation;
+                    $cart[$variation_id]['price'] = $selectedVariationPrice ?? $cart[$variation_id]['price'];
+                }
+            } else {
+
+                $thumbnail_image = 'uploads/custom-images/' . $item->thumb_image;
 
                 $cart[$variation_id] = [
-                    
+
                     'name'                 => $item->name,
                     'product_id'           => $request->id,
                     'category_id'          => $item->category_id,
                     'category_name'          => $item->category->name,
-                    
+
                     'price'                => $price,
                     'discount_price'       => $request->retrieve_discount,
-                    
+
                     'variation_id'         => $variation_id,
                     'variation_size'       => $request->varSize,
                     'variation_size_id'    => $request->variation_size_id,
                     'variation_color'      => $request->varColor,
                     'variation_color_id'   => $request->variation_color_id,
-                    
+
                     'quantity'             => $request->quantity,
                     'image'                => !empty($request->image) ? $request->image : $thumbnail_image,
                     'type'                 => $request->pro_type,
                     'stock_qty'            => $stockCheck->quantity,
-                    
+
                     'is_free_shipping'     => $item->is_free_shipping,
                     'coupon_name'          => '',
                     'offer_type'           => 0,
                     'check_variation'      => 'yes'
                 ];
-            // dd($cart);
-            /* Cart Array For Variable Product */ 
+                // dd($cart);
+                /* Cart Array For Variable Product */
+            }
         }
 
-    }
 
-
-             //dd($cart);
+        //dd($cart);
         // Store the updated cart back in the session
         session()->put('cart', $cart);
 
@@ -362,13 +350,13 @@ class CartController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-     public function update(Request $request, $id)
+    public function update(Request $request, $id)
     {
-        
+
         $cart = session()->get('cart', []);
 
         if (isset($cart[$id])) {
-         
+
             $quantity = $request->input('quantity');
             // Perform validation if needed, e.g., check stock availability
 
@@ -405,35 +393,31 @@ class CartController extends Controller
     {
         $item = Product::findOrFail($id);
         $cart = session()->get('cart', []);
-        if(isset($cart[$id]))
-        {
-           $newQty = $cart[$id]['quantity'] + 1;
-           if($item->qty < $newQty)
-           {
+        if (isset($cart[$id])) {
+            $newQty = $cart[$id]['quantity'] + 1;
+            if ($item->qty < $newQty) {
                 return response()->json([
                     'status' => false,
                     'msg' => 'Stock not available!'
-                    ], 200);
-           }
+                ], 200);
+            }
 
-           $cart[$id]['quantity'] =  $newQty;
-           session()->put('cart', $cart);
+            $cart[$id]['quantity'] =  $newQty;
+            session()->put('cart', $cart);
 
-           return response()->json([
-               'status' => true,
-               'totalItems' => totalCartItems(),
-               'msg' => 'Item quantity increased!'
-           ], 200);
+            return response()->json([
+                'status' => true,
+                'totalItems' => totalCartItems(),
+                'msg' => 'Item quantity increased!'
+            ], 200);
         }
     }
 
     public function decreaseQty($id)
     {
         $cart = session()->get('cart', []);
-        if(isset($cart[$id]))
-        {
-            if($cart[$id]['quantity'] == 1)
-            {
+        if (isset($cart[$id])) {
+            if ($cart[$id]['quantity'] == 1) {
                 unset($cart[$id]);
                 session()->put('cart', $cart);
                 return response()->json([
@@ -441,8 +425,7 @@ class CartController extends Controller
                     'totalItems' => totalCartItems(),
                     'msg' => 'Item has been removed!'
                 ], 200);
-            }
-            else {
+            } else {
                 $cart[$id]['quantity'] -= 1;
                 session()->put('cart', $cart);
                 return response()->json([
@@ -450,7 +433,6 @@ class CartController extends Controller
                     'msg' => 'Item quantity decreased!'
                 ], 200);
             }
-
         }
     }
 
@@ -463,8 +445,7 @@ class CartController extends Controller
     public function destroy($id)
     {
         $cart = session()->get('cart', []);
-        if(isset($cart[$id]))
-        {
+        if (isset($cart[$id])) {
             unset($cart[$id]);
             session()->put('cart', $cart);
 
@@ -488,21 +469,21 @@ class CartController extends Controller
         if (count($cart) == 0) {
             $notification = trans("Your shopping cart is empty");
 
-            return response()->json(["status"=>false, "msg" => $notification]);
+            return response()->json(["status" => false, "msg" => $notification]);
         }
 
         foreach ($cart as $index => $cartProduct) {
             $variantPrice = 0;
 
             if (!empty($cartProduct['variation'])) {
-                    $item = ProductVariantItem::find(
-                        $cartProduct['variation']
-                    );
+                $item = ProductVariantItem::find(
+                    $cartProduct['variation']
+                );
 
-                    if ($item) {
-                        $variantPrice = $item->price;
-                    }
+                if ($item) {
+                    $variantPrice = $item->price;
                 }
+            }
 
             $product = Product::select(
                 "id",
@@ -571,7 +552,6 @@ class CartController extends Controller
                     }
                 }
             }
-
         }
 
         $shipping = Shipping::find($request_shipping_method_id);
@@ -605,7 +585,7 @@ class CartController extends Controller
         $arr["shipping_fee"] = $shipping_fee;
         $arr["shipping"] = $shipping;
         return $arr;
-}
+    }
 
     public function applyCoupon(Request $request)
     {
@@ -617,23 +597,23 @@ class CartController extends Controller
 
         $coupon = Coupon::where(['code' => $request->code, 'status' => 1])->first();
 
-        if(!$coupon){
+        if (!$coupon) {
             return response()->json([
                 'status' => false,
                 'msg' => 'Coupon not found!',
             ]);
         }
 
-        if($coupon->expired_date < date('Y-m-d')){
+        if ($coupon->expired_date < date('Y-m-d')) {
             return response()->json([
                 'status' => false,
                 'msg' => 'Coupon already expired!',
             ]);
         }
 
-        if($coupon->apply_qty >=  $coupon->max_quantity ){
+        if ($coupon->apply_qty >=  $coupon->max_quantity) {
             $notification = trans('Sorry! You can not apply this coupon');
-            return response()->json(['message' => $notification],403);
+            return response()->json(['message' => $notification], 403);
         }
 
         $user = Auth::user();

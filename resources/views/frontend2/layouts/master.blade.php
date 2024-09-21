@@ -38,7 +38,7 @@
     <!-- tap to top End -->
 
     <!-- Add to cart bar -->
-    <div id="cart_side" class=" add_to_cart bottom ">
+    {{-- <div id="cart_side" class=" add_to_cart bottom ">
         <a href="javascript:void(0)" class="overlay" onclick="closeCart()"></a>
         <div class="cart-inner">
             <div class="cart_top">
@@ -126,7 +126,7 @@
                 </ul>
             </div>
         </div>
-    </div>
+    </div> --}}
     <!-- Add to cart bar end-->
 
 
@@ -424,13 +424,20 @@
     <!-- notification product -->
 
     <!-- latest jquery-->
-    <script src="{{ asset('assets/js/jquery-3.3.1.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/jquery-3.3.1.min.js') }}"></script> --}}
+    <script src="{{asset('frontend/assets/js/jquery.min.js')}}"></script>
+
 
     <!-- script -->
     <script src="{{ asset('assets/js/include/config.js') }}"></script>
     <script src="{{ asset('assets/js/include/axios.min.js') }}"></script>
     <script src="{{ asset('assets/js/include/toastify-js.js') }}"></script>
     <script src="{{ asset('assets/js/include/custom.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    @stack('js')
 
 
 

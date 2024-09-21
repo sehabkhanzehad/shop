@@ -44,7 +44,7 @@
 
                         <!-- Mini Image Thumbnails -->
                         {{-- <div class="thumbnail-container"> --}}
-                            {{-- <br />
+                        {{-- <br />
                             <img class="thumbnail img-thumbnail"
                                 src="" alt=""
                                 class=""
@@ -57,63 +57,94 @@
                             @endforelse
                         </div> --}}
 
-                            <div class="row">
-                                <div class="col-12 p-0">
-                                    <div class="slider-nav">
+                        <div class="row">
+                            <div class="col-12 p-0">
+                                <div class="slider-nav">
 
-                                        <div><img src="{{ asset('uploads/custom-images/' . $product->thumb_image) }}"
-                                                alt="" class="img-fluid  image_zoom_cls-0"></div>
+                                    <div><img src="{{ asset('uploads/custom-images/' . $product->thumb_image) }}"
+                                            alt="" class="img-fluid  image_zoom_cls-0"></div>
 
-                                        @forelse($product->gallery as $key => $img_gals)
+                                    @forelse($product->gallery as $key => $img_gals)
                                         <div><img src="{{ asset($img_gals->image) }}" alt=""
-                                            class="img-fluid  image_zoom_cls-1"></div>
-                                        @empty
-                                        @endforelse
+                                                class="img-fluid  image_zoom_cls-1"></div>
+                                    @empty
+                                    @endforelse
 
-{{--
+                                    {{--
                                         <div><img src="../assets/images/product-sidebar/003.jpg" alt=""
                                                 class="img-fluid  image_zoom_cls-2"></div>
                                         <div><img src="../assets/images/product-sidebar/004.jpg" alt=""
                                                 class="img-fluid  image_zoom_cls-3"></div> --}}
 
-                                    </div>
                                 </div>
                             </div>
-
-
                         </div>
 
 
+                    </div>
 
-                        <div class="col-lg-7 rtl-text">
-                            <div class="product-right">
-                                <h2>{{ $product->name }}</h2>
-                                @if (!empty($product->offer_price))
-                                    @if ($product->offer_price > 0 && $product->price > 0)
-                                        <h4><del>{{ $product->price }}
-                                                tk</del><span>{{ $product->price - $product->offer_price }} tk
-                                                discount.</span>
-                                        </h4>
+
+
+                    <div class="col-lg-7 rtl-text">
+                        <div class="product-right">
+                            <h2>{{ $product->name }}</h2>
+                            <input type="hidden" name="pro_img" id="pro_img">
+                            <input type="hidden" name="type" id="type" value="{{ $product->type }}">
+                            @if (!empty($product->offer_price))
+                                @if ($product->offer_price > 0 && $product->price > 0)
+                                    <h4><del>{{ $product->price }}
+                                            tk</del><span>{{ $product->price - $product->offer_price }} tk
+                                            discount.</span>
+                                    </h4>
+                                    <input type="hidden" id="retrieve_price" value="{{ $product->price }}">
+                                    @if ($product->type != 'single')
+                                        <input type="hidden" id="retrieve_discount">
+                                    @else
+                                        <input type="hidden" id="retrieve_discount"
+                                            value="{{ $product->price - $product->offer_price }}">
                                     @endif
-                                    <h3>{{ $product->offer_price }} tk</h3>
-                                @else
-                                    <h3>ট{{ $product->price }}</h3>
                                 @endif
+                                <h3><span class="current-price-product">{{ $product->offer_price }}</span> tk</h3>
+                            @else
+                                <h3>ট<span class="current-price-product">{{ $product->price }}</span></h3>
+                            @endif
+
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <input type="hidden" name="product_name" value="{{ $product->name }}">
+                            <input type="hidden" name="category_id" value="{{ $product->category_id }}">
+                            @if ($product->offer_price != '0')
+                                <input type="hidden" name="price" id="price_val" value="{{ $product->offer_price }}">
+                            @else
+                                <input type="hidden" name="price" id="price_val" value="{{ $product->price }}">
+                            @endif
 
 
 
-                                {{-- <h4><del>$459.00</del><span>55% off</span></h4>
+
+
+                            {{-- <h4><del>$459.00</del><span>55% off</span></h4>
                         <h3>$32.96</h3> --}}
 
 
-                                {{-- <ul class="color-variant">
+                            {{-- <ul class="color-variant">
                                 <li class="bg-light0"></li>
                                 <li class="bg-light1"></li>
                                 <li class="bg-light2"></li>
                             </ul> --}}
-                                <div class="product-description border-product">
 
-                                    {{-- <h6 class="product-title size-text">select size <span><a href="" data-toggle="modal"
+
+
+
+
+
+
+
+
+
+
+                            <div class="product-description border-product">
+
+                                {{-- <h6 class="product-title size-text">select size <span><a href="" data-toggle="modal"
                                             data-target="#sizemodal">size chart</a></span></h6>
 
                                 <div class="modal fade" id="sizemodal" tabindex="-1" role="dialog"
@@ -131,147 +162,172 @@
                                     </div>
                                 </div> --}}
 
-                                    <div class="size-box">
+                                {{-- <div class="size-box">
                                         <ul>
                                             <li class="active"><a href="#">s</a></li>
                                             <li><a href="#">m</a></li>
                                             <li><a href="#">l</a></li>
                                             <li><a href="#">xl</a></li>
                                         </ul>
-                                    </div>
+                                    </div> --}}
 
 
-                                    @if ($product->type == 'variable')
+                                @if ($product->type == 'variable')
                                     <h6 id="select_size">Select Size : </h6>
-                                    @else
-                                    @endif
+                                @else
+                                @endif
 
                                 @if ($product->type == 'variable')
 
                                     @if (count($product->variations))
-
-                                        <div class="size-box" >
+                                        <div class="size-box">
                                             <ul id="sizes" class="sizes">
-                                            @foreach ($product->variations as $v)
+                                                @foreach ($product->variations as $v)
+                                                    @if (!empty($v->size->title))
+                                                        <span data-proid="{{ $v->product_id }}"
+                                                            data-varprice="{{ $v->sell_price }}"
+                                                            data-varsize="{{ $v->size->title }}"
+                                                            value="{{ $v->id }}"
+                                                            data-varSizeId="{{ $v->size_id }}">
+                                                            @if ($v->size->title == 'free')
+                                                                <li class="size"><a>{{ $v->size->title }}</a></li>
+                                                                <input type="hidden" id="size_value" name="variation_id">
 
-                                                @if (!empty($v->size->title))
-                                                    <span data-proid="{{ $v->product_id }}"
-                                                        data-varprice="{{ $v->sell_price }}"
-                                                        data-varsize="{{ $v->size->title }}" value="{{ $v->id }}"
-                                                        data-varSizeId="{{ $v->size_id }}">
-                                                        @if ($v->size->title == 'free')
-                                                            <li class="active size"><a>{{ $v->size->title }}</a></li>
-                                                            <input type="hidden" id="size_value" name="variation_id">
-                                                            <input type="hidden" id="size_variation_id"
-                                                                name="size_variation_id">
-                                                            <input type="hidden" name="pro_price" id="pro_price">
-                                                            <input type="hidden" name="variation_size_id"
-                                                                id="variation_size_id">
-                                                        @else
-                                                        <li class="active size"><a>{{ $v->size->title }}</a></li>
-                                                            <input type="hidden" id="size_value" name="variation_id">
-                                                            <input type="hidden" id="size_variation_id"
-                                                                name="size_variation_id">
-                                                            <input type="hidden" name="pro_price" id="pro_price">
-                                                            <input type="hidden" name="variation_size_id"
-                                                                id="variation_size_id">
-                                                        @endif
-                                                    </span>
-                                                @else
-                                                    Size Not Available
-                                                @endif
+                                                                <input type="hidden" id="size_variation_id"
+                                                                    name="size_variation_id">
 
-                                            @endforeach
-                                        </ul>
+                                                                <input type="hidden" name="pro_price" id="pro_price">
+                                                                <input type="hidden" name="variation_size_id"
+                                                                    id="variation_size_id">
+                                                            @else
+                                                                <li class="size"><a>{{ $v->size->title }}</a></li>
+                                                                <input type="hidden" id="size_value" name="variation_id">
+                                                                <input type="hidden" id="size_variation_id"
+                                                                    name="size_variation_id">
+                                                                <input type="hidden" name="pro_price" id="pro_price">
+                                                                <input type="hidden" name="variation_size_id"
+                                                                    id="variation_size_id">
+                                                            @endif
+                                                        </span>
+                                                    @else
+                                                        Size Not Available
+                                                    @endif
+                                                @endforeach
+                                            </ul>
                                         </div>
-
-
-
-
                                     @else
                                         <input type="hidden" id="size_value" name="variation_id" value="free">
-                                        <input type="hidden" name="variation_size_id" id="variation_size_id" value="1">
+                                        <input type="hidden" name="variation_size_id" id="variation_size_id"
+                                            value="1">
                                     @endif
                                 @else
                                     <input type="hidden" id="size_value" name="variation_id" value="free">
-                                    <input type="hidden" name="variation_size_id" id="variation_size_id" value="1">
+                                    <input type="hidden" name="variation_size_id" id="variation_size_id"
+                                        value="1">
                                 @endif
 
+                                @if (!empty($product->prod_color == 'varcolor'))
+                                @if ($product->type == 'variable')
+                                    <h6 id="select_color">Select Color : </h6>
+                                @else
+                                @endif
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                    <h6 class="product-title">quantity</h6>
-                                    <div class="qty-box">
-                                        <div class="input-group"><span class="input-group-prepend"><button type="button"
-                                                    class="btn quantity-left-minus" data-type="minus" data-field=""><i
-                                                        class="ti-angle-left"></i></button> </span>
-                                            <input type="text" name="quantity" class="form-control input-number"
-                                                value="1"> <span class="input-group-prepend"><button type="button"
-                                                    class="btn quantity-right-plus" data-type="plus" data-field=""><i
-                                                        class="ti-angle-right"></i></button></span>
-                                        </div>
-                                    </div>
+                                <div class="colors" id="colors">
+                                    @foreach ($product->colorVariations as $v)
+                                        @if (!empty($v->color->code))
+                                            <div class="color" style="background: {{ $v->color->code }}"
+                                                data-proid="{{ $v->product_id }}" data-colorid="{{ $v->color_id }}"
+                                                data-varcolor="{{ $v->color->name }}" value="{{ $v->id }}"
+                                                data-variationColorId="{{ $v->color_id }}">
+                                                <input type="hidden" id="color_val" name="color_id">
+                                                <!--<img src="{{ asset($v->var_images) }}" width="50px" height="50px" /> -->
+                                                <input type="hidden" id="color_value" name="variationColor_id">
+                                                <input type="hidden" id="variation_color_id" name="variation_color_id">
+                                            </div>
+                                        @else
+                                            Color Not Available
+                                        @endif
+                                    @endforeach
                                 </div>
+                            @else
+                                <input type="hidden" id="color_value" name="variationColor_id" value="default">
+                                <input type="hidden" id="variation_color_id" name="variation_color_id" value="1">
+                            @endif
 
 
 
+                                <h6 class="product-title">quantity</h6>
+                                <div class="qty-box">
 
-                                <div class="product-buttons"><a href="#" data-toggle="modal" data-target="#addtocart"
-                                        class="btn btn-normal">add to cart</a> <a href="#" class="btn btn-normal">buy
-                                        now</a></div>
-                                <div class="border-product">
-                                    <h6 class="product-title">product details</h6>
-                                    <p>{!! $product->long_description !!}</p>
-                                </div>
-                                <div class="border-product">
-                                    <div class="product-icon">
-                                        <ul class="product-social">
-                                            <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-rss"></i></a></li>
-                                        </ul>
-                                        <form class="d-inline-block">
-                                            <button class="wishlist-btn"><i class="fa fa-heart"></i><span
-                                                    class="title-font">Add
-                                                    To WishList</span></button>
-                                        </form>
+                                    <div class="input-group">
+
+                                        <span class="input-group-prepend">
+                                            <button type="button" class="btn quantity-left-minus" data-type="minus"
+                                                data-field=""><i class="ti-angle-left"></i></button>
+                                        </span>
+
+                                        <input type="text" min="1" name="quantity" id="quantity"
+                                            class="form-control input-number" value="1">
+
+                                        <span class="input-group-prepend">
+                                            <button type="button" class="btn quantity-right-plus" data-type="plus"
+                                                data-field=""><i class="ti-angle-right"></i></button>
+                                        </span>
                                     </div>
+
+
                                 </div>
-                                <div class="border-product ">
-                                    <h6 class="product-title">Time Reminder</h6>
-                                    <div class="timer">
-                                        <p id="demo"><span>25 <span class="padding-l">:</span> <span
-                                                    class="timer-cal">Days</span> </span><span>22 <span
-                                                    class="padding-l">:</span> <span class="timer-cal">Hrs</span>
-                                            </span><span>13 <span class="padding-l">:</span> <span
-                                                    class="timer-cal">Min</span> </span><span>57 <span
-                                                    class="timer-cal">Sec</span></span>
-                                        </p>
-                                    </div>
+                            </div>
+
+
+
+
+                            <div class="product-buttons">
+                                <a data-id="{{ $product->id }}" data-url="{{ route('front.cart.store') }}"
+                                    class="btn btn-normal add-to-cart bold add_cart">add to cart</a>
+
+                                {{-- <a href="#"class="btn btn-normal">add to cart</a> --}}
+                                <a href="#" class="btn btn-normal">buy now</a>
+                            </div>
+
+                            <div class="border-product">
+                                <h6 class="product-title">product details</h6>
+                                <p>{!! $product->long_description !!}</p>
+                            </div>
+
+                            <div class="border-product">
+                                <div class="product-icon">
+                                    <ul class="product-social">
+                                        <li><a href="#"><i class="fa fa-facebook"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-twitter"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-instagram"></i></a></li>
+                                        <li><a href="#"><i class="fa fa-rss"></i></a></li>
+                                    </ul>
+                                    <form class="d-inline-block">
+                                        <button class="wishlist-btn"><i class="fa fa-heart"></i><span
+                                                class="title-font">Add
+                                                To WishList</span></button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="border-product ">
+                                <h6 class="product-title">Time Reminder</h6>
+                                <div class="timer">
+                                    <p id="demo"><span>25 <span class="padding-l">:</span> <span
+                                                class="timer-cal">Days</span> </span><span>22 <span
+                                                class="padding-l">:</span> <span class="timer-cal">Hrs</span>
+                                        </span><span>13 <span class="padding-l">:</span> <span
+                                                class="timer-cal">Min</span> </span><span>57 <span
+                                                class="timer-cal">Sec</span></span>
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
     </section>
     <!-- Section ends -->
 
@@ -489,3 +545,144 @@
     </section>
     <!-- related products -->
 @endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            let defaultSize = $('#sizes .size.active');
+            if (defaultSize.length === 0) {
+                defaultSize = $('#sizes .size').first();
+            }
+            // $('#sizes .size').removeClass('active');
+            // defaultSize.addClass('active');
+            defaultSize.find('a').trigger('click');
+        });
+    </script>
+@endsection
+
+
+@push('js')
+    <script>
+        $(function() {
+
+            $(document).on('click', '.add-to-cart', function(e) {
+
+                let variation_id = $('#size_variation_id').val();
+                let variation_size = $('#size_value').val();
+                let variation_size_id = $('input[name="variation_size_id"]').val();
+                let variation_color = $('#color_value').val();
+                let variation_color_id = $('input[name="variation_color_id"]').val();
+                let variation_price = $('#pro_price').val();
+                var quantity = $('#quantity').val();
+                let image = $('input#pro_img').val();
+                let pro_type = $('input#type').val();
+
+
+                let proName = $('input[name="product_name"]').val();
+                let proId = $('input[name="product_id"]').val();
+                let catId = $('input[name="category_id"]').val();
+
+                // alert(variation_id);
+
+                window.dataLayer = window.dataLayer || [];
+
+                dataLayer.push({
+                    ecommerce: null
+                });
+                dataLayer.push({
+                    event: "add_to_cart",
+                    ecommerce: {
+                        currency: "BDT",
+                        value: variation_price,
+                        items: [{
+                            item_id: proId,
+                            item_name: proName,
+                            item_category: catId,
+                            price: variation_price,
+                            quantity: quantity
+                        }]
+                    }
+                });
+
+
+                let id = $(this).data('id');
+                let url = $(this).data('url');
+
+                addToCart(url, id, variation_size, variation_color, variation_id, variation_price, quantity,
+                    variation_size_id, variation_color_id, image, pro_type, type = "");
+            });
+
+
+            function addToCart(url, id, varSize = "", varColor = "", variation_id = "", variation_price = "",
+                quantity, variation_size_id, variation_color_id, image = "", pro_type, type = "") {
+
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                showLoader();
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: {
+                        id,
+                        varSize,
+                        varColor,
+                        variation_id,
+                        variation_price,
+                        quantity,
+                        variation_size_id,
+                        variation_color_id,
+                        image,
+                        pro_type
+                    },
+                    success: function(res) {
+
+                        if (res.status) {
+                            // toastr.success(res.msg);
+                            // alert('Product added to cart');
+                            hideLoader();
+                            successToast(res.msg);
+                            // if (type) {
+
+                            //     if (res.url !== '') {
+                            //         document.location.href = res.url;
+                            //     } else {
+                            //         alert('no');
+                            //         // Handle specific case
+                            //     }
+                            // } else {
+                            //     window.location.reload();
+                            // }
+                        } else {
+                            // Check if the response contains validation errors
+                            if (res.errors) {
+                                for (var field in res.errors) {
+                                    if (res.errors.hasOwnProperty(field)) {
+                                        for (var i = 0; i < res.errors[field].length; i++) {
+                                            // toastr.error(res.errors[field][i]);
+                                            alert(res.errors[field][i]);
+                                        }
+                                    }
+                                }
+                            } else {
+                                // toastr.error(res.msg ||'An error occurred while processing your request.');
+                                alert("Error2");
+                            }
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        // toastr.error('An error occurred while processing your request.');
+                        alert("An error occurred while processing your request.");
+                    }
+                });
+            }
+
+            // ... other functions ...
+
+
+        });
+    </script>
+@endpush

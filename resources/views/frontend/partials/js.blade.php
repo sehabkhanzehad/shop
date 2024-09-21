@@ -4,6 +4,7 @@
 <script src="{{asset('frontend/assets/silck/slick.min.js')}}"></script>
 <script src="{{asset('frontend/assets/js/main.js')}}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
@@ -27,15 +28,15 @@
     //     var url = $(this).data("url");
 
     //     // Perform your logic to add the item to the cart
-        
+
     //     // Show toaster message
     //     showToasterMessage("Item added to cart!", "success");
     // });
 
     // AJAX request for checkout
-    
-  
-    
+
+
+
     $("#checkout-form").on("submit", function (e) {
         e.preventDefault();
 
@@ -52,7 +53,7 @@
 
                     // Show success message
                     showToasterMessage(response.msg, "success");
-                    
+
                     // Redirect to a specific URL if needed
                     window.location.href = response.url;
                 } else {
@@ -87,12 +88,12 @@ $.ajax({
 <script>
    $(document).on('click', '.remove-item', function (e) {
     e.preventDefault();
-    
+
     let id = $(this).data('id');
     let url = '{{ route('front.cart.destroy', ['id' => ':id']) }}'; // Adjust the route name as needed
-    
+
     url = url.replace(':id', id); // Replace the placeholder with the actual id
-    
+
     $.ajax({
         type: 'GET', // Use GET or POST based on your route definition
         url: url,
@@ -115,7 +116,7 @@ $.ajax({
 
 <script>
 $(document).ready(function() {
-    
+
     $(document).on('click', '.inc', function(e) {
         e.preventDefault();
         let id = $(this).data('id');
@@ -155,7 +156,7 @@ $(document).ready(function() {
         let id = $(this).data('id');
         let quantityInput = $('.quantity-value[data-id="' + id + '"]');
         let newQuantity = parseInt(quantityInput.val());
-        
+
         $.ajax({
             type: 'POST',
             url: '{{ route("front.cart.update", ["id" => "__id__"]) }}'.replace('__id__', id),

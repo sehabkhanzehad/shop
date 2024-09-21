@@ -9,7 +9,7 @@
     <!-- Add the slick-theme.css if you want default styling -->
     <link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
     <link rel="stylesheet" href="{{ asset('frontend/css/food.css') }}">
-    
+
     <style>
         .product-item .product_content h4 {
             line-height: 20px;
@@ -832,6 +832,7 @@
                             @else
                                 <input type="hidden" name="price" id="price_val" value="{{ $product->price }}">
                             @endif
+
                             <div style="">
 
                             </div>
@@ -920,16 +921,25 @@
                         @endif
 
                         <div class="row">
+
+
                             <div class="qty-btn-box mt-3 col-12">
                                 <div class="qty-box mb-2" style="margin-left:20%">
+
                                     <button
                                         class="btn btn-light border rounded-0 bold font-20 border-muted decrease-qty">-</button>
+
                                     <input type="number" min="1" name="quantity" id="quantity" value="1"
                                         class="form-control font-20 rounded-0 shadow-none qty">
+
+
                                     <button
                                         class="btn btn-light border rounded-0 bold font-20 border-muted increase-qty">+</button>
                                 </div>
                             </div>
+
+
+
                             <div class="text-center row mb-2 mt-2 col-12 col-md-12 col-xl-8">
 
                                 <a href="{{ route('front.check.single', ['product_id' => $product->id]) }}"
@@ -938,6 +948,7 @@
                                     data-url="{{ route('front.cart.store') }}">
                                     <i class="fas fa-shopping-cart"></i> &ensp; {{ BanglaText('order') }}
                                 </a>
+
                                 <br />
                                 <a data-id="{{ $product->id }}"
                                     style="background: #F85606 !important;color: #ffffff; margin-top: 2%"
@@ -947,6 +958,9 @@
                                 </a>
 
                             </div>
+
+
+
                             @php $footer = DB::table('footers')->first(); @endphp
                             <div class="text-center row mb-2 mt-2 col-12 col-md-12 col-xl-8">
                                 <a href="tel: +88{{ $footer->phone }}"
@@ -961,6 +975,7 @@
                                         +88{{ $footer->phone2 }}</span>
                                 </a>
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -1237,6 +1252,7 @@
                "></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
     <script src="https://www.jqueryscript.net/demo/magnify-image-hover-touch/dist/jquery.izoomify.js"></script>
+
     <script>
         $(document).ready(function() {
             $('.buy-now').on('click', function(e) {
@@ -1328,6 +1344,7 @@
             });
         });
     </script>
+    
     <script>
         $(function() {
 
@@ -1501,7 +1518,6 @@
             $("#variation_size_id").val(variation_size_id);
         });
 
-
         let imageClick = false;
 
         $('#colors .color').on('click', function() {
@@ -1564,7 +1580,6 @@
 
             }
         });
-
 
         // JavaScript function to change the big image
         function changeImage(imageUrl) {
