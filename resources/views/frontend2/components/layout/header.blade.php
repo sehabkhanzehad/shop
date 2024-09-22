@@ -144,8 +144,8 @@
                                             <a href="#">Coming Soon</a>
                                         </li> --}}
 
-                                         <!--blog-meu start-->
-                                         <li>
+                                        <!--blog-meu start-->
+                                        <li>
                                             <a href="">blog</a>
                                             <ul>
                                                 <li><a href="blog(left-sidebar).html">left sidebar</a></li>
@@ -235,10 +235,19 @@
                                                 href="#"><i class="icon-settings"></i></a>
                                         </li>
                                     </ul>
+
+                                    @php $cart = session()->get('cart', []); @endphp
+                                    
+
                                     <div class="cart-block mobile-cart cart-hover-div" onclick="openCart()">
-                                        <a href="#"><span class="cart-product">0</span><i
-                                                class="icon-shopping-cart"></i></a>
+                                        <a href="{{ route('front.checkout.index') }}">
+                                            @if($cart!== null)
+                                            <span class="cart-product">{{ count($cart) }}</span><i class="icon-shopping-cart"></i></a>
+                                            @else
+                                            <span class="cart-product">0</span><i class="icon-shopping-cart"></i></a>
+                                            @endif
                                     </div>
+
                                 </div>
                             </div>
                         </div>

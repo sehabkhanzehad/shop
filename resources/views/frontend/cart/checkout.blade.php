@@ -31,7 +31,7 @@
     .card-header {
         font-family: 'Kalpurush', sans-serif;
     }
-    
+
     #coupon-toggle {
         font-family: 'Kalpurush', sans-serif;
         font-size: 16px;
@@ -43,7 +43,7 @@
         background: #032BB9 !important;
         padding: 0px;
     }
-    
+
     @media screen and (max-width: 768px) {
         #order_info {
             order: 2 !important;
@@ -52,14 +52,14 @@
             order: 1 !important;
         }
     }
-    
+
 </style>
 
     <style>
         .container-fluid *{
             font-weight: 600;
         }
-        
+
     </style>
 
 <div class="main-wrapper">
@@ -69,7 +69,7 @@
             <div class="container-fluid mt-5 mb-5">
                 <div class="row flex-lg-row-reverse">
                     <div id="order_info" class="col-lg-6">
-                        
+
                         <div class="card text-center">
   <div class="card-header">
   {{ BanglaText('order_information') }}
@@ -92,25 +92,25 @@
                               @php $sub_total = 0; @endphp
                         @forelse($cart as $key => $item)
                             <tr>
-                                
+
                               <td>
                                     <div class="remove">
                                         <button class="btn remove-item" data-id="{{ $key }}">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </div>
-                                </td>   
+                                </td>
                               <th scope="row">
                                  @if($item['type'] == "variable")
                                   @if($item['variation_color'] != 'default')
                                   <img src="{{ asset($item['image']) }}"
                                   alt="" class="rounded border" style="height: 60px;width: 60px;" width="">
                                   @else
-                                  <img src="{{ asset($item['image']) }}" 
+                                  <img src="{{ asset($item['image']) }}"
                                   alt="" class="rounded border" style="height: 60px;width: 60px;" width="">
                                   @endif
                                   @else
-                                  <img src="{{ asset($item['image']) }}" 
+                                  <img src="{{ asset($item['image']) }}"
                                   alt="" class="rounded border" style="height: 60px;width: 60px;" width="">
                                   @endif
                               </th>
@@ -166,13 +166,13 @@
   <div class="card-footer text-muted">
     <div class="table-responsive">
       <table class="table table-bordered">
-      
+
       <tbody>
         <tr>
             <td>
           <div class="d-flex justify-content-between align-item-conter al_btn">
                               <p class="login_text" style="font-size: 14px;">{{ BanglaText('login_account') }}  <a style="font-size: 11px;background: #0f134f;color: #ffffff;" class="btn" href="{{url('login-user')}}" class="text-muted text-decoration-none icon-signin">Login</a></p>
-                            
+
                </div>
                </td>
           <td>
@@ -192,32 +192,32 @@
           </div>
           </td>
         </tr>
-        
+
       </tbody>
     </table>
 </div>
   </div>
 </div>
-                        
-                        
-                        
+
+
+
 
                     </div>
                     <div id="data_info" class="col-lg-6">
-                        
+
                       <div class="card text-center">
   <div class="card-header">
    <h3 class="bold-9" style="font-size: 16px;font-family: 'Kalpurush', sans-serif;">
                         {{ BanglaText('instruction') }}
                         </h3>
   </div>
-  <div class="card-body">  
-                       
+  <div class="card-body">
+
 
                         <form action="">
-                          
+
                         </form>
-                       
+
                         <form action="{{ route('front.checkout.store') }}" method="POST" id="checkoutForm">
                             @csrf
                           	<input type="hidden" name=""/>
@@ -228,7 +228,7 @@
                                       <label for="name" class="ps-4">{{ BanglaText('name') }}</label>
                                 </div>
 								<input type="hidden" name="variation_color_id" value="{{$item['variation_color']}}" />
-                             
+
                               	<div class="form-group col-sm-12">
                                     <input type="hidden" name="ip_address" id="ip_address" value="">
                                 </div>
@@ -242,7 +242,7 @@
                               </div>
 
                               </div>
-                              
+
                                 <div class="row">
 
                                 </div>
@@ -273,7 +273,7 @@
                                       <input selected type="radio" value="{{ $shipping->id}}" class="charge_radio delivery_charge_id" id="ship_{{ $shipping->id}}" data-shippingid="{{ $shipping->id }}" name="shipping_method" data-shipping="{{ $shipping->shipping_fee}}"> &nbsp;&nbsp;
                                         <label for="ship_{{ $shipping->id}}">{{ $shipping->shipping_rule}} - {{ $shipping->shipping_fee }}{{ $setting->currency_icon }}</label>
                                    </div>
-                                  @else 
+                                  @else
                                   @endif
                                 @endforeach
                               </div>
@@ -288,14 +288,14 @@
                                   <input checked selected type="radio" value="{{ $free_shippings->id}}" class="charge_radio delivery_charge_id" id="ship_{{ $free_shippings->id}}" data-shippingid="{{ $free_shippings->id }}" name="shipping_method" data-shipping="{{ $free_shippings->shipping_fee}}"> &nbsp;&nbsp;
                                     <label for="ship_{{ $free_shippings->id}}">{{ $free_shippings->shipping_rule}} - {{ $free_shippings->shipping_fee }}{{ $setting->currency_icon }}</label>
                                     </div>
-                                
+
                                  <?php
                              }
 
                            ?>
                         <input type="hidden" name="total_amount" id="total_amount" value="{{ number_format($sub_total, 2) }}">
                         <input type="hidden" name="shipCharge" id="shipCharge" value="">
-                        
+
                         <hr>
                         @if($bkash_payment || $ssl_payment)
                             <div class="input-group" style="margin-bottom: 25px;">
@@ -306,7 +306,7 @@
                         @else
                           <input type="hidden" name="payment_method" id="payment_method" value="cash_on_delivery">
                         @endif
-                        
+
                         @if($ssl_payment)
                             <div class="input-group" style="margin-bottom: 25px;">
                                 <label>
@@ -337,11 +337,11 @@
 </div>
 
                 @foreach($cart as $item)
-                    <div class="cart-item-data" 
-                         data-product-id="{{ $item['product_id'] }}" 
-                         data-product-name="{{ $item['name'] }}" 
+                    <div class="cart-item-data"
+                         data-product-id="{{ $item['product_id'] }}"
+                         data-product-name="{{ $item['name'] }}"
                          data-category-name="{{ $item['category_name'] }}"
-                         data-price="{{ $item['price'] }}" 
+                         data-price="{{ $item['price'] }}"
                          data-quantity="{{ $item['quantity'] }}">
                     </div>
                 @endforeach
@@ -377,9 +377,9 @@ $(document).ready(function() {
 <script type="text/javascript">
 
     $(document).ready(function () {
-        
+
         generateDataLayers();
-        
+
   		$('.charge_radio').click(function(){
           getCharge();
         // alert('hi');
@@ -395,7 +395,7 @@ $(document).ready(function() {
             let sub_total = '{{cartTotalAmount()['total']}}';
             let total=Number(testval)+Number(sub_total);
             $('p#total_amount').text(total+' ৳');
-            
+
             $('input#shipCharge').val(testval);
 
         }
@@ -420,7 +420,7 @@ $(document).ready(function() {
             }
         });
     });
-    
+
     function generateDataLayers() {
         var items = [];
         $('.cart-item-data').each(function() {
@@ -445,7 +445,7 @@ $(document).ready(function() {
             event: 'begin_checkout',
             ecommerce: {
                 currency: "BDT",
-                value: total, 
+                value: total,
                 items: items
             }
         });
@@ -461,7 +461,7 @@ $(document).ready(function() {
         var first_name = $('input[name="shipping_name"]').val();
         var mobile = $('input[name="order_phone"]').val();
         var shipping_address = $('input[name="shipping_address"]').val();
-        
+
         // Function to generate data layer
         function generateDataLayer(transaction_id) {
             var items = [];
@@ -480,14 +480,14 @@ $(document).ready(function() {
                 });
             });
             let total = $('input[name="total_cart_price"]').val();
-    
+
             // Push data to data layer
             window.dataLayer = window.dataLayer || [];
             window.dataLayer.push({
                 event: 'purchase',
                 ecommerce: {
                     currency: "BDT",
-                    value: total, 
+                    value: total,
                     shipping: shipCharge,
                     transaction_id: transaction_id,
                     items: items
@@ -499,7 +499,7 @@ $(document).ready(function() {
                 }
             });
         }
-        
+
         $.ajax({
           type:method,
           url:url,
@@ -511,7 +511,7 @@ $(document).ready(function() {
               toastr.success(res.msg);
               var transaction_id = res.invoiceId;
               generateDataLayer(transaction_id);
-              
+
               if(res.url)
               {
                 document.location.href = res.url;
@@ -538,5 +538,5 @@ $(document).ready(function() {
 
  </script>
 
- 
+
 

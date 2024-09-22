@@ -36,36 +36,38 @@ class CheckoutController extends Controller
         //     "sslcommerz_success",
         //     "sslcommerz_failed"
         // );
-        
+
         $bkash = BkashPayment::first();
         $this->base_url = $bkash->base_url;
         $this->bkash_username = $bkash->username;
         $this->bkash_password = $bkash->password;
         $this->bkash_app_key = $bkash->app_key;
         $this->bkash_app_secret = $bkash->app_secret;
-    
+
     }
-    
+
     public function index()
     {
         $cart = session()->get('cart', []);
-        
+
+        // return $cart;
+
         $totalPrice = 0;
             foreach ($cart as $item) {
                 $totalPrice += $item['price'] * $item['quantity'];
             }
-    
+
         if (count($cart) <= 0) {
             return redirect()->route('front.home');
         }
-    
+
         $user = Auth::user();
         $countries = Country::select('id', 'name')->orderBy('name')->get();
         $shippings = Shipping::with('city')->orderBy('id', 'asc')->get();
         $setting = Setting::first();
         $bkash_payment =  BkashPayment::firstWhere(['status'=>1]);
         $ssl_payment =  SslcommerzPayment::firstWhere(['status'=>1]);
-        return view('frontend.cart.checkout', compact('cart', 'countries', 'user', 'shippings', 'setting', 'bkash_payment', 'ssl_payment','totalPrice'));
+        return view('frontend2.pages.checkout', compact('cart', 'countries', 'user', 'shippings', 'setting', 'bkash_payment', 'ssl_payment','totalPrice'));
     }
 
     public function checkoutsing($product_id)
@@ -131,13 +133,13 @@ class CheckoutController extends Controller
             'transection_id' => '',
           	'ip_address' => '',
         ]);
-        
+
         $user = User::create([
           'name' => $request->shipping_name,
           'phone' => $request->order_phone,
           'address' => $request->shipping_address
         ]);
-        
+
         // $user = Auth::user();
         // if(empty($user))
         // {
@@ -147,23 +149,23 @@ class CheckoutController extends Controller
         //       'address' => $request->shipping_address
         //     ]);
         // }
-        
+
         if(!$user->email)
         {
             $user->email = $user->name."_".rand(111111,999999)."@gmail.com";
             $user->save();
         }
-        
+
         $data['user_id']=$user->id;
         $shipping_id = $inputs['shipping_method'];
-        $couponCode = isset($coupon['code']) ? $coupon['code'] : null;        
+        $couponCode = isset($coupon['code']) ? $coupon['code'] : null;
         $lastOrder = Order::latest()->first();
         $total = $this->calculateCartTotal(
             $user,
             1235,
             $shipping_id
         );
-        
+
         //Session store
         $newOrderNumber = $lastOrder ? $lastOrder->order_id + 1 : 1;
         Session::forget(['total_order_amount', 'invoice_number', 'user']);
@@ -193,7 +195,7 @@ class CheckoutController extends Controller
         $data['cash_on_delivery'] = 0;
         $data['additional_info'] = 0;
         $data['assign_id'] = User::inRandomOrder()->first()->id;
-        
+
         // Order Assign Among Users Start
 
         $assign_user_id=1;
@@ -202,14 +204,14 @@ class CheckoutController extends Controller
                         })->where('active_status',1)
                         ->select('id')
                         ->pluck('id')->toArray();
-        
+
         $ordering=count($users)-1;
         if(count($users)==1){
             $assign_user_id=$users[0];
             $data['assign_user_id'] = $assign_user_id;
         }else if($ordering>0){
             $order=Order::latest()->take($ordering)->get()->pluck('assign_user_id')->toArray();
-           
+
             $output = array_merge(array_diff($order, $users), array_diff($users, $order));
 
             if(!empty($output)){
@@ -221,7 +223,7 @@ class CheckoutController extends Controller
                 $data['assign_user_id'] = $assign_user_id;
             }
 
-        } 
+        }
 
         // Order Assign Among Users End.
         try{
@@ -242,8 +244,8 @@ class CheckoutController extends Controller
                         'product_image' => $item['image'],
                       	'variation_color_id' => $item['variation_color'],
                       	'variation' =>  $item['variation_size'],
-                      	'size_id'=>$item['variation_size_id'], 
-                      	'color_id'=>$item['variation_color_id'], 
+                      	'size_id'=>$item['variation_size_id'],
+                      	'color_id'=>$item['variation_color_id'],
                         'unit_price' => $unit_price,
                         'total_discount' => (int)$item['quantity'] * (int)$item['discount_price'],
                         'qty' => $item['quantity']
@@ -279,7 +281,7 @@ class CheckoutController extends Controller
                 ]);
                 foreach($cart as $key => $item)
                 {
-                
+
                 // dd($item['quantity']);
                 if($item['variation_color_id'] > 0 || $item['variation_size_id'] > 0)
                 {
@@ -292,7 +294,7 @@ class CheckoutController extends Controller
                         'quantity'=> $ultimate_stock,
                     ]);
                 }
-                
+
                 else{
                         $chekckVarSingle = Product::where('id',  $item['product_id'])->first();
                         $stockCheck = ProductStock::where('color_id', 1)->where('size_id', 1)->where('product_id', $item['product_id'])->first();
@@ -341,11 +343,11 @@ class CheckoutController extends Controller
                 'url' => route('user.checkout.bkash-url-pay')
             ], 200);
         }
-        
+
         else{
             dd($request->all());
         }
-        
+
     }
 
     public function storelandData(Request $request)
@@ -377,7 +379,7 @@ class CheckoutController extends Controller
         // dd($request->variation_size);
 
         $user = Auth::user();
-        
+
         if($user == null)
         {
             $user = User::create([
@@ -387,8 +389,8 @@ class CheckoutController extends Controller
                 'address'  =>   $inputs['shipping_address'],
             ]);
         }
-        
-        
+
+
         $checkinguser = User::where('phone', $inputs['shipping_phone'])->first();
 
         if($checkinguser == null) {
@@ -452,7 +454,7 @@ class CheckoutController extends Controller
             }
 
         }
-        
+
 
         // Order Assign Among Users End.
         try{
@@ -460,7 +462,7 @@ class CheckoutController extends Controller
             $order = Order::create($data);
             if($order)
             {
-               
+
                 $cart = session()->get('cart', []);
                     $orderProduct = OrderProduct::create([
                         'order_id' => $order->id,
@@ -472,7 +474,7 @@ class CheckoutController extends Controller
                         'variation_color_id' => $request->variation_color,
                         'variation' => $request->variation_size
                     ]);
-                  
+
 
 
                 //    $single_product = Product::find($orderProduct->product_id);
@@ -616,14 +618,14 @@ class CheckoutController extends Controller
             $variantPrice = 0;
 
             if (!empty($cartProduct['check_variation'])) {
-                
+
                     $item = ProductVariant::where('product_id', $cartProduct['product_id'])->where('size_id', $cartProduct['variation_size_id'])->first();
 
                     if ($item) {
                         $variantPrice = $item->sell_price;
                     }
                 } else {
-                    
+
                 }
 
             $product = Product::select(
@@ -730,10 +732,10 @@ class CheckoutController extends Controller
 
     public function storeOrder()
     {
-        
+
     }
-    
-    //Bkash Payment 
+
+    //Bkash Payment
      public function authHeaders(){
         return array(
             'Content-Type:application/json',
@@ -741,7 +743,7 @@ class CheckoutController extends Controller
             'X-APP-Key:'.$this->bkash_app_key,
         );
     }
-         
+
     public function curlWithBody($url,$header,$method,$body_data_json){
         $curl = curl_init($this->base_url.$url);
         curl_setopt($curl,CURLOPT_HTTPHEADER, $header);
@@ -782,7 +784,7 @@ class CheckoutController extends Controller
     }
 
     public function create(Request $request)
-    {     
+    {
         Session::forget('bkash_token');
         $token = $this->grant();
         Session::put('bkash_token', $token);
@@ -851,11 +853,11 @@ class CheckoutController extends Controller
             ]);
 
         }else{
-            
+
             $response = $this->execute($allRequest['paymentID']);
 
             $arr = json_decode($response,true);
-    
+
             if(array_key_exists("statusCode",$arr) && $arr['statusCode'] != '0000')
             {
                 return view('CheckoutURL.fail')->with([
@@ -888,7 +890,7 @@ class CheckoutController extends Controller
                                     'currency' => $queryResponse['currency'],
                                     'status' => $queryResponse['transactionStatus'],
                                 ]);
-                                
+
                                 if($order_payment)
                                 {
                                     return to_route('front.order-thanks-page', $order->order_phone);
@@ -906,7 +908,7 @@ class CheckoutController extends Controller
                 //     'response' => $queryResponse
                 // ]);
             }
-    
+
             return view('CheckoutURL.success')->with([
                 'response' => $response
             ]);
@@ -914,7 +916,7 @@ class CheckoutController extends Controller
         }
 
     }
- 
+
     public function getRefund(Request $request)
     {
         return view('CheckoutURL.refund');
@@ -935,7 +937,7 @@ class CheckoutController extends Controller
             'sku' => 'sku',
             'reason' => 'Quality issue'
         );
-     
+
         $body_data_json=json_encode($body_data);
 
         $response = $this->curlWithBody('/tokenized/checkout/payment/refund',$header,'POST',$body_data_json);
@@ -945,15 +947,15 @@ class CheckoutController extends Controller
         ]);
     }
 
-    
+
     public function getRefundStatus(Request $request)
     {
         return view('CheckoutURL.refund-status');
     }
 
     public function refundStatus(Request $request)
-    {     
-        Session::forget('bkash_token');  
+    {
+        Session::forget('bkash_token');
         $token = $this->grant();
         Session::put('bkash_token', $token);
 
@@ -966,13 +968,13 @@ class CheckoutController extends Controller
         $body_data_json = json_encode($body_data);
 
         $response = $this->curlWithBody('/tokenized/checkout/payment/refund',$header,'POST',$body_data_json);
-                
+
         return view('CheckoutURL.refund-status')->with([
             'response' => $response,
         ]);
     }
-    
-    //SSLCommerz Payment 
+
+    //SSLCommerz Payment
     public function sslcommerzWebView(Request $request)
     {
         $sslcommerzPaymentInfo = SslcommerzPayment::first();
@@ -990,7 +992,7 @@ class CheckoutController extends Controller
         $coupon = Session::get("coupon");
         $total_price = Session::get('total_order_amount');
         $sslcommerzPaymentInfo = SslcommerzPayment::first();
-       
+
         $post_data = [];
         $post_data["total_amount"] = $total_price; # You cant not pay less than 10
         $post_data["currency"] = $sslcommerzPaymentInfo->currency_code;
@@ -1105,9 +1107,9 @@ class CheckoutController extends Controller
                             'currency' => $request->currency,
                             'status' => $request->status,
                         ]);
-                        
+
                         // dd($order_payment);
-                        
+
                         if($order_payment)
                         {
                             return to_route('front.order-thanks-page', $order->order_phone);
@@ -1124,14 +1126,14 @@ class CheckoutController extends Controller
                     403
                 );
             }
-            
-        } 
+
+        }
         else {
                 // return response()->json(
                 //     ["message" => trans("Payment Failed")],
                 //     403
                 // );
-                
+
                 return view('CheckoutURL.fail')->with([
                     'statusMessage' => 'Payment Transaction Failed!',
                     'order_inv' => $order,
