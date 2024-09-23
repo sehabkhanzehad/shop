@@ -1,4 +1,4 @@
-@extends('frontend2.layouts.master')
+@extends('frontend2.layouts.master-for-homepage')
 @section('content')
     <!--slider start-->
     <section class="theme-slider section-pt-space">
@@ -224,8 +224,7 @@
                         @forelse($feateuredCategories as $key => $item)
                             <div>
                                 <div class="category-contain">
-                                    <a
-                                        href="{{ route('front.subcategory', [
+                                    <a href="{{ route('front.subcategory', [
                                             'type' => 'subcategory',
                                             'slug' => $item->category->slug,
                                         ]) }}">

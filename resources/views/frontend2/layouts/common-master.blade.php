@@ -19,7 +19,7 @@
     <!-- loader end -->
 
     <!--header start-->
-    @include('frontend2.components.layout.header')
+    @include('frontend2.components.layout.common-header')
     <!--header end-->
 
     @yield('content')
@@ -440,7 +440,7 @@
     @stack('js')
 
 
-
+<script>
     $("#checkout-form").on("submit", function(e) {
         e.preventDefault();
 
@@ -503,11 +503,13 @@
                     toastr.success(res.msg);
                     window.location.reload(); // Refresh the page or update the cart UI
                 } else {
-                    toastr.error(res.msg);
+                    // toastr.error(res.msg);
+                    errorToast(res.msg);
                 }
             },
             error: function(xhr, status, error) {
-                toastr.error('An error occurred while processing your request.');
+                // toastr.error('An error occurred while processing your request.');
+                errorToast('An error occurred while processing your request.');
             }
         });
     });
@@ -523,7 +525,8 @@
             let quantityInput = $('.quantity-value[data-id="' + id + '"]');
             let newQuantity = parseInt(quantityInput.val()) + 1;
             if (exist_qty < newQuantity) {
-                toastr.error('Stock Not Available!!!');
+                // toastr.error('Stock Not Available!!!');
+                errorToast('Stock Not Available!!!');
                 return false;
             } else {
                 quantityInput.val(newQuantity);

@@ -1,4 +1,4 @@
-@extends('frontend2.layouts.master')
+@extends('frontend2.layouts.common-master')
 @section('content')
     <!-- breadcrumb start -->
     <div class="breadcrumb-main ">
@@ -227,32 +227,34 @@
                                 @endif
 
                                 @if (!empty($product->prod_color == 'varcolor'))
-                                @if ($product->type == 'variable')
-                                    <h6 id="select_color">Select Color : </h6>
-                                @else
-                                @endif
+                                    @if ($product->type == 'variable')
+                                        <h6 id="select_color">Select Color : </h6>
+                                    @else
+                                    @endif
 
-                                <div class="colors" id="colors">
-                                    @foreach ($product->colorVariations as $v)
-                                        @if (!empty($v->color->code))
-                                            <div class="color" style="background: {{ $v->color->code }}"
-                                                data-proid="{{ $v->product_id }}" data-colorid="{{ $v->color_id }}"
-                                                data-varcolor="{{ $v->color->name }}" value="{{ $v->id }}"
-                                                data-variationColorId="{{ $v->color_id }}">
-                                                <input type="hidden" id="color_val" name="color_id">
-                                                <!--<img src="{{ asset($v->var_images) }}" width="50px" height="50px" /> -->
-                                                <input type="hidden" id="color_value" name="variationColor_id">
-                                                <input type="hidden" id="variation_color_id" name="variation_color_id">
-                                            </div>
-                                        @else
-                                            Color Not Available
-                                        @endif
-                                    @endforeach
-                                </div>
-                            @else
-                                <input type="hidden" id="color_value" name="variationColor_id" value="default">
-                                <input type="hidden" id="variation_color_id" name="variation_color_id" value="1">
-                            @endif
+                                    <div class="colors" id="colors">
+                                        @foreach ($product->colorVariations as $v)
+                                            @if (!empty($v->color->code))
+                                                <div class="color" style="background: {{ $v->color->code }}"
+                                                    data-proid="{{ $v->product_id }}" data-colorid="{{ $v->color_id }}"
+                                                    data-varcolor="{{ $v->color->name }}" value="{{ $v->id }}"
+                                                    data-variationColorId="{{ $v->color_id }}">
+                                                    <input type="hidden" id="color_val" name="color_id">
+                                                    <!--<img src="{{ asset($v->var_images) }}" width="50px" height="50px" /> -->
+                                                    <input type="hidden" id="color_value" name="variationColor_id">
+                                                    <input type="hidden" id="variation_color_id"
+                                                        name="variation_color_id">
+                                                </div>
+                                            @else
+                                                Color Not Available
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <input type="hidden" id="color_value" name="variationColor_id" value="default">
+                                    <input type="hidden" id="variation_color_id" name="variation_color_id"
+                                        value="1">
+                                @endif
 
 
 
@@ -644,17 +646,21 @@
                             // alert('Product added to cart');
                             hideLoader();
                             successToast(res.msg);
-                            // if (type) {
+                            // set timeout to show success message
+                            setTimeout(function() {
+                                if (type) {
 
-                            //     if (res.url !== '') {
-                            //         document.location.href = res.url;
-                            //     } else {
-                            //         alert('no');
-                            //         // Handle specific case
-                            //     }
-                            // } else {
-                            //     window.location.reload();
-                            // }
+                                    if (res.url !== '') {
+                                        document.location.href = res.url;
+                                    } else {
+                                        alert('no');
+                                        // Handle specific case
+                                    }
+                                } else {
+                                    window.location.reload();
+                                }
+                            }, 1000);
+
                         } else {
                             // Check if the response contains validation errors
                             if (res.errors) {

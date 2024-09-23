@@ -124,6 +124,7 @@
                                 <nav id="main-nav">
                                     <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
                                     <ul id="main-menu" class="sm pixelstrap sm-horizontal">
+                                        
                                         <li>
                                             <div class="mobile-back text-right">Back<i class="fa fa-angle-right pl-2"
                                                     aria-hidden="true"></i></div>
@@ -237,15 +238,17 @@
                                     </ul>
 
                                     @php $cart = session()->get('cart', []); @endphp
-                                    
+
 
                                     <div class="cart-block mobile-cart cart-hover-div" onclick="openCart()">
                                         <a href="{{ route('front.checkout.index') }}">
-                                            @if($cart!== null)
-                                            <span class="cart-product">{{ count($cart) }}</span><i class="icon-shopping-cart"></i></a>
-                                            @else
-                                            <span class="cart-product">0</span><i class="icon-shopping-cart"></i></a>
-                                            @endif
+                                            @if ($cart !== null)
+                                                <span class="cart-product">{{ count($cart) }}</span><i
+                                                    class="icon-shopping-cart"></i>
+                                        </a>
+                                    @else
+                                        <span class="cart-product">0</span><i class="icon-shopping-cart"></i></a>
+                                        @endif
                                     </div>
 
                                 </div>
@@ -277,13 +280,17 @@
                                             @foreach ($feateuredCategories as $item)
                                                 <li> <img
                                                         src="{{ asset('uploads/custom-images2/' . $item->category->image) }}"
-                                                        alt="catergory-product"> <a>{{ $item->category->name }}</a>
+                                                        alt="catergory-product"> <a href="{{ route('front.subcategory', [
+                                                            'type' => 'subcategory',
+                                                            'slug' => $item->category->slug,
+                                                        ]) }}">{{ $item->category->name }}</a>
                                                 </li>
                                             @endforeach
                                         </ul>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="input-block">
                                 <div class="input-box">
                                     <form class="big-deal-form" action="{{ route('front.product.search') }}">

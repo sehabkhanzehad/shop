@@ -1,4 +1,4 @@
-@extends("frontend2.layouts.master")
+@extends("frontend2.layouts.common-master")
 @section("content")
 <!-- breadcrumb start -->
 <div class="breadcrumb-main ">
@@ -151,7 +151,7 @@
                     </tr>
                     </tfoot>
                 </table>
-                
+
             </div>
         </div>
         <div class="row cart-buttons">
