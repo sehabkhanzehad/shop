@@ -13,22 +13,22 @@ class OrderController extends Controller
     {
         $orders = Order::with('orderProducts')->where('user_id', Auth::id())->latest()->get();
 // dd($orders);
-        return view('frontend.order.index', compact('orders'));
+        return view('frontend2.pages.order-history', compact('orders'));
     }
-    
+
     public function order_list($phone)
     {
         $orders = Order::with('orderProducts')->where('order_phone', $phone)->latest()->get();
       	$order_inv = Order::with('orderProducts')->where('order_phone', $phone)->first();
-      			  
-        return view('frontend.order.index', compact('orders', 'order_inv'));
+
+        return view('frontend2.pages.order-history', compact('orders', 'order_inv'));
     }
   	public function thanks_page($phone)
     {
       	$order_inv = Order::with('orderProducts')->where('order_phone', $phone)->first();
-        return view('frontend.order.thanks_page', compact('order_inv'));
+        return view('frontend2.pages.thanks_page', compact('order_inv'));
     }
-  	
+
 
     public function show($id)
     {
@@ -40,9 +40,9 @@ class OrderController extends Controller
         //     'status' => true,
         //     'html' => $view,
         // ]);
-        return view('frontend.order.show', compact('order'));
-    }    
-    
+        return view('frontend2.pages.order-details', compact('order'));
+    }
+
     public function print($id)
     {
         $order = Order::with('user', 'orderProducts')->findOrFail($id);

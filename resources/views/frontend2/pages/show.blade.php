@@ -289,7 +289,8 @@
                                     class="btn btn-normal add-to-cart bold add_cart">add to cart</a>
 
                                 {{-- <a href="#"class="btn btn-normal">add to cart</a> --}}
-                                <a href="#" class="btn btn-normal">buy now</a>
+                                <a data-id="{{ $product->id }}" data-url="{{ route('front.cart.store') }}"
+                                    class="btn btn-normal buy-now">buy now</a>
                             </div>
 
                             <div class="border-product">
@@ -514,9 +515,6 @@
                                                         <div class="price">{{ $product->offer_price }} Tk</div>
                                                     </div>
                                                 @endif
-
-
-
                                             </div>
                                         </div>
                                         <div class="icon-detail">
@@ -564,6 +562,125 @@
 
 
 @push('js')
+
+
+    <script>
+        $(function() {
+
+            $(document).on('click', '.buy-now', function(e) {
+
+                let variation_id = $('#size_variation_id').val();
+                let variation_size = $('#size_value').val();
+                let variation_size_id = $('input[name="variation_size_id"]').val();
+                let variation_color = $('#color_value').val();
+                let variation_color_id = $('input[name="variation_color_id"]').val();
+                let variation_price = $('#pro_price').val();
+                var quantity = $('#quantity').val();
+                let image = $('input#pro_img').val();
+                let pro_type = $('input#type').val();
+
+
+                let proName = $('input[name="product_name"]').val();
+                let proId = $('input[name="product_id"]').val();
+                let catId = $('input[name="category_id"]').val();
+
+                // alert(variation_id);
+
+                window.dataLayer = window.dataLayer || [];
+
+                dataLayer.push({
+                    ecommerce: null
+                });
+                dataLayer.push({
+                    event: "add_to_cart",
+                    ecommerce: {
+                        currency: "BDT",
+                        value: variation_price,
+                        items: [{
+                            item_id: proId,
+                            item_name: proName,
+                            item_category: catId,
+                            price: variation_price,
+                            quantity: quantity
+                        }]
+                    }
+                });
+
+
+                let id = $(this).data('id');
+                let url = $(this).data('url');
+
+                addToCart(url, id, variation_size, variation_color, variation_id, variation_price, quantity,
+                    variation_size_id, variation_color_id, image, pro_type, type = "");
+            });
+
+
+            function addToCart(url, id, varSize = "", varColor = "", variation_id = "", variation_price = "",
+                quantity, variation_size_id, variation_color_id, image = "", pro_type, type = "") {
+
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                showLoader();
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    data: {
+                        id,
+                        varSize,
+                        varColor,
+                        variation_id,
+                        variation_price,
+                        quantity,
+                        variation_size_id,
+                        variation_color_id,
+                        image,
+                        pro_type
+                    },
+                    success: function(res) {
+
+                        if (res.status) {
+                            // toastr.success(res.msg);
+                            // alert('Product added to cart');
+                            hideLoader();
+                            successToast(res.msg);
+                            // set timeout to show success message
+                            setTimeout(function() {
+                                document.location.href = "{{ route("front.checkout.index") }}";
+                            }, 1000);
+
+                        } else {
+                            // Check if the response contains validation errors
+                            if (res.errors) {
+                                for (var field in res.errors) {
+                                    if (res.errors.hasOwnProperty(field)) {
+                                        for (var i = 0; i < res.errors[field].length; i++) {
+                                            // toastr.error(res.errors[field][i]);
+                                            alert(res.errors[field][i]);
+                                        }
+                                    }
+                                }
+                            } else {
+                                // toastr.error(res.msg ||'An error occurred while processing your request.');
+                                alert("Error2");
+                            }
+                        }
+
+                    },
+                    error: function(xhr, status, error) {
+                        // toastr.error('An error occurred while processing your request.');
+                        alert("An error occurred while processing your request.");
+                    }
+                });
+            }
+
+            // ... other functions ...
+
+
+        });
+    </script>
     <script>
         $(function() {
 

@@ -832,12 +832,11 @@ Auth::routes();
 Route::group(['as' => 'front.'], function () {
 
 
-Route::middleware(['FrontUser'])->group(function () {
-   Route::get("/user-profile", [FrontUserController::class, 'profile'])->name('profile');
-    // Route::get("/profile-edit", [FrontUserController::class, 'profileEdit'])->name('profile-edit');
-    Route::get("/dashboard", [FrontUserController::class, 'dashboard'])->name('dashboard');
-
-});
+    Route::middleware(['FrontUser'])->group(function () {
+        Route::get("/user-profile", [FrontUserController::class, 'profile'])->name('profile');
+        // Route::get("/profile-edit", [FrontUserController::class, 'profileEdit'])->name('profile-edit');
+        Route::get("/dashboard", [FrontUserController::class, 'dashboard'])->name('dashboard');
+    });
 
 
 
