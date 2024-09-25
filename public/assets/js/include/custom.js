@@ -86,7 +86,14 @@ async function filluUpQuickView(id) {
 
     document.getElementById("ProductDetails").innerHTML =
         respons.data.data.long_description;
+   document.getElementById("viewDetails").href = "/product/" + id;
+
 }
+
+$(document).on("click", "#viewDetails", function () {
+    $("#quickViewModal").modal("hide");
+});
+
 
 // $(function () {
 //     $(document).on("click", ".add-to-cart", function (e) {

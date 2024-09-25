@@ -119,6 +119,7 @@ class ProductController extends Controller
         return response()->json([
             'status' => "success",
             "data" => $product,
+            "url" => route("front.product.show", $product->id),
         ]);
     }
 

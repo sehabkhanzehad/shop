@@ -22,13 +22,13 @@ class AdminLoginController extends Controller
     }
 
     public function adminLoginPage(){
-        
+
         $setting = Setting::first();
         return view('admin.auth.login',compact('setting'));
     }
 
 
-    public function storeLogin(Request $request){
+          public function storeLogin(Request $request){
 
         $rules = [
             'email'=>'required|email',

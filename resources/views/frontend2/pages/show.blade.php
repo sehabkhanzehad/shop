@@ -30,59 +30,28 @@
 
                         <div class="product-slick no-arrow">
 
-                            <div><img src="{{ asset('uploads/custom-images/' . $product->thumb_image) }}" alt=""
-                                    class="img-fluid  image_zoom_cls-0"></div>
-
-                            {{-- <div><img src="../assets/images/product-sidebar/002.jpg" alt=""
-                                    class="img-fluid  image_zoom_cls-1"></div>
-                            <div><img src="../assets/images/product-sidebar/003.jpg" alt=""
-                                    class="img-fluid  image_zoom_cls-2"></div>
-                            <div><img src="../assets/images/product-sidebar/004.jpg" alt=""
-                                    class="img-fluid  image_zoom_cls-3"></div> --}}
+                            <div><img id="showImage" src="{{ asset('uploads/custom-images/' . $product->thumb_image) }}"
+                                    alt="" class="img-fluid"></div>
 
                         </div>
-
-                        <!-- Mini Image Thumbnails -->
-                        {{-- <div class="thumbnail-container"> --}}
-                        {{-- <br />
-                            <img class="thumbnail img-thumbnail"
-                                src="" alt=""
-                                class=""
-                                onclick="changeImage('{{ asset('uploads/custom-images/' . $product->thumb_image) }}')">
-
-                            @forelse($product->gallery as $key => $img_gals)
-                                <img class="thumbnail img-thumbnail" src="{{ asset($img_gals->image) }}"
-                                    onclick="changeImage('{{ asset($img_gals->image) }}')">
-                            @empty
-                            @endforelse
-                        </div> --}}
 
                         <div class="row">
                             <div class="col-12 p-0">
                                 <div class="slider-nav">
 
                                     <div><img src="{{ asset('uploads/custom-images/' . $product->thumb_image) }}"
-                                            alt="" class="img-fluid  image_zoom_cls-0"></div>
+                                            alt="" class="getSrc1 img-fluid  image_zoom_cls-0"></div>
 
                                     @forelse($product->gallery as $key => $img_gals)
-                                        <div><img src="{{ asset($img_gals->image) }}" alt=""
-                                                class="img-fluid  image_zoom_cls-1"></div>
+                                        <div><img id="getSrc" src="{{ asset($img_gals->image) }}" alt=""
+                                                class=" img-fluid image_zoom_cls-1"></div>
                                     @empty
                                     @endforelse
-
-                                    {{--
-                                        <div><img src="../assets/images/product-sidebar/003.jpg" alt=""
-                                                class="img-fluid  image_zoom_cls-2"></div>
-                                        <div><img src="../assets/images/product-sidebar/004.jpg" alt=""
-                                                class="img-fluid  image_zoom_cls-3"></div> --}}
-
                                 </div>
                             </div>
                         </div>
 
-
                     </div>
-
 
 
                     <div class="col-lg-7 rtl-text">
@@ -298,7 +267,7 @@
                                 <p>{!! $product->long_description !!}</p>
                             </div>
 
-                            <div class="border-product">
+                            {{-- <div class="border-product">
                                 <div class="product-icon">
                                     <ul class="product-social">
                                         <li><a href="#"><i class="fa fa-facebook"></i></a></li>
@@ -313,8 +282,8 @@
                                                 To WishList</span></button>
                                     </form>
                                 </div>
-                            </div>
-                            <div class="border-product ">
+                            </div> --}}
+                            {{-- <div class="border-product ">
                                 <h6 class="product-title">Time Reminder</h6>
                                 <div class="timer">
                                     <p id="demo"><span>25 <span class="padding-l">:</span> <span
@@ -325,7 +294,7 @@
                                                 class="timer-cal">Sec</span></span>
                                     </p>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -414,6 +383,102 @@
                                 </div>
                             </div>
                             <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
+                                @auth
+                                    <form action="{{ route('front.product.product-reviews.store') }}" method="POST">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                        <div class="form-group">
+                                            <label for="rating">Rating:</label>
+                                            <select name="rating" id="rating" class="form-control">
+                                                <option value="1">1 Star</option>
+                                                <option value="2">2 Star</option>
+                                                <option value="3">3 Star</option>
+                                                <option value="4">4 Star</option>
+                                                <option value="5">5 Star</option>
+                                                <!-- Add more options for ratings -->
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="review">Review:</label>
+                                            <textarea name="review" id="review" rows="4" class="form-control"></textarea>
+                                        </div>
+                                        <button type="submit" class="btn btn-normal">Submit Review</button>
+                                    </form>
+                                @else
+                                    <p>Please <a href="{{ url('login-user') }}" class="btn btn-normal">login</a> to submit a review.</p>
+                                @endauth
+                                <style>
+                                    .fa-solid {
+                                        color: #F2C94C;
+                                    }
+
+                                    p.rev {
+                                        font-size: 17px;
+                                    }
+
+                                    p.rev_user {
+                                        font-size: 25px;
+                                    }
+                                </style>
+                                @forelse($reviews as $key=>$rev)
+                                    <br />
+                                    <div class="container card">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="rev_user" style="font-weight:bold;">
+                                                    <img src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                                                        alt="Avater" width="70px" height="70px" />
+                                                    {{ $rev->user->name }}
+                                                </p>
+                                            </div>
+                                            <div class="col-md-6" style="text-align: right;">
+                                                <p style="margin-left:8%;font-weight:bolder;margin-top: 15px;">
+                                                    @if ($rev->rating == 1)
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-regular fa-star"></i>
+                                                        <i class="fa-regular fa-star"></i>
+                                                        <i class="fa-regular fa-star"></i>
+                                                        <i class="fa-regular fa-star"></i>
+                                                    @elseif($rev->rating == 2)
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-regular fa-star"></i>
+                                                        <i class="fa-regular fa-star"></i>
+                                                        <i class="fa-regular fa-star"></i>
+                                                    @elseif($rev->rating == 3)
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-regular fa-star"></i>
+                                                        <i class="fa-regular fa-star"></i>
+                                                    @elseif($rev->rating == 4)
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-regular fa-star"></i>
+                                                    @else
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-solid fa-star"></i>
+                                                        <i class="fa-solid fa-star"></i>
+                                                    @endif
+                                                    ({{ $rev->rating }}/5)
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <p class="price" style="margin-left: 7%; margin-top: -2%; font-weight: bold;">
+                                                {{ $rev->review }}</p>
+                                        </div>
+                                        <br><br>
+                                    </div>
+                                @empty
+                                    <p> No reviews. </p>
+                                @endforelse
+                            </div>
+                            {{-- <div class="tab-pane fade" id="top-review" role="tabpanel" aria-labelledby="review-top-tab">
                                 <form class="theme-form">
                                     <div class="form-row">
                                         <div class="col-md-12">
@@ -451,7 +516,7 @@
                                         </div>
                                     </div>
                                 </form>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -517,21 +582,20 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="icon-detail">
+                                        {{-- <div class="icon-detail">
                                             <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
                                                 <i class="ti-bag"></i>
                                             </button>
                                             <a href="javascript:void(0)" title="Add to Wishlist">
                                                 <i class="ti-heart" aria-hidden="true"></i>
                                             </a>
-                                            <a href="#" data-toggle="modal" data-target="#quick-view"
-                                                title="Quick View">
-                                                <i class="ti-search" aria-hidden="true"></i>
+                                            <a style="cursor: pointer" class="quickView" title="Quick View" data-product_id="{{ $product->id }}">                   <i class="ti-search" aria-hidden="true"></i>
                                             </a>
+
                                             <a href="compare.html" title="Compare">
                                                 <i class="fa fa-exchange" aria-hidden="true"></i>
                                             </a>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
@@ -558,12 +622,23 @@
             defaultSize.find('a').trigger('click');
         });
     </script>
+
+    <script>
+        $("#getSrc").click(function() {
+            let image = $(this).attr('src');
+            $("#showImage").attr('src', image);
+        });
+        $(".getSrc1").click(function() {
+            let image = $(this).attr('src');
+            $("#showImage").attr('src', image);
+
+        });
+
+    </script>
 @endsection
 
 
 @push('js')
-
-
     <script>
         $(function() {
 
@@ -648,7 +723,7 @@
                             successToast(res.msg);
                             // set timeout to show success message
                             setTimeout(function() {
-                                document.location.href = "{{ route("front.checkout.index") }}";
+                                document.location.href = "{{ route('front.checkout.index') }}";
                             }, 1000);
 
                         } else {

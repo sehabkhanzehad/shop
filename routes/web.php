@@ -900,7 +900,7 @@ Route::group(['as' => 'front.'], function () {
 
     Route::controller(FrontAuthController::class)->group(function () {
         Route::get('register-user', 'regpage')->name('user-reg');
-        Route::get('user-login', 'logpage')->name('user-log');
+        Route::get('/login-user', 'logpage')->name('user-log');
         Route::post('login', 'login')->name('login');
         Route::get('logout', 'logout')->name('logout');
         Route::post('register', 'register')->name('register');

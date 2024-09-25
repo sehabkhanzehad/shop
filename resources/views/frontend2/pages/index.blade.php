@@ -29,53 +29,9 @@
                             </div>
                         </div>
                     @endforeach
-
-
-
-                        {{-- <div>
-                            <div class="slider-banner">
-                                <div class="slider-img">
-                                    <ul class="layout2-slide-2">
-                                        <li id="img-2"><img src="{{ asset('assets') }}/images/layout-1/slider/1.2.png"
-                                                class="img-fluid" alt="slider"></li>
-                                    </ul>
-                                </div>
-                                <div class="slider-banner-contain">
-                                    <div>
-                                        <h4>cinema festival</h4>
-                                        <h1>reflex camera</h1>
-                                        <h2>minimum 40% off</h2>
-                                        <a class=" btn btn-rounded">
-                                            Shop Now
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <div class="slider-banner">
-                                <div class="slider-img">
-                                    <ul class="layout2-slide-3">
-                                        <li id="img-3"><img src="{{ asset('assets') }}/images/layout-1/slider/1.3.png"
-                                                class="img-fluid" alt="slider"></li>
-                                    </ul>
-                                </div>
-                                <div class="slider-banner-contain">
-                                    <div>
-                                        <h4>march special</h4>
-                                        <h1>leather bag</h1>
-                                        <h2>minimum 60% off</h2>
-                                        <a class=" btn btn-rounded">
-                                            Shop Now
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> --}}
-
                     </div>
                 </div>
+
                 <div class="col-xl-2 col-sm-3 pl-0 offer-banner">
                     <div class="offer-banner-img">
                         <img src="{{ asset('assets') }}/images/layout-1/offer-banner.png" alt="offer-banner"
@@ -90,6 +46,8 @@
                         </div>
                     </div>
                 </div>
+
+                
             </div>
         </div>
     </section>
@@ -190,11 +148,11 @@
                         @forelse($brands as $key => $brand)
                             <div>
                                 <div class="category-contain">
-                                    <a href="{{ url('/brand-product/' . $brand->slug) }}">
+                                    {{-- <a href="{{ url('/brand-product/' . $brand->slug) }}"> --}}
                                         <div style="border: none !important" class="img-wrapper">
                                             <img src="{{ $brand->logo }}" alt="category" class="img-fluid">
                                         </div>
-                                    </a>
+                                    {{-- </a> --}}
                                 </div>
                             </div>
                         @empty
@@ -282,17 +240,17 @@
                                         </a>
                                         @endif
                                         <div class="product-icon">
-                                            <button onclick="openCart()" type="button">
+                                            {{-- <button onclick="openCart()" type="button">
                                                 <i class="ti-bag"></i>
-                                            </button>
+                                            </button> --}}
                                             <a href="javascript:void(0)" title="Add to Wishlist">
                                                 <i class="ti-heart" aria-hidden="true"></i>
                                             </a>
                                             <a style="cursor: pointer" id="" class="quickView" title="Quick View" data-product_id="{{ $sale->product->id }}">                   <i class="ti-search" aria-hidden="true"></i>
                                             </a>
-                                            <a href="compare.html" title="Compare">
+                                            {{-- <a href="compare.html" title="Compare">
                                                 <i class="fa fa-exchange" aria-hidden="true"></i>
-                                            </a>
+                                            </a> --}}
                                         </div>
 
                                         @if ($sale->product->is_free_shipping > 0)
@@ -1153,19 +1111,17 @@
                                                 </a>
                                                 @endif
                                                 <div class="product-icon">
-                                                    <button onclick="openCart()" type="button">
+                                                    {{-- <button onclick="openCart()" type="button">
                                                         <i class="ti-bag"></i>
-                                                    </button>
+                                                    </button> --}}
                                                     <a href="javascript:void(0)" title="Add to Wishlist">
                                                         <i class="ti-heart" aria-hidden="true"></i>
                                                     </a>
-                                                    <a href="#" data-toggle="modal" data-target="#quick-view"
-                                                        title="Quick View">
-                                                        <i class="ti-search" aria-hidden="true"></i>
+                                                    <a style="cursor: pointer" id="" class="quickView" title="Quick View" data-product_id="{{ $sale->product->id }}">                   <i class="ti-search" aria-hidden="true"></i>
                                                     </a>
-                                                    <a href="compare.html" title="Compare">
+                                                    {{-- <a href="compare.html" title="Compare">
                                                         <i class="fa fa-exchange" aria-hidden="true"></i>
-                                                    </a>
+                                                    </a> --}}
                                                 </div>
 
                                                 @if ($product->is_free_shipping > 0)

@@ -1,5 +1,6 @@
 @php
     $feateuredCategories = \App\Models\FeaturedCategory::with('category')->orderBy('serial', 'DESC')->get();
+    $custom_pages = DB::table('custom_pages')->where('status', 1)->get();
 @endphp
 <header>
     <div class="mobile-fix-option"></div>
@@ -73,7 +74,7 @@
                     <div class="main-menu-block">
 
                         <div class="menu-left">
-                            <div class="sm-nav-block">
+                            {{-- <div class="sm-nav-block">
                                 <span class="sm-nav-btn"><i class="fa fa-bars"></i></span>
                                 <ul class="nav-slide">
                                     <li>
@@ -109,7 +110,7 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </div>
+                            </div> --}}
 
                             <div class="brand-logo">
                                 <a href="{{ route('front.home') }}">
@@ -124,7 +125,7 @@
                                 <nav id="main-nav">
                                     <div class="toggle-nav"><i class="fa fa-bars sidebar-bar"></i></div>
                                     <ul id="main-menu" class="sm pixelstrap sm-horizontal">
-                                        
+
                                         <li>
                                             <div class="mobile-back text-right">Back<i class="fa fa-angle-right pl-2"
                                                     aria-hidden="true"></i></div>
@@ -133,14 +134,13 @@
                                         <li>
                                             <a href="{{ route('front.home') }}">Home</a>
                                         </li>
-                                        <li>
-                                            <a href="#">About Us</a>
-                                        </li>
 
-
+                                        @foreach ($custom_pages as $pages)
                                         <li>
-                                            <a href="#">Review</a>
+                                            <a href="{{ route('front.customPages', $pages->slug) }}">{{ $pages->page_name }}</a>
                                         </li>
+                                         @endforeach
+
                                         {{-- <li>
                                             <a href="#">Coming Soon</a>
                                         </li> --}}
@@ -157,10 +157,10 @@
                                         </li>
                                         <!--blog-meu end-->
 
-                                        <li>
+                                        {{-- <li>
                                             <a href="#">Contact</a>
                                         </li>
-
+ --}}
 
                                     </ul>
                                 </nav>

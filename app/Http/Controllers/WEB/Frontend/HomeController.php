@@ -231,6 +231,6 @@ class HomeController extends Controller
         $customPage = CustomPage::where('slug', $slug)->first();
 
         // dd($customPage);
-        return view('frontend.pages', compact('customPage'));
+        return view('frontend2.pages.custom-page', compact('customPage'));
     }
 }

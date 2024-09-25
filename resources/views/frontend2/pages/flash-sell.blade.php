@@ -33,6 +33,8 @@
                         @forelse($flashSell  as $key => $product)
                             <div class="product-box">
                                 <div class="product-imgbox">
+                                    <a href="{{ route('front.product.show', [$product->product->id]) }}">
+
                                     <div class="product-front">
                                         <img src="{{ asset('uploads/custom-images2/' . $product->product->thumb_image) }}"
                                             class="img-fluid" alt="product">
@@ -41,7 +43,8 @@
                                         <img src="{{ asset('uploads/custom-images2/' . $product->product->thumb_image) }}"
                                             class="img-fluid" alt="product">
                                     </div>
-                                    <div class="product-icon">
+                                    </a>
+                                    {{-- <div class="product-icon">
                                         <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
                                             <i class="ti-bag"></i>
                                         </button>
@@ -54,7 +57,7 @@
                                         <a href="compare.html" title="Compare">
                                             <i class="fa fa-exchange" aria-hidden="true"></i>
                                         </a>
-                                    </div>
+                                    </div> --}}
 
                                     @if ($product->product->is_free_shipping > 0)
                                         <div class="new-label">

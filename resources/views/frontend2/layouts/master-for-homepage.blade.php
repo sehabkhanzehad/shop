@@ -177,24 +177,25 @@
                             aria-hidden="true">&times;</span></button>
                     <div class="row">
                         <div class="col-lg-6 col-xs-12">
-                            <div class="quick-view-img"><img id="quickViewImage"
-                                     alt="quick"
-                                    class="img-fluid "></div>
+                            <div class="quick-view-img"><img id="quickViewImage" alt="quick" class="img-fluid ">
+                            </div>
                         </div>
                         <div class="col-lg-6 rtl-text">
                             <div class="product-right">
                                 <h2 id="productName"></h2>
                                 <h3 id="productPrice"></h3>
-                                <ul class="color-variant">
+
+                                {{-- <ul class="color-variant">
                                     <li class="bg-light0"></li>
                                     <li class="bg-light1"></li>
                                     <li class="bg-light2"></li>
-                                </ul>
+                                </ul> --}}
                                 <div class="border-product">
                                     <h6 class="product-title">product details</h6>
                                     <p id="ProductDetails"></p>
                                 </div>
-                                <div class="product-description border-product">
+
+                                {{-- <div class="product-description border-product">
                                     <div class="size-box">
                                         <ul>
                                             <li class="active"><a href="#">s</a></li>
@@ -215,9 +216,107 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="product-buttons"><a href="#" class="btn btn-normal">add to cart</a>
-                                    <a href="#" class="btn btn-normal">view detail</a>
+                                --}}
+                                <div class="product-buttons">
+                                    {{-- <a href="#" class="btn btn-normal">add to cart</a> --}}
+                                    <a id="viewDetails" class="btn btn-normal">view detail</a>
                                 </div>
+
+                                {{-- <form action="{{ route('front.cart.store') }}" method="POST" class="cart_form_home">
+                                    <div class="modal-body">
+                                        <p id="test_for"></p>
+                                        <p id="selected_color"></p>
+                                        <div class="variable_info">
+
+                                            <div class="size-box">
+                                                <ul id="sizes" class="sizes">
+                                                    @foreach ($product->variations as $v)
+                                                        @if (!empty($v->size->title))
+                                                            <span data-proid="{{ $v->product_id }}"
+                                                                data-varprice="{{ $v->sell_price }}"
+                                                                data-varsize="{{ $v->size->title }}"
+                                                                value="{{ $v->id }}"
+                                                                data-varSizeId="{{ $v->size_id }}">
+                                                                @if ($v->size->title == 'free')
+                                                                    <li class="size"><a>{{ $v->size->title }}</a>
+                                                                    </li>
+                                                                    <input type="hidden" id="size_value"
+                                                                        name="variation_id">
+                                                                    <input type="hidden" id="size_variation_id"
+                                                                        name="size_variation_id">
+                                                                    <input type="hidden" name="pro_price"
+                                                                        id="pro_price">
+                                                                    <input type="hidden" name="variation_size_id"
+                                                                        id="variation_size_id">
+                                                                @else
+                                                                    <li class="size"><a>{{ $v->size->title }}</a>
+                                                                    </li>
+                                                                    <input type="hidden" id="size_value"
+                                                                        name="variation_id">
+                                                                    <input type="hidden" id="size_variation_id"
+                                                                        name="size_variation_id">
+                                                                    <input type="hidden" name="pro_price"
+                                                                        id="pro_price">
+                                                                    <input type="hidden" name="variation_size_id"
+                                                                        id="variation_size_id">
+                                                                @endif
+                                                            </span>
+                                                        @endif
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+
+
+                                            <div class="colors" id="colors">
+                                                @if (!empty($product->prod_color == 'varcolor'))
+                                                    @foreach ($product->colorVariations as $v)
+                                                        @if (!empty($v->color->code))
+                                                            <div class="color"
+                                                                style="background: {{ $v->color->code }}"
+                                                                data-proid="{{ $v->product_id }}"
+                                                                data-colorid="{{ $v->color_id }}"
+                                                                data-varcolor="{{ $v->color->name }}"
+                                                                value="{{ $v->id }}"
+                                                                data-variationColorId="{{ $v->color_id }}">
+                                                                <input type="hidden" id="color_val" name="color_id">
+                                                                <!--<img src="{{ asset($v->var_images) }}" width="50px" height="50px" /> -->
+                                                                <input type="hidden" id="color_value"
+                                                                    name="variationColor_id">
+                                                                <input type="hidden" id="variation_color_id"
+                                                                    name="variation_color_id">
+                                                            </div>
+                                                        @else
+                                                            Color Not Available
+                                                        @endif
+                                                    @endforeach
+                                                @else
+                                                    <input type="hidden" id="variation_color" name="variation_color"
+                                                        value="default">
+                                                    <input type="hidden" id="variation_color_id"
+                                                        name="variation_color_id" value="1">
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <input type="hidden" name="id">
+                                        <input type="hidden" name="variation_id">
+                                        <input type="hidden" name="variation_size">
+                                        <input type="hidden" name="variation_size_id">
+                                        <input type="hidden" name="variation_price">
+                                        <input type="hidden" name="variation_color">
+                                        <input type="hidden" name="variation_color_id">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <input type="hidden" name="type" value="variable">
+                                        <input type="hidden" name="pro_img">
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            data-bs-dismiss="modal">ক্লোজ</button>
+                                        <button type="submit"
+                                            class="btn btn-primary">{{ BanglaText('cart_add') }}</button>
+                                        <button type="button"
+                                            class="btn btn-primary do_order">{{ BanglaText('order') }}</button>
+                                    </div>
+                                </form> --}}
                             </div>
                         </div>
                     </div>
@@ -425,7 +524,7 @@
 
     <!-- latest jquery-->
     {{-- <script src="{{ asset('assets/js/jquery-3.3.1.min.js') }}"></script> --}}
-    <script src="{{asset('frontend/assets/js/jquery.min.js')}}"></script>
+    <script src="{{ asset('frontend/assets/js/jquery.min.js') }}"></script>
 
 
     <!-- script -->
@@ -434,187 +533,189 @@
     <script src="{{ asset('assets/js/include/toastify-js.js') }}"></script>
     <script src="{{ asset('assets/js/include/custom.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
+        integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 
     @stack('js')
 
 
-<script>
-    $("#checkout-form").on("submit", function(e) {
-        e.preventDefault();
+    <script>
+        $("#checkout-form").on("submit", function(e) {
+            e.preventDefault();
 
-        var form = $(this);
-        var url = form.attr("action");
+            var form = $(this);
+            var url = form.attr("action");
 
-        $.ajax({
-            url: url,
-            type: "POST",
-            data: form.serialize(),
-            success: function(response) {
-                if (response.status) {
-                    // Clear the cart or perform other actions
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: form.serialize(),
+                success: function(response) {
+                    if (response.status) {
+                        // Clear the cart or perform other actions
 
-                    // Show success message
-                    showToasterMessage(response.msg, "success");
+                        // Show success message
+                        showToasterMessage(response.msg, "success");
 
-                    // Redirect to a specific URL if needed
-                    window.location.href = response.url;
-                } else {
+                        // Redirect to a specific URL if needed
+                        window.location.href = response.url;
+                    } else {
+                        // Show error message
+                        showToasterMessage(response.msg, "error");
+                    }
+                },
+                error: function(error) {
                     // Show error message
-                    showToasterMessage(response.msg, "error");
+                    showToasterMessage("An error occurred. Please try again later.", "error");
                 }
-            },
-            error: function(error) {
-                // Show error message
-                showToasterMessage("An error occurred. Please try again later.", "error");
-            }
+            });
         });
-    });
-</script>
+    </script>
 
 
 
-<script type="text/javascript">
-    var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-    $.ajax({
-        headers: {
-            'X-CSRF-TOKEN': csrfToken
-        },
-        // ... other AJAX settings ...
-    });
-</script>
-
-<script>
-    $(document).on('click', '.remove-item', function(e) {
-        e.preventDefault();
-
-        let id = $(this).data('id');
-        let url = '{{ route('front.cart.destroy', ['id' => ':id']) }}'; // Adjust the route name as needed
-
-        url = url.replace(':id', id); // Replace the placeholder with the actual id
+    <script type="text/javascript">
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
         $.ajax({
-            type: 'GET', // Use GET or POST based on your route definition
-            url: url,
-            success: function(res) {
-                if (res.status) {
-                    toastr.success(res.msg);
-                    window.location.reload(); // Refresh the page or update the cart UI
-                } else {
-                    // toastr.error(res.msg);
-                    errorToast(res.msg);
-                }
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
             },
-            error: function(xhr, status, error) {
-                // toastr.error('An error occurred while processing your request.');
-                errorToast('An error occurred while processing your request.');
-            }
+            // ... other AJAX settings ...
         });
-    });
-</script>
+    </script>
 
-<script>
-    $(document).ready(function() {
-
-        $(document).on('click', '.inc', function(e) {
-            e.preventDefault();
-            let id = $(this).data('id');
-            let exist_qty = $(this).data('exist_qty');
-            let quantityInput = $('.quantity-value[data-id="' + id + '"]');
-            let newQuantity = parseInt(quantityInput.val()) + 1;
-            if (exist_qty < newQuantity) {
-                // toastr.error('Stock Not Available!!!');
-                errorToast('Stock Not Available!!!');
-                return false;
-            } else {
-                quantityInput.val(newQuantity);
-                updateSubtotal(id, newQuantity);
-            }
-        });
-
-        $(document).on('click', '.dec', function(e) {
-            e.preventDefault();
-            let id = $(this).data('id');
-            let quantityInput = $('.quantity-value[data-id="' + id + '"]');
-            let newQuantity = parseInt(quantityInput.val()) - 1;
-            if (newQuantity >= 1) {
-                quantityInput.val(newQuantity);
-                updateSubtotal(id, newQuantity);
-            }
-        });
-
+    <script>
         $(document).on('click', '.remove-item', function(e) {
             e.preventDefault();
-            let id = $(this).data('id');
-            $(this).closest('tr').remove();
-            updateSubtotal(id, 0);
-        });
 
-        // Add event listener for the "Update" button
-        $(document).on('click', '.update-cart', function(e) {
-            e.preventDefault();
             let id = $(this).data('id');
-            let quantityInput = $('.quantity-value[data-id="' + id + '"]');
-            let newQuantity = parseInt(quantityInput.val());
+            let url = '{{ route('front.cart.destroy', ['id' => ':id']) }}'; // Adjust the route name as needed
+
+            url = url.replace(':id', id); // Replace the placeholder with the actual id
 
             $.ajax({
-                type: 'POST',
-                url: '{{ route('front.cart.update', ['id' => '__id__']) }}'.replace('__id__',
-                    id),
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    quantity: newQuantity
+                type: 'GET', // Use GET or POST based on your route definition
+                url: url,
+                success: function(res) {
+                    if (res.status) {
+                        toastr.success(res.msg);
+                        window.location.reload(); // Refresh the page or update the cart UI
+                    } else {
+                        // toastr.error(res.msg);
+                        errorToast(res.msg);
+                    }
                 },
-                success: function(response) {
-                    // Update subtotal
-                    let subtotal = response.totalAmount.toFixed(2);
-                    $('#subtotal-' + id).text(subtotal);
-
-                    // Update total amount
-                    $('#total-amount').text(response.totalAmount.toFixed(2));
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    // Handle error response, if needed
+                error: function(xhr, status, error) {
+                    // toastr.error('An error occurred while processing your request.');
+                    errorToast('An error occurred while processing your request.');
                 }
             });
         });
+    </script>
 
-        function updateSubtotal(id, quantity) {
-            let price = parseFloat($('#subtotal-' + id).data('price'));
-            let subtotal = price * quantity;
-            $('#subtotal-' + id).text(subtotal.toFixed(2));
-            updateCart(id, quantity);
-        }
+    <script>
+        $(document).ready(function() {
 
-        function updateTotalAmount() {
-            let totalAmount = 0;
-            $('.subtotal').each(function() {
-                totalAmount += parseFloat($(this).text());
-            });
-            $('#total-amount').text(totalAmount.toFixed(2));
-        }
-
-        function updateCart(id, quantity) {
-            $.ajax({
-                type: 'POST',
-                url: '{{ route('front.cart.update', ['id' => '__id__']) }}'.replace('__id__', id),
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    quantity: quantity
-                },
-                success: function(response) {
-                    window.location.reload();
-                    // Handle success response, if needed
-                },
-                error: function(xhr, textStatus, errorThrown) {
-                    // Handle error response, if needed
+            $(document).on('click', '.inc', function(e) {
+                e.preventDefault();
+                let id = $(this).data('id');
+                let exist_qty = $(this).data('exist_qty');
+                let quantityInput = $('.quantity-value[data-id="' + id + '"]');
+                let newQuantity = parseInt(quantityInput.val()) + 1;
+                if (exist_qty < newQuantity) {
+                    // toastr.error('Stock Not Available!!!');
+                    errorToast('Stock Not Available!!!');
+                    return false;
+                } else {
+                    quantityInput.val(newQuantity);
+                    updateSubtotal(id, newQuantity);
                 }
             });
-        }
-    });
-</script>
+
+            $(document).on('click', '.dec', function(e) {
+                e.preventDefault();
+                let id = $(this).data('id');
+                let quantityInput = $('.quantity-value[data-id="' + id + '"]');
+                let newQuantity = parseInt(quantityInput.val()) - 1;
+                if (newQuantity >= 1) {
+                    quantityInput.val(newQuantity);
+                    updateSubtotal(id, newQuantity);
+                }
+            });
+
+            $(document).on('click', '.remove-item', function(e) {
+                e.preventDefault();
+                let id = $(this).data('id');
+                $(this).closest('tr').remove();
+                updateSubtotal(id, 0);
+            });
+
+            // Add event listener for the "Update" button
+            $(document).on('click', '.update-cart', function(e) {
+                e.preventDefault();
+                let id = $(this).data('id');
+                let quantityInput = $('.quantity-value[data-id="' + id + '"]');
+                let newQuantity = parseInt(quantityInput.val());
+
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('front.cart.update', ['id' => '__id__']) }}'.replace('__id__',
+                        id),
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        quantity: newQuantity
+                    },
+                    success: function(response) {
+                        // Update subtotal
+                        let subtotal = response.totalAmount.toFixed(2);
+                        $('#subtotal-' + id).text(subtotal);
+
+                        // Update total amount
+                        $('#total-amount').text(response.totalAmount.toFixed(2));
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        // Handle error response, if needed
+                    }
+                });
+            });
+
+            function updateSubtotal(id, quantity) {
+                let price = parseFloat($('#subtotal-' + id).data('price'));
+                let subtotal = price * quantity;
+                $('#subtotal-' + id).text(subtotal.toFixed(2));
+                updateCart(id, quantity);
+            }
+
+            function updateTotalAmount() {
+                let totalAmount = 0;
+                $('.subtotal').each(function() {
+                    totalAmount += parseFloat($(this).text());
+                });
+                $('#total-amount').text(totalAmount.toFixed(2));
+            }
+
+            function updateCart(id, quantity) {
+                $.ajax({
+                    type: 'POST',
+                    url: '{{ route('front.cart.update', ['id' => '__id__']) }}'.replace('__id__', id),
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        quantity: quantity
+                    },
+                    success: function(response) {
+                        window.location.reload();
+                        // Handle success response, if needed
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        // Handle error response, if needed
+                    }
+                });
+            }
+        });
+    </script>
 
 
 

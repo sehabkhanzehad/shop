@@ -1,5 +1,11 @@
 @php
     $feateuredCategories = \App\Models\FeaturedCategory::with('category')->orderBy('serial', 'DESC')->get();
+    $footer = DB::table('footers')->first();
+    $sLinks = DB::table('footer_social_links')->get();
+    $custom_pages = DB::table('custom_pages')->where('status', 1)->get();
+    $paymentv = DB::table('banner_images')->where('id', 16)->first();
+    $deliveryp = DB::table('banner_images')->where('id', 17)->first();
+    $sLink =DB::table('footer_social_links')->where('id', 5)->first();
 @endphp
 
 <header>
@@ -210,18 +216,19 @@
                                                     aria-hidden="true"></i></div>
                                         </li>
 
-                                        <li>
-                                            <a href="#" class="dark-menu-item">Home</a>
-
-                                        </li>
-                                        <li>
-                                            <a href="#" class="dark-menu-item">About Us</a>
-                                        </li>
-
 
                                         <li>
-                                            <a href="#" class="dark-menu-item">Review</a>
+                                            <a href="{{ route('front.home') }}" class="dark-menu-item">Home</a>
+
                                         </li>
+
+                                        @foreach ($custom_pages as $pages)
+                                        <li>
+                                            <a class="dark-menu-item" href="{{ route('front.customPages', $pages->slug) }}">{{ $pages->page_name }}</a>
+                                        </li>
+                                         @endforeach
+
+
                                         {{-- <li>
                                             <a href="#" class="dark-menu-item">Coming Soon</a>
                                         </li> --}}
@@ -238,9 +245,9 @@
                                         </li>
                                         <!--blog-meu end-->
 
-                                        <li>
+                                        {{-- <li>
                                             <a href="#" class="dark-menu-item">Contact</a>
-                                        </li>
+                                        </li> --}}
                                     </ul>
                                 </nav>
                             </div>
