@@ -1,3 +1,9 @@
+
+@php
+    $trendingProduct = \App\Models\Product::orderBy('sold_qty', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->first();
+@endphp
 <!DOCTYPE html>
 <html lang="en">
 @include('frontend2.components.layout.head')
@@ -511,14 +517,34 @@
     <!-- notification product -->
     <div class="product-notification" id="dismiss">
         <span onclick="dismiss();" class="close" aria-hidden="true">×</span>
-        <div class="media">
-            <img class="mr-2" src="{{ asset('assets') }}/images/layout-1/product/5.jpg"
-                alt="Generic placeholder image">
-            <div class="media-body">
-                <h5 class="mt-0 mb-1">Latest trending</h5>
-                Cras sit amet nibh libero, in gravida nulla.
+        <a href="{{ route('front.product.show', [$product->id]) }}">
+            <div class="media">
+                <img class="mr-2" src="{{ asset('uploads/custom-images2/' . $product->thumb_image) }}"
+                    alt="Generic placeholder image">
+                <div class="media-body">
+                    <h5 class="mt-0 mb-1">Latest trending</h5>{{ $product->name }}
+                    <br>
+                    @if (empty($sale->product->offer_price))
+                    <div class="price">
+                        <div class="price">
+                            ৳ {{ $sale->product->price }}
+                        </div>
+                    </div>
+                @else
+                    <div class="check-price">
+                        ৳ {{ $sale->product->price }}
+                    </div>
+                    <div class="price">
+                        <div class="price">
+                            ৳ {{ $sale->product->offer_price }}
+                        </div>
+                    </div>
+                @endif
+                </div>
+
+
             </div>
-        </div>
+        </a>
     </div>
     <!-- notification product -->
 

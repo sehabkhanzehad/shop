@@ -64,6 +64,13 @@ class HomeController extends Controller
 
         $cart = session()->get('cart', []);
 
+
+        $trendingProduct = Product::orderBy('sold_qty', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+
+
         // return view('frontend.home.index', compact(
         return view('frontend2.pages.index', compact(
             'slider',
@@ -82,7 +89,8 @@ class HomeController extends Controller
             'popularCats',
             'popularProducts',
             'offer',
-            'home_bottom_settings'
+            'home_bottom_settings',
+            'trendingProduct'
         ));
     }
 
