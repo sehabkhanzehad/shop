@@ -57,7 +57,7 @@ $(document).on("click", ".quickView", async function () {
 
 async function filluUpQuickView(id) {
     showLoader();
-    const respons = await axios.get("get/product/details", {
+    const respons = await axios.get("/get/product/details", {
         params: {
             productId: id,
         },

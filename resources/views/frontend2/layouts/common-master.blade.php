@@ -173,61 +173,161 @@
 
     <!-- Quick-view modal popup start-->
     <div class="modal fade bd-example-modal-lg theme-modal" id="quickViewModal" tabindex="-1" role="dialog"
-        aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content quick-view-modal">
-                <div class="modal-body">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <div class="row">
-                        <div class="col-lg-6 col-xs-12">
-                            <div class="quick-view-img"><img id="quickViewImage" alt="quick" class="img-fluid ">
-                            </div>
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content quick-view-modal">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <div class="row">
+                    <div class="col-lg-6 col-xs-12">
+                        <div class="quick-view-img"><img id="quickViewImage" alt="quick" class="img-fluid ">
                         </div>
-                        <div class="col-lg-6 rtl-text">
-                            <div class="product-right">
-                                <h2 id="productName"></h2>
-                                <h3 id="productPrice"></h3>
-                                <ul class="color-variant">
-                                    <li class="bg-light0"></li>
-                                    <li class="bg-light1"></li>
-                                    <li class="bg-light2"></li>
-                                </ul>
-                                <div class="border-product">
-                                    <h6 class="product-title">product details</h6>
-                                    <p id="ProductDetails"></p>
+                    </div>
+                    <div class="col-lg-6 rtl-text">
+                        <div class="product-right">
+                            <h2 id="productName"></h2>
+                            <h3 id="productPrice"></h3>
+
+                            {{-- <ul class="color-variant">
+                                <li class="bg-light0"></li>
+                                <li class="bg-light1"></li>
+                                <li class="bg-light2"></li>
+                            </ul> --}}
+                            <div class="border-product">
+                                <h6 class="product-title">product details</h6>
+                                <p id="ProductDetails"></p>
+                            </div>
+
+                            {{-- <div class="product-description border-product">
+                                <div class="size-box">
+                                    <ul>
+                                        <li class="active"><a href="#">s</a></li>
+                                        <li><a href="#">m</a></li>
+                                        <li><a href="#">l</a></li>
+                                        <li><a href="#">xl</a></li>
+                                    </ul>
                                 </div>
-                                <div class="product-description border-product">
-                                    <div class="size-box">
-                                        <ul>
-                                            <li class="active"><a href="#">s</a></li>
-                                            <li><a href="#">m</a></li>
-                                            <li><a href="#">l</a></li>
-                                            <li><a href="#">xl</a></li>
-                                        </ul>
+                                <h6 class="product-title">quantity</h6>
+                                <div class="qty-box">
+                                    <div class="input-group"><span class="input-group-prepend"><button
+                                                type="button" class="btn quantity-left-minus" data-type="minus"
+                                                data-field=""><i class="ti-angle-left"></i></button> </span>
+                                        <input type="text" name="quantity" class="form-control input-number"
+                                            value="1"> <span class="input-group-prepend"><button
+                                                type="button" class="btn quantity-right-plus" data-type="plus"
+                                                data-field=""><i class="ti-angle-right"></i></button></span>
                                     </div>
-                                    <h6 class="product-title">quantity</h6>
-                                    <div class="qty-box">
-                                        <div class="input-group"><span class="input-group-prepend"><button
-                                                    type="button" class="btn quantity-left-minus" data-type="minus"
-                                                    data-field=""><i class="ti-angle-left"></i></button> </span>
-                                            <input type="text" name="quantity" class="form-control input-number"
-                                                value="1"> <span class="input-group-prepend"><button type="button"
-                                                    class="btn quantity-right-plus" data-type="plus" data-field=""><i
-                                                        class="ti-angle-right"></i></button></span>
+                                </div>
+                            </div>
+                            --}}
+                            <div class="product-buttons">
+                                {{-- <a href="#" class="btn btn-normal">add to cart</a> --}}
+                                <a id="viewDetails" class="btn btn-normal">view detail</a>
+                            </div>
+
+                            {{-- <form action="{{ route('front.cart.store') }}" method="POST" class="cart_form_home">
+                                <div class="modal-body">
+                                    <p id="test_for"></p>
+                                    <p id="selected_color"></p>
+                                    <div class="variable_info">
+
+                                        <div class="size-box">
+                                            <ul id="sizes" class="sizes">
+                                                @foreach ($product->variations as $v)
+                                                    @if (!empty($v->size->title))
+                                                        <span data-proid="{{ $v->product_id }}"
+                                                            data-varprice="{{ $v->sell_price }}"
+                                                            data-varsize="{{ $v->size->title }}"
+                                                            value="{{ $v->id }}"
+                                                            data-varSizeId="{{ $v->size_id }}">
+                                                            @if ($v->size->title == 'free')
+                                                                <li class="size"><a>{{ $v->size->title }}</a>
+                                                                </li>
+                                                                <input type="hidden" id="size_value"
+                                                                    name="variation_id">
+                                                                <input type="hidden" id="size_variation_id"
+                                                                    name="size_variation_id">
+                                                                <input type="hidden" name="pro_price"
+                                                                    id="pro_price">
+                                                                <input type="hidden" name="variation_size_id"
+                                                                    id="variation_size_id">
+                                                            @else
+                                                                <li class="size"><a>{{ $v->size->title }}</a>
+                                                                </li>
+                                                                <input type="hidden" id="size_value"
+                                                                    name="variation_id">
+                                                                <input type="hidden" id="size_variation_id"
+                                                                    name="size_variation_id">
+                                                                <input type="hidden" name="pro_price"
+                                                                    id="pro_price">
+                                                                <input type="hidden" name="variation_size_id"
+                                                                    id="variation_size_id">
+                                                            @endif
+                                                        </span>
+                                                    @endif
+                                                @endforeach
+                                            </ul>
+                                        </div>
+
+
+                                        <div class="colors" id="colors">
+                                            @if (!empty($product->prod_color == 'varcolor'))
+                                                @foreach ($product->colorVariations as $v)
+                                                    @if (!empty($v->color->code))
+                                                        <div class="color"
+                                                            style="background: {{ $v->color->code }}"
+                                                            data-proid="{{ $v->product_id }}"
+                                                            data-colorid="{{ $v->color_id }}"
+                                                            data-varcolor="{{ $v->color->name }}"
+                                                            value="{{ $v->id }}"
+                                                            data-variationColorId="{{ $v->color_id }}">
+                                                            <input type="hidden" id="color_val" name="color_id">
+                                                            <!--<img src="{{ asset($v->var_images) }}" width="50px" height="50px" /> -->
+                                                            <input type="hidden" id="color_value"
+                                                                name="variationColor_id">
+                                                            <input type="hidden" id="variation_color_id"
+                                                                name="variation_color_id">
+                                                        </div>
+                                                    @else
+                                                        Color Not Available
+                                                    @endif
+                                                @endforeach
+                                            @else
+                                                <input type="hidden" id="variation_color" name="variation_color"
+                                                    value="default">
+                                                <input type="hidden" id="variation_color_id"
+                                                    name="variation_color_id" value="1">
+                                            @endif
                                         </div>
                                     </div>
+                                    <input type="hidden" name="id">
+                                    <input type="hidden" name="variation_id">
+                                    <input type="hidden" name="variation_size">
+                                    <input type="hidden" name="variation_size_id">
+                                    <input type="hidden" name="variation_price">
+                                    <input type="hidden" name="variation_color">
+                                    <input type="hidden" name="variation_color_id">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <input type="hidden" name="type" value="variable">
+                                    <input type="hidden" name="pro_img">
                                 </div>
-                                <div class="product-buttons"><a href="#" class="btn btn-normal">add to cart</a>
-                                    <a href="#" class="btn btn-normal">view detail</a>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">ক্লোজ</button>
+                                    <button type="submit"
+                                        class="btn btn-primary">{{ BanglaText('cart_add') }}</button>
+                                    <button type="button"
+                                        class="btn btn-primary do_order">{{ BanglaText('order') }}</button>
                                 </div>
-                            </div>
+                            </form> --}}
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
     <!-- Quick-view modal popup end-->
 
 
@@ -415,29 +515,30 @@
     <!-- notification product -->
     <div class="product-notification" id="dismiss">
         <span onclick="dismiss();" class="close" aria-hidden="true">×</span>
-        <a href="{{ route('front.product.show', [$product->id]) }}">
+        <a href="{{ route('front.product.show', [$trendingProduct->id]) }}">
             <div class="media">
-                <img class="mr-2" src="{{ asset('uploads/custom-images2/' . $product->thumb_image) }}"
+                <img class="mr-2" src="{{ asset('uploads/custom-images2/' . $trendingProduct->thumb_image) }}"
                     alt="Generic placeholder image">
                 <div class="media-body">
-                    <h5 class="mt-0 mb-1">Latest trending</h5>{{ $product->name }}
+                    <h5 class="mt-0 mb-1">Latest trending</h5>{{ $trendingProduct->name }}
                     <br>
-                    @if (empty($product->offer_price))
+                    @if (empty($trendingProduct->offer_price))
+                    <div class="price">
                         <div class="price">
-                            <div class="price">
-                                ৳ {{ $product->price }}
-                            </div>
+                            ৳ {{ $trendingProduct->price }}
                         </div>
-                    @else
+                    </div>
+                @else
+                    <div class="check-price">
+                        ৳ {{ $trendingProduct->price }}
+                    </div>
+                    <div class="price">
                         <div class="price">
-                            <div class="price">
-                                ৳ {{ $product->offer_price }}
-                            </div>
+                            ৳ {{ $trendingProduct->offer_price }}
                         </div>
-                    @endif
+                    </div>
+                @endif
                 </div>
-
-
             </div>
         </a>
     </div>

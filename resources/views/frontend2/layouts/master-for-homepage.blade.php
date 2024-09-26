@@ -517,26 +517,26 @@
     <!-- notification product -->
     <div class="product-notification" id="dismiss">
         <span onclick="dismiss();" class="close" aria-hidden="true">×</span>
-        <a href="{{ route('front.product.show', [$product->id]) }}">
+        <a href="{{ route('front.product.show', [$trendingProduct->id]) }}">
             <div class="media">
-                <img class="mr-2" src="{{ asset('uploads/custom-images2/' . $product->thumb_image) }}"
+                <img class="mr-2" src="{{ asset('uploads/custom-images2/' . $trendingProduct->thumb_image) }}"
                     alt="Generic placeholder image">
                 <div class="media-body">
-                    <h5 class="mt-0 mb-1">Latest trending</h5>{{ $product->name }}
+                    <h5 class="mt-0 mb-1">Latest trending</h5>{{ $trendingProduct->name }}
                     <br>
-                    @if (empty($sale->product->offer_price))
+                    @if (empty($trendingProduct->offer_price))
                     <div class="price">
                         <div class="price">
-                            ৳ {{ $sale->product->price }}
+                            ৳ {{ $trendingProduct->price }}
                         </div>
                     </div>
                 @else
                     <div class="check-price">
-                        ৳ {{ $sale->product->price }}
+                        ৳ {{ $trendingProduct->price }}
                     </div>
                     <div class="price">
                         <div class="price">
-                            ৳ {{ $sale->product->offer_price }}
+                            ৳ {{ $trendingProduct->offer_price }}
                         </div>
                     </div>
                 @endif
