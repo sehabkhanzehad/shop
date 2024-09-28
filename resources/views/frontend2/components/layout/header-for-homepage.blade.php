@@ -74,7 +74,7 @@
                     <div class="main-menu-block">
 
                         <div class="menu-left">
-                            {{-- <div class="sm-nav-block">
+                            <div class="sm-nav-block">
                                 <span class="sm-nav-btn"><i class="fa fa-bars"></i></span>
                                 <ul class="nav-slide">
                                     <li>
@@ -82,7 +82,15 @@
                                             back <i class="fa fa-angle-right pl-2"></i>
                                         </div>
                                     </li>
-                                    <li><a href="#">western ware</a></li>
+
+                                    @foreach ($feateuredCategories as $item)
+                                    <li><a href="{{ route('front.subcategory', [
+                                                'type' => 'subcategory',
+                                                'slug' => $item->category->slug,
+                                            ]) }}">{{ $item->category->name }}</a>
+                                    </li>
+                                    @endforeach
+                                    {{-- <li><a href="#">western ware</a></li>
                                     <li><a href="#">TV, Appliances</a></li>
                                     <li><a href="#">Pets Products</a></li>
                                     <li><a href="#">Car, Motorbike</a></li>
@@ -108,9 +116,9 @@
                                             <i class="fa fa-angle-down pro-down"></i>
                                             <i class="fa fa-angle-up pro-up"></i>
                                         </a>
-                                    </li>
+                                    </li> --}}
                                 </ul>
-                            </div> --}}
+                            </div>
 
                             <div class="brand-logo">
                                 <a href="{{ route('front.home') }}">
@@ -147,13 +155,7 @@
 
                                         <!--blog-meu start-->
                                         <li>
-                                            <a href="">blog</a>
-                                            <ul>
-                                                <li><a href="blog(left-sidebar).html">left sidebar</a></li>
-                                                <li><a href="blog(right-sidebar).html">right sidebar</a></li>
-                                                <li><a href="blog(no-sidebar).html">no sidebar</a></li>
-                                                <li><a href="blog-details.html">blog details</a></li>
-                                            </ul>
+                                            <a href="{{ route('front.blog.index') }}">Blog</a>
                                         </li>
                                         <!--blog-meu end-->
 

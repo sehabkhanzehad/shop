@@ -11,10 +11,11 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use  Image;
 use File;
-use Auth;
+// use Auth;
+use Illuminate\Support\Facades\Auth;
 class BlogController extends Controller
 {
-    
+
     public function index()
     {
         $blogs = Blog::with('category','comments')->get();

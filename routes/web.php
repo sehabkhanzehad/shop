@@ -99,6 +99,7 @@ use App\Http\Controllers\WEB\Seller\Auth\SellerForgotPasswordController;
 
 //Frontend
 use App\Http\Controllers\WEB\Frontend\Auth\AuthController as FrontAuthController;
+use App\Http\Controllers\WEB\Frontend\Blog\BlogController as BlogBlogController;
 use App\Http\Controllers\WEB\Frontend\HomeController as FrontHomeController;
 use App\Http\Controllers\WEB\Frontend\ProductController as FrontProductController;
 use App\Http\Controllers\WEB\Frontend\CartController as FrontCartController;
@@ -473,18 +474,19 @@ Route::group(['middleware' => ['demo', 'XSS']], function () {
         Route::resource('terms-and-condition', TermsAndConditionController::class);
 
         Route::resource('privacy-policy', PrivacyPolicyController::class);
-
-        Route::resource('blog-category', BlogCategoryController::class);
+        // Blog Routes Start
+        Route::resource('blog-category', BlogCategoryController::class); // Add
         Route::put('blog-category-status/{id}', [BlogCategoryController::class, 'changeStatus'])->name('blog.category.status');
 
-        Route::resource('blog', BlogController::class);
+        Route::resource('blog', BlogController::class); // Add
         Route::put('blog-status/{id}', [BlogController::class, 'changeStatus'])->name('blog.status');
 
-        Route::resource('popular-blog', PopularBlogController::class);
+        Route::resource('popular-blog', PopularBlogController::class); // Add
         Route::put('popular-blog-status/{id}', [PopularBlogController::class, 'changeStatus'])->name('popular-blog.status');
 
-        Route::resource('blog-comment', BlogCommentController::class);
+        Route::resource('blog-comment', BlogCommentController::class); // Add
         Route::put('blog-comment-status/{id}', [BlogCommentController::class, 'changeStatus'])->name('blog-comment.status');
+        // Blog Routes End
 
         Route::get('clear-database', [SettingController::class, 'showClearDatabasePage'])->name('clear-database');
         Route::delete('clear-database', [SettingController::class, 'clearDatabase'])->name('clear-database');
@@ -826,22 +828,13 @@ Auth::routes();
 
 
 
-
-
-
 Route::group(['as' => 'front.'], function () {
-
 
     Route::middleware(['FrontUser'])->group(function () {
         Route::get("/user-profile", [FrontUserController::class, 'profile'])->name('profile');
         // Route::get("/profile-edit", [FrontUserController::class, 'profileEdit'])->name('profile-edit');
         Route::get("/dashboard", [FrontUserController::class, 'dashboard'])->name('dashboard');
     });
-
-
-
-
-
 
     Route::controller(FrontHomeController::class)->group(function () {
         Route::get('/', 'index')->name('home');
@@ -891,7 +884,6 @@ Route::group(['as' => 'front.'], function () {
     Route::post('/store/landing/data', [FrontCheckoutController::class, 'storelandData'])->name('storelandData');
 
 
-
     Route::resource('order', FrontOrderController::class);
 
     Route::get('order-list/{phone}', [FrontOrderController::class, 'order_list'])->name('order-list');
@@ -912,5 +904,13 @@ Route::group(['as' => 'front.'], function () {
     Route::prefix('front')->group(function () {
         Route::get('state-by-country/{id}', [FrontCheckoutController::class, 'stateByCountry'])->name('state-by-country');
         Route::get('city-by-state/{id}', [FrontCheckoutController::class, 'cityByState'])->name('city-by-state');
+    });
+
+    Route::prefix("blog")->group(function () {
+        Route::get("/", [BlogBlogController::class, "index"])->name("blog.index");
+        Route::get("/{slug}", [BlogBlogController::class, "show"])->name("blog.show");
+
+        // comments
+        Route::post("/comment", [BlogBlogController::class, "commentStore"])->name("blog.comment");
     });
 });
