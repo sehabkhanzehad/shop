@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\WEB\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\AboutUs;
+use App\Models\CollectionBanner;
 use App\Models\HomeBottomSetting;
 use Illuminate\Http\Request;
 use Image;
@@ -9,7 +10,7 @@ use File;
 
 class AboutUsController extends Controller
 {
-    
+
     public function index()
     {
        if(!auth()->user()->can('homepage-setting')){
@@ -18,7 +19,8 @@ class AboutUsController extends Controller
         $aboutUs = AboutUs::find('1');
         $item = AboutUs::find('2');
         $hbs=HomeBottomSetting::all();
-        return view('admin.about-us',compact('aboutUs', 'item','hbs'));
+        $collectionBanner = CollectionBanner::where("status", true)->get();
+        return view('admin.about-us',compact('aboutUs', 'item','hbs', 'collectionBanner'));
     }
 
     public function update(Request $request, $id)

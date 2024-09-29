@@ -230,22 +230,31 @@ class AuthController extends Controller
     public function login(Request $request)
     {
 
-            // $credentials = $request->validate([
-            //     'email' => ['required', 'email'],
-            //     'password' => ['required'],
-            // ]);
+        //   try {
+        //     $credentials = $request->validate([
+        //         'email' => ['required', 'email'],
+        //         'password' => ['required'],
+        //     ]);
 
-            // if (Auth::attempt($credentials)) {
-            //     return redirect('/admin/dashboard');
-            // }
+        //     if (Auth::attempt($credentials)) {
+        //         // return redirect('/admin/dashboard');
+        //         return response()->json([
+        //             'status' => "success",
+        //             'message' => 'Login Success',
+        //             'url' =>  route("admin.dashboard"),
+        //         ]);
+        //     }
 
-            // return response()->json([
-            //     'status' => false,
-            //     'msg' => 'Invalid credentials',
-            // ], 422);
-
-
-
+        //     return response()->json([
+        //         'status' => "failed",
+        //         'message' => 'Invalid credentials',
+        //     ], 422);
+        //   } catch (\Throwable $th) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => $th->getMessage(),
+        //     ], 422);
+        //   }
 
         try {
             $email = $request->input('email');

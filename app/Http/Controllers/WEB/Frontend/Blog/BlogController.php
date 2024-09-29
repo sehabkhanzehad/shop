@@ -12,7 +12,7 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $blogs = Blog::with('category', 'comments')->get();
+        $blogs = Blog::with('category', 'comments')->latest()->get();
         $recentBlogs = Blog::with('category', 'comments')->latest()->limit(5)->get();
         $popularBlogs = PopularPost::with('blog')->get();
 
@@ -21,8 +21,9 @@ class BlogController extends Controller
             'recentBlogs' => $recentBlogs,
             'popularBlogs' => $popularBlogs
         ]);
-        // return $blogs;
+        // return $popularBlogs[0]->blog->title;
     }
+
 
     public function show($slug)
     {

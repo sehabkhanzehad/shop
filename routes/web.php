@@ -93,6 +93,7 @@ use App\Http\Controllers\User\AddressCotroller;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\FrontUserController;
+use App\Http\Controllers\WEB\Admin\CollectionBannerController;
 use App\Http\Controllers\WEB\Seller\Auth\SellerLoginController;
 use App\Http\Controllers\WEB\Seller\Auth\SellerForgotPasswordController;
 
@@ -459,6 +460,7 @@ Route::group(['middleware' => ['demo', 'XSS']], function () {
         Route::put('service-status/{id}', [ServiceController::class, 'changeStatus'])->name('service.status');
 
         Route::resource('about-us', AboutUsController::class);
+        Route::resource('collection-banner', CollectionBannerController::class);
 
         // Home Bottom Setting
 
@@ -893,7 +895,7 @@ Route::group(['as' => 'front.'], function () {
     Route::controller(FrontAuthController::class)->group(function () {
         Route::get('register-user', 'regpage')->name('user-reg');
         Route::get('/login-user', 'logpage')->name('user-log');
-        Route::post('login', 'login')->name('login');
+        Route::post('/login', 'login')->name('login');
         Route::get('logout', 'logout')->name('logout');
         Route::post('register', 'register')->name('register');
         Route::post('optverify', 'optverify')->name('optverify');

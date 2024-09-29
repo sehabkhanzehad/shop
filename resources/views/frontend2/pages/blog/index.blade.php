@@ -43,7 +43,7 @@
                             <div>
                                  <a href="{{ route('front.blog.show', $blog->slug) }}"><h4>{{ $blog->title  }}</h4> </a>
                                 <ul class="post-social">
-                                    <li>Posted By : Admin Admin</li>
+                                    <li>Posted By : Admin</li>
                                     {{-- <li><i class="fa fa-heart"></i> 5 Hits</li> --}}
                                     <li><i class="fa fa-comments"></i> {{ $blog->comments->count() }}</li>
                                 </ul>
@@ -85,17 +85,17 @@
                             <li>
                                 <div class="media">
                                     @php
-                                        $date = $blog->created_at;
+                                        $date = $blog->blog->created_at;
                                         $day = $date->format('d');
                                         $month = $date->format('M');
                                     @endphp
                                     <div class="blog-date"><span>{{ $day }}</span><span>{{ $month }}</span></div>
                                     <div class="media-body align-self-center">
-                                        <h6><a href="{{ route('front.blog.show', $blog->slug) }}">{{ str_limit($blog->title, 2) }}</a></h6>
-                                        <p><i class="fa fa-comments"></i> {{ $blog->comments->count() }}</p>
+                                        <h6><a href="{{ route('front.blog.show', $blog->blog->slug) }}">{{ $blog->blog->title }}</a></h6>
+                                        <p><i class="fa fa-comments"></i> {{ $blog->blog->comments->count() }}</p>
                                     </div>
                                 </div>
-                                <p>{{ $blog->seo_description }}</p>
+                                <p style="text-align: justify">{{ $blog->blog->seo_description }}</p>
                             </li>
                             @endforeach
 

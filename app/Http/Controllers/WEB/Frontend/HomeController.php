@@ -10,7 +10,9 @@ use App\Models\SubCategory;
 use App\Models\Product;
 use App\Models\Brand;
 use App\Models\AboutUs;
+use App\Models\Blog;
 use App\Models\ChildCategory;
+use App\Models\CollectionBanner;
 use App\Models\FlashSaleProduct;
 use App\Models\FooterLink;
 use App\Models\Footer;
@@ -69,6 +71,12 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
+        $collectionBanners = CollectionBanner::where('status', 1)->get();
+        $collectionBanner1 = CollectionBanner::where('status', 1)->first();
+        $collectionBanner2 = CollectionBanner::where('status', 1)->skip(1)->first();
+        $collectionBanner3 = CollectionBanner::where('status', 1)->skip(2)->first();
+
+        $latestBlogs = Blog::with('category', 'comments')->latest()->limit(5)->get();
 
 
         // return view('frontend.home.index', compact(
@@ -90,7 +98,13 @@ class HomeController extends Controller
             'popularProducts',
             'offer',
             'home_bottom_settings',
-            'trendingProduct'
+            'trendingProduct',
+            'collectionBanner1',
+            'collectionBanner2',
+            'collectionBanner3',
+            'collectionBanners',
+            'latestBlogs'
+
         ));
     }
 
