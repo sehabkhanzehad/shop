@@ -106,6 +106,7 @@ use App\Http\Controllers\WEB\Frontend\ProductController as FrontProductControlle
 use App\Http\Controllers\WEB\Frontend\CartController as FrontCartController;
 use App\Http\Controllers\WEB\Frontend\CheckoutController as FrontCheckoutController;
 use App\Http\Controllers\WEB\Frontend\OrderController as FrontOrderController;
+use App\Http\Controllers\WEB\Frontend\WishlistController;
 
 Route::get('/clear-cache', function () {
     \Artisan::call('cache:clear');
@@ -831,13 +832,6 @@ Auth::routes();
 
 
 Route::group(['as' => 'front.'], function () {
-
-    Route::middleware(['FrontUser'])->group(function () {
-        Route::get("/user-profile", [FrontUserController::class, 'profile'])->name('profile');
-        // Route::get("/profile-edit", [FrontUserController::class, 'profileEdit'])->name('profile-edit');
-        Route::get("/dashboard", [FrontUserController::class, 'dashboard'])->name('dashboard');
-    });
-
     Route::controller(FrontHomeController::class)->group(function () {
         Route::get('/', 'index')->name('home');
         Route::get('/flash-selling-product', 'flashSellProducts')->name('flash-sell');
@@ -915,4 +909,17 @@ Route::group(['as' => 'front.'], function () {
         // comments
         Route::post("/comment", [BlogBlogController::class, "commentStore"])->name("blog.comment");
     });
+
+
+    Route::middleware(['FrontUser'])->group(function () {
+        Route::get("/user-profile", [FrontUserController::class, 'profile'])->name('profile');
+        // Route::get("/profile-edit", [FrontUserController::class, 'profileEdit'])->name('profile-edit');
+        Route::get("/dashboard", [FrontUserController::class, 'dashboard'])->name('dashboard');
+
+
+        // Wishlist
+        Route::get("/wishlist", [WishlistController::class, "index"])->name("wishlist.index");
+        Route::post("/wishlist", [WishlistController::class, "store"])->name("wishlist.store");
+    });
+
 });

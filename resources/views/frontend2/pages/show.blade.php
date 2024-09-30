@@ -143,7 +143,6 @@
 
                                 @if ($product->type == 'variable')
                                     <h6 id="select_size">Select Size : </h6>
-                                @else
                                 @endif
 
                                 @if ($product->type == 'variable')

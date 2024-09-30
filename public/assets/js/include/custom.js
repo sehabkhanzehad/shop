@@ -40,20 +40,10 @@ async function login() {
 }
 
 $(document).on("click", ".quickView", async function () {
-    // cursoor make pointer
-
     let product_id = $(this).data("product_id");
     await filluUpQuickView(product_id);
     $("#quickViewModal").modal("show");
 });
-
-// $quickView = document.querySelectorAll(".quickView");
-// $quickView.forEach((element) => {
-//     element.addEventListener("click", function() {
-//         let product_id = element.getAttribute("data-product_id");
-//         alert(product_id);
-//     });
-// });
 
 async function filluUpQuickView(id) {
     showLoader();
@@ -63,12 +53,6 @@ async function filluUpQuickView(id) {
         },
     });
     hideLoader();
-    // src="{{ asset('assets') }}/images/layout-1/product/a4.jpg"
-
-    // document.getElementById('quickViewImage').src = "{{ asset('assets') }}/images/layout-1/product/" + respons.data.data.thumb_image;
-
-    // document.getElementById("productName").innerHTML = respons.data.data.name;
-    // show name in 30 character
     let name = respons.data.data.name;
     document.getElementById("productName").innerHTML =
         name.length > 30 ? name.substring(0, 30) + "..." : name;
@@ -86,14 +70,163 @@ async function filluUpQuickView(id) {
 
     document.getElementById("ProductDetails").innerHTML =
         respons.data.data.long_description;
-   document.getElementById("viewDetails").href = "/product/" + id;
-
+    document.getElementById("viewDetails").href = "/product/" + id;
 }
 
 $(document).on("click", "#viewDetails", function () {
     $("#quickViewModal").modal("hide");
 });
 
+$(document).on("click", ".openWishlist", async function () {
+    let productId = $(this).data("wish_pro_id");
+    await filluUpWishList(productId);
+    $("#wishlistModal").modal("show");
+});
+
+async function filluUpWishList(productId) {
+    showLoader();
+    const respons = await axios.get("/get/product/details", {
+        params: {
+            productId: productId,
+        },
+    });
+    hideLoader();
+    let name = respons.data.data.name;
+    document.getElementById("wishProductName").innerHTML =
+        name.length > 30 ? name.substring(0, 30) + "..." : name;
+    document.getElementById("wishlistImage").src =
+        "/uploads/custom-images2/" + respons.data.data.thumb_image;
+    document.getElementById("wishProductId").value = productId;
+    let price = respons.data.data.price;
+    let offer_price = respons.data.data.offer_price;
+
+    if (offer_price == null) {
+        document.getElementById("wishProductPrice").innerHTML = "৳ " + price;
+    } else {
+        document.getElementById("wishProductPrice").innerHTML =
+            "৳ " + offer_price;
+    }
+
+    document.getElementById("wishProductDetails").innerHTML =
+        respons.data.data.long_description;
+    document.getElementById("wishViewDetails").href = "/product/" + productId;
+
+    //  @if ($product->type == 'variable')
+    //     <h6 id="select_size">Select Size : </h6>
+    //     @endif
+
+    //     @if ($product->type == 'variable')
+
+    //         @if (count($product->variations))
+    //             <div class="size-box">
+    //                 <ul id="sizes" class="sizes">
+    //                     @foreach ($product->variations as $v)
+    //                         @if (!empty($v->size->title))
+    //                             <span data-proid="{{ $v->product_id }}"
+    //                                 data-varprice="{{ $v->sell_price }}"
+    //                                 data-varsize="{{ $v->size->title }}"
+    //                                 value="{{ $v->id }}"
+    //                                 data-varSizeId="{{ $v->size_id }}">
+    //                                 @if ($v->size->title == 'free')
+    //                                     <li class="size"><a>{{ $v->size->title }}</a></li>
+    //                                     <input type="hidden" id="size_value" name="variation_id">
+
+    //                                     <input type="hidden" id="size_variation_id"
+    //                                         name="size_variation_id">
+
+    //                                     <input type="hidden" name="pro_price" id="pro_price">
+    //                                     <input type="hidden" name="variation_size_id"
+    //                                         id="variation_size_id">
+    //                                 @else
+    //                                     <li class="size"><a>{{ $v->size->title }}</a></li>
+    //                                     <input type="hidden" id="size_value" name="variation_id">
+    //                                     <input type="hidden" id="size_variation_id"
+    //                                         name="size_variation_id">
+    //                                     <input type="hidden" name="pro_price" id="pro_price">
+    //                                     <input type="hidden" name="variation_size_id"
+    //                                         id="variation_size_id">
+    //                                 @endif
+    //                             </span>
+    //                         @else
+    //                             Size Not Available
+    //                         @endif
+    //                     @endforeach
+    //                 </ul>
+    //             </div>
+    //         @else
+    //             <input type="hidden" id="size_value" name="variation_id" value="free">
+    //             <input type="hidden" name="variation_size_id" id="variation_size_id"
+    //                 value="1">
+    //         @endif
+    //     @else
+    //         <input type="hidden" id="size_value" name="variation_id" value="free">
+    //         <input type="hidden" name="variation_size_id" id="variation_size_id"
+    //             value="1">
+    //     @endif
+
+    //     <div class="product-description border-product">
+    //     <div class="size-box">
+    //         <ul>
+    //             <li class="active"><a href="#">s</a></li>
+    //             <li><a href="#">m</a></li>
+    //             <li><a href="#">l</a></li>
+    //             <li><a href="#">xl</a></li>
+    //         </ul>
+    //     </div>
+    //    <h6 class="product-title">quantity</h6>
+    //        <div class="qty-box">
+    //         <div class="input-group"><span class="input-group-prepend"><button
+    //                     type="button" class="btn quantity-left-minus" data-type="minus"
+    //                     data-field=""><i class="ti-angle-left"></i></button> </span>
+    //             <input type="text" name="quantity" class="form-control input-number"
+    //                 value="1"> <span class="input-group-prepend"><button
+    //                     type="button" class="btn quantity-right-plus" data-type="plus"
+    //                     data-field=""><i class="ti-angle-right"></i></button></span>
+    //         </div>
+    //     </div>
+    // </div>
+
+    // const wishProductStock = document.getElementById("wishProductStock");
+    // const isVariable = respons.data.data.type;
+
+    // if(isVariable == "variable"){
+    //     wishProductStock.innerHTML = `<h6 id="select_size">Select Size : </h6>`;
+    // }
+    // if(isVariable == "variable"){
+    //     wishProductStock.innerHTML = `<h6 id="select_size">Select Size : </h6>`;
+    // }
+}
+
+$(document).on("click", ".addWishList", async function () {
+    let productId = document.getElementById("wishProductId").value;
+    let userId = document.getElementById("wishUserId").value;
+
+    if (userId == "0") {
+        showLoader();
+        errorToast("Please login or register first.");
+        $("#wishlistModal").modal("hide");
+        hideLoader();
+        setTimeout(() => {
+            window.location.href = "/login-user";
+        }, 1000);
+    } else {
+        showLoader();
+        const respons = await axios.post("/wishlist", {
+            user_id: userId,
+            productId: productId,
+        });
+        hideLoader();
+        if (respons.data.status == "success") {
+            successToast(respons.data.message);
+            $("#wishlistModal").modal("hide");
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            errorToast(respons.data.message);
+        }
+    }
+});
 
 // $(function () {
 //     $(document).on("click", ".add-to-cart", function (e) {
@@ -253,7 +386,6 @@ $("#sizes .size a").on("click", function () {
     $("#size_variation_id").val(value);
     $("#variation_size_id").val(variation_size_id);
 });
-
 
 // $(function () {
 //     $(document).on("click", ".add-to-cart", async function (e) {

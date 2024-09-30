@@ -84,11 +84,12 @@
                                     </li>
 
                                     @foreach ($feateuredCategories as $item)
-                                    <li><a href="{{ route('front.subcategory', [
-                                                'type' => 'subcategory',
-                                                'slug' => $item->category->slug,
-                                            ]) }}">{{ $item->category->name }}</a>
-                                    </li>
+                                        <li><a
+                                                href="{{ route('front.subcategory', [
+                                                    'type' => 'subcategory',
+                                                    'slug' => $item->category->slug,
+                                                ]) }}">{{ $item->category->name }}</a>
+                                        </li>
                                     @endforeach
                                     {{-- <li><a href="#">western ware</a></li>
                                     <li><a href="#">TV, Appliances</a></li>
@@ -144,10 +145,11 @@
                                         </li>
 
                                         @foreach ($custom_pages as $pages)
-                                        <li>
-                                            <a href="{{ route('front.customPages', $pages->slug) }}">{{ $pages->page_name }}</a>
-                                        </li>
-                                         @endforeach
+                                            <li>
+                                                <a
+                                                    href="{{ route('front.customPages', $pages->slug) }}">{{ $pages->page_name }}</a>
+                                            </li>
+                                        @endforeach
 
                                         {{-- <li>
                                             <a href="#">Coming Soon</a>
@@ -191,7 +193,7 @@
                                                             href="{{ route('front.profile') }}">Profile</a></li>
                                                     {{-- <li class="border-bottom"><a href="{{ route("front.dashboard") }}">Dashboard</a></li> --}}
                                                     <li class="border-bottom"><a href="">Order</a></li>
-                                                    <li class="border-bottom"><a href="">Wishlist</a></li>
+                                                    <li class="border-bottom"><a href="{{ route('front.wishlist.index') }}">Wishlist</a></li>
                                                     <li class="border-bottom"><a
                                                             href="{{ route('front.logout') }}">Logout</a></li>
 
@@ -200,13 +202,17 @@
                                         @else
                                             <li class="mobile-user onhover-dropdown" onclick="openAccount()"><a
                                                     style="cursor: pointer"><i class="icon-user"></i></a>
+                                            </li>
                                         @endif
-                                        </li>
-                                        <li class="mobile-wishlist" onclick="openWishlist()">
-                                            <a href="#">
+                                        @php
+                                          $wishlists =  \App\Models\Wishlist::where('user_id', Auth::id())->get();
+                                        @endphp
+                                        {{-- <li class="mobile-wishlist" onclick="openWishlist()"> --}}
+                                        <li class="mobile-wishlist">
+                                            <a href="{{ $wishlists->count() > 0 ? route('front.wishlist.index') : '' }}">
                                                 <i class="icon-heart"></i>
                                                 <div class="cart-item">
-                                                    <div>0 item<span>wishlist</span></div>
+                                                    <div>{{ count($wishlists) }} item<span>wishlist</span></div>
                                                 </div>
                                             </a>
                                         </li>
@@ -282,7 +288,8 @@
                                             @foreach ($feateuredCategories as $item)
                                                 <li> <img
                                                         src="{{ asset('uploads/custom-images2/' . $item->category->image) }}"
-                                                        alt="catergory-product"> <a href="{{ route('front.subcategory', [
+                                                        alt="catergory-product"> <a
+                                                        href="{{ route('front.subcategory', [
                                                             'type' => 'subcategory',
                                                             'slug' => $item->category->slug,
                                                         ]) }}">{{ $item->category->name }}</a>
