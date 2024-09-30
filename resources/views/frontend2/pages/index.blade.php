@@ -1124,7 +1124,8 @@
                                                             {{-- <button onclick="openCart()" type="button">
                                                         <i class="ti-bag"></i>
                                                     </button> --}}
-                                                            <a href="javascript:void(0)" title="Add to Wishlist">
+                                                          
+                                                            <a style="cursor: pointer" class="openWishlist" data-wish_pro_id="{{ $sale->product->id }}" title="Add to Wishlist">
                                                                 <i class="ti-heart" aria-hidden="true"></i>
                                                             </a>
                                                             <a style="cursor: pointer" id="" class="quickView"
