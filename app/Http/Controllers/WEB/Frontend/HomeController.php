@@ -71,12 +71,75 @@ class HomeController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
+        $onSale = Product::orderBy('sold_qty', 'desc')
+            ->get();
+        $hotDeals = Product::with("gallery")->selectRaw('*, (price - offer_price) as diff')
+            ->orderBy('diff', 'desc')->limit(3)->get();
+
+
+
+        // Step 1: Get the top 3 products with the highest discount percentage
+        $topDiscountedProducts = Product::selectRaw('*, ((price - offer_price) / price) * 100 as discount_percentage')
+            ->where('offer_price', '>', 0)  // Only consider products with an offer price
+            ->orderBy('discount_percentage', 'desc')  // Order by the highest discount percentage
+            ->take(3)  // Limit to top 3 products
+            ->get();
+
+        // Step 2: Find the minimum discount percentage from the top 3 products
+        $minDiscountPercentage = $topDiscountedProducts->min('discount_percentage');
+        // floor
+        $minDiscountPercentage = floor($minDiscountPercentage);
+        // Step 3: Get 3 products that have a discount percentage greater than or equal to the minimum
+        $productsWithMinDiscount = Product::selectRaw('*, ((price - offer_price) / price) * 100 as discount_percentage')
+            ->where('offer_price', '>', 0)
+            ->having('discount_percentage', '>=', $minDiscountPercentage)  // Filter by the minimum discount percentage dynamically
+            ->orderBy('discount_percentage', 'desc')
+            ->take(3)
+            ->get();
+
+        $newProducts = Product::orderBy('created_at', 'desc')->limit(3)->get();
+        $bestSellers = Product::orderBy('sold_qty', 'desc')->limit(3)->get();
+        $hotDeals = Product::selectRaw('*, (price - offer_price) as diff')->orderBy('diff', 'desc')->limit(3)->get();
+        $flashSell3 = FlashSaleProduct::with('product')->limit(3)->where('status', 1)->latest()->get();
+        $flashSell3 = $flashSell3->map(function ($flashSell3) {
+            return $flashSell3->product;
+        });
+
+        $data = [
+            [
+                "title" => "$minDiscountPercentage%+ OFF",
+                "products" => $productsWithMinDiscount,
+            ],
+            [
+                "title" => "New Products",
+                "products" => $newProducts,
+            ],
+            [
+                "title" => "Best Sellers",
+                "products" => $bestSellers,
+            ],
+            [
+                "title" => "Hot Deals",
+                "products" => $hotDeals,
+            ],
+            [
+                "title" => "Flash Sell",
+                "products" => $flashSell3,
+            ],
+        ];
+
+
+
+
+
         $collectionBanners = CollectionBanner::where('status', 1)->get();
         $collectionBanner1 = CollectionBanner::where('status', 1)->first();
         $collectionBanner2 = CollectionBanner::where('status', 1)->skip(1)->first();
         $collectionBanner3 = CollectionBanner::where('status', 1)->skip(2)->first();
 
         $latestBlogs = Blog::with('category', 'comments')->latest()->limit(5)->get();
+
+
 
 
         // return view('frontend.home.index', compact(
@@ -103,7 +166,12 @@ class HomeController extends Controller
             'collectionBanner2',
             'collectionBanner3',
             'collectionBanners',
-            'latestBlogs'
+            'latestBlogs',
+            'hotDeals',
+            'onSale',
+            'newProducts',
+            'data'
+
 
         ));
     }
