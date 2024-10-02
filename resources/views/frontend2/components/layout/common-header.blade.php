@@ -123,7 +123,7 @@
                         </ul>
                     </div>
                     <div class="logo-block">
-                        <a href="{{ route('front.home') }}"><img src="{{ asset(siteInfo()->logo) }}" class="img-fluid  "
+                        <a href="{{ route('front.home') }}"><img height="60" width="120" src="{{ asset(siteInfo()->logo) }}" class="img-fluid  "
                                 alt="logo"></a>
                     </div>
 

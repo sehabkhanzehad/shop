@@ -124,7 +124,7 @@
                             <div class="brand-logo">
                                 <a href="{{ route('front.home') }}">
                                     {{-- <img src="{{ asset('assets') }}/images/layout-1/logo/logo.png" class="img-fluid  " alt="logo-header"> --}}
-                                    <img src="{{ asset(siteInfo()->logo) }}" class="img-fluid  " alt="logo-header">
+                                    <img height="60" width="120" src="{{ asset(siteInfo()->logo) }}" class="img-fluid  " alt="logo-header">
                                 </a>
                             </div>
                         </div>
