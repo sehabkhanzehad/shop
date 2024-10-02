@@ -95,7 +95,7 @@
                     <div class="col-lg-3 col-md-12 ">
                         <div class="logo-block">
                             <a href="{{ route('front.home') }}">
-                                <img src="{{ asset(siteInfo()->logo) }}" class="img-fluid  " alt="logo">
+                                <img width="120" height="60" src="{{ asset(siteInfo()->logo) }}" class="img-fluid  " alt="logo">
                             </a>
                         </div>
                     </div>
