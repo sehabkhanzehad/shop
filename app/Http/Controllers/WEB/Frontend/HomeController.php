@@ -19,6 +19,7 @@ use App\Models\Footer;
 use App\Models\HomeBottomSetting;
 use DB;
 use App\Models\CustomPage;
+use App\Models\Testimonial;
 
 class HomeController extends Controller
 {
@@ -134,6 +135,8 @@ class HomeController extends Controller
         $collectionBanner3 = CollectionBanner::where('status', 1)->skip(2)->first();
 
         $latestBlogs = Blog::with('category', 'comments')->latest()->limit(5)->get();
+        $testimonials = Testimonial::all();
+
 
         // return view('frontend.home.index', compact(
         return view('frontend2.pages.index', compact(
@@ -163,7 +166,8 @@ class HomeController extends Controller
             'hotDeals',
             'onSale',
             'newProducts',
-            'data'
+            'data',
+            'testimonials',
 
 
         ));
