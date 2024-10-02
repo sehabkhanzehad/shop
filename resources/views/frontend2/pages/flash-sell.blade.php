@@ -9,9 +9,9 @@
                         <div>
                             <h2>Flash Sell</h2>
                             <ul>
-                                <li><a href="{{ route("front.home") }}">home</a></li>
+                                <li><a href="{{ route('front.home') }}">home</a></li>
                                 <li><i class="fa fa-angle-double-right"></i></li>
-                                <li><a href="{{ route("front.flash-sell") }}">Flash Sell</a></li>
+                                <li><a href="{{ route('front.flash-sell') }}">Flash Sell</a></li>
                             </ul>
                         </div>
                     </div>
@@ -35,29 +35,32 @@
                                 <div class="product-imgbox">
                                     <a href="{{ route('front.product.show', [$product->product->id]) }}">
 
-                                    <div class="product-front">
-                                        <img src="{{ asset('uploads/custom-images2/' . $product->product->thumb_image) }}"
-                                            class="img-fluid" alt="product">
-                                    </div>
-                                    <div class="product-back">
-                                        <img src="{{ asset('uploads/custom-images2/' . $product->product->thumb_image) }}"
-                                            class="img-fluid" alt="product">
-                                    </div>
+                                        <div class="product-front">
+                                            <img src="{{ asset('uploads/custom-images2/' . $product->product->thumb_image) }}"
+                                                class="img-fluid" alt="product">
+                                        </div>
+                                        <div class="product-back">
+                                            <img src="{{ asset('uploads/custom-images2/' . $product->product->thumb_image) }}"
+                                                class="img-fluid" alt="product">
+                                        </div>
                                     </a>
-                                    {{-- <div class="product-icon">
-                                        <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
+                                    <div class="product-icon">
+                                        {{-- <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
                                             <i class="ti-bag"></i>
-                                        </button>
-                                        <a href="javascript:void(0)" title="Add to Wishlist">
+                                        </button> --}}
+                                        <a style="cursor: pointer" class="openWishlist"
+                                            data-wish_pro_id="{{ $product->product->id }}" title="Add to Wishlist">
                                             <i class="ti-heart" aria-hidden="true"></i>
                                         </a>
-                                        <a href="#" data-toggle="modal" data-target="#quick-view" title="Quick View">
-                                            <i class="ti-search" aria-hidden="true"></i>
+                                        <a style="cursor: pointer" id="" class="quickView" title="Quick View"
+                                            data-product_id="{{ $product->product->id }}"> <i class="ti-search"
+                                                aria-hidden="true"></i>
                                         </a>
-                                        <a href="compare.html" title="Compare">
+
+                                        {{-- <a href="compare.html" title="Compare">
                                             <i class="fa fa-exchange" aria-hidden="true"></i>
-                                        </a>
-                                    </div> --}}
+                                        </a> --}}
+                                    </div>
 
                                     @if ($product->product->is_free_shipping > 0)
                                         <div class="new-label">

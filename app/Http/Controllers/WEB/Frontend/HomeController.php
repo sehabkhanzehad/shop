@@ -128,19 +128,12 @@ class HomeController extends Controller
             ],
         ];
 
-
-
-
-
         $collectionBanners = CollectionBanner::where('status', 1)->get();
         $collectionBanner1 = CollectionBanner::where('status', 1)->first();
         $collectionBanner2 = CollectionBanner::where('status', 1)->skip(1)->first();
         $collectionBanner3 = CollectionBanner::where('status', 1)->skip(2)->first();
 
         $latestBlogs = Blog::with('category', 'comments')->latest()->limit(5)->get();
-
-
-
 
         // return view('frontend.home.index', compact(
         return view('frontend2.pages.index', compact(
@@ -175,7 +168,6 @@ class HomeController extends Controller
 
         ));
     }
-
     public function showProModal()
     {
         $productId = request()->productId;

@@ -65,18 +65,20 @@
                                         </div>
                                     </div>
                                     <div class="icon-detail">
-                                        <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
+                                        {{-- <button data-toggle="modal" data-target="#addtocart" title="Add to cart">
                                             <i class="ti-bag"></i>
-                                        </button>
-                                        <a href="javascript:void(0)" title="Add to Wishlist">
+                                        </button> --}}
+                                        <a style="cursor: pointer" class="openWishlist"
+                                            data-wish_pro_id="{{ $product->id }}" title="Add to Wishlist">
                                             <i class="ti-heart" aria-hidden="true"></i>
                                         </a>
-                                        <a href="#" data-toggle="modal" data-target="#quick-view" title="Quick View">
-                                            <i class="ti-search" aria-hidden="true"></i>
+                                        <a style="cursor: pointer" id="" class="quickView" title="Quick View"
+                                            data-product_id="{{ $product->id }}"> <i class="ti-search"
+                                                aria-hidden="true"></i>
                                         </a>
-                                        <a href="compare.html" title="Compare">
+                                        {{-- <a href="compare.html" title="Compare">
                                             <i class="fa fa-exchange" aria-hidden="true"></i>
-                                        </a>
+                                        </a> --}}
                                     </div>
                                 </div>
                             </div>

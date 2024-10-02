@@ -49,6 +49,7 @@
                                                         <th>#</th>
                                                         <th>Brand</th>
                                                         <th>Title</th>
+                                                        <th>Discount Text</th>
                                                         <th>Image</th>
                                                         <th>Link</th>
                                                         <th>Action</th>
@@ -61,6 +62,7 @@
                                                             <td>{{ $key + 1 }}</td>
                                                             <td>{{ $item->brand }}</td>
                                                             <td>{{ $item->title }}</td>
+                                                            <td>{{ $item->discount_text }}</td>
                                                             <td>
                                                                 <img src="{{ asset($item->image) }}" alt="image" width="80px" height="80px" class="image img-fluid">
                                                             </td>

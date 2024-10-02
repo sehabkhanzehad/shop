@@ -29,12 +29,13 @@ class CollectionBannerController extends Controller
         $item = CollectionBanner::where('status', 1)->get();
 
         // if item is less than 3 then only add the collection
-        if ($item->count() < 3) {
+        if ($item->count() < 10) {
             CollectionBanner::create([
                 'brand' => $request->input('brand'),
                 'title' => $request->input('title'),
                 'url' => $request->input('url'),
                 'image' => $imagePath,
+                'discount_text' => $request->input('discount_text'),
             ]);
 
             return redirect()->route('admin.about-us.index')->with('success', 'Collection Banner Added Successfully!');
@@ -70,6 +71,7 @@ class CollectionBannerController extends Controller
                 'title' => $request->input('title'),
                 'url' => $request->input('url'),
                 'image' => $imagePath,
+                'discount_text' => $request->input('discount_text'),
             ]);
             return redirect()->route('admin.about-us.index')->with('updated', 'Collection Banner Updated Successfully!');
         } else {
@@ -78,6 +80,7 @@ class CollectionBannerController extends Controller
                 'brand' => $request->input('brand'),
                 'title' => $request->input('title'),
                 'url' => $request->input('url'),
+                'discount_text' => $request->input('discount_text'),
             ]);
             return redirect()->route('admin.about-us.index')->with('updated', 'Collection Banner Updated Successfully!');
         }

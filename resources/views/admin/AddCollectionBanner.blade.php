@@ -30,7 +30,7 @@
                                         </div>
 
                                         <div class="form-group col-12">
-                                            <label for="">Brand</label>
+                                            <label for="">Brand/Category</label>
                                             <input  type="text" name="brand" class="form-control"
                                                 value="">
                                         </div>
@@ -38,6 +38,11 @@
                                         <div class="form-group col-12">
                                             <label for="">Title</label>
                                             <input  type="text" name="title" class="form-control"
+                                                value="">
+                                        </div>
+                                        <div class="form-group col-12">
+                                            <label for="">Discount Text</label>
+                                            <input  type="text" name="discount_text" class="form-control"
                                                 value="">
                                         </div>
                                         <div class="form-group col-12">
