@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\WEB\Admin\UserController;
 use App\Http\Controllers\WEB\Admin\DashboardController;
@@ -109,11 +110,11 @@ use App\Http\Controllers\WEB\Frontend\OrderController as FrontOrderController;
 use App\Http\Controllers\WEB\Frontend\WishlistController;
 
 Route::get('/clear-cache', function () {
-    \Artisan::call('cache:clear');
-    \Artisan::call('route:clear');
-    \Artisan::call('view:clear');
-    \Artisan::call('config:clear');
-    dd("Application all cached has been cleared!");
+    Artisan::call('cache:clear');
+    Artisan::call('route:clear');
+    Artisan::call('view:clear');
+    Artisan::call('config:clear');
+    return "Application all cached has been cleared!";
 });
 
 Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
@@ -922,5 +923,4 @@ Route::group(['as' => 'front.'], function () {
         Route::post("/wishlist", [WishlistController::class, "store"])->name("wishlist.store");
         Route::post("/wishlist/delete", [WishlistController::class, "deleteWish"])->name("wishlist.delete");
     });
-
 });
