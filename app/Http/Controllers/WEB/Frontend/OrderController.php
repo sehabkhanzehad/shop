@@ -11,7 +11,8 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::with('orderProducts')->where('user_id', Auth::id())->latest()->get();
+        $user = Auth::user();
+        $orders = Order::with('orderProducts')->where('order_phone', $user->phone)->latest()->get();
 // dd($orders);
         return view('frontend2.pages.order-history', compact('orders'));
     }

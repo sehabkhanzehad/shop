@@ -192,8 +192,8 @@
                                                     <li class="border-top border-bottom"><a
                                                             href="{{ route('front.profile') }}">Profile</a></li>
                                                     {{-- <li class="border-bottom"><a href="{{ route("front.dashboard") }}">Dashboard</a></li> --}}
-                                                    <li class="border-bottom"><a href="">Order</a></li>
-                                                    <li class="border-bottom"><a href="{{ route('front.wishlist.index') }}">Wishlist</a></li>
+                                                    <li class="border-bottom"><a href="{{ route("front.order.index") }}">Order</a></li>
+                                                    {{-- <li class="border-bottom"><a href="{{ route('front.wishlist.index') }}">Wishlist</a></li> --}}
                                                     <li class="border-bottom"><a
                                                             href="{{ route('front.logout') }}">Logout</a></li>
 
@@ -204,18 +204,18 @@
                                                     style="cursor: pointer"><i class="icon-user"></i></a>
                                             </li>
                                         @endif
-                                        @php
+                                        {{-- @php
                                           $wishlists =  \App\Models\Wishlist::where('user_id', Auth::id())->get();
-                                        @endphp
+                                        @endphp --}}
                                         {{-- <li class="mobile-wishlist" onclick="openWishlist()"> --}}
-                                        <li class="mobile-wishlist">
+                                        {{-- <li class="mobile-wishlist">
                                             <a href="{{ $wishlists->count() > 0 ? route('front.wishlist.index') : '' }}">
                                                 <i class="icon-heart"></i>
                                                 <div class="cart-item">
                                                     <div>{{ count($wishlists) }} item<span>wishlist</span></div>
                                                 </div>
                                             </a>
-                                        </li>
+                                        </li> --}}
                                         <li class="mobile-search"><a href="#"><i class="icon-search"></i></a>
                                             <div class ="search-overlay">
                                                 <div>

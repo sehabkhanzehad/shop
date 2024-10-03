@@ -279,7 +279,7 @@
                                         <div class="row">
                                             <div class="col-lg-12 col-12 mb-3 form-floating">
                                                 <input type="text" class="form-control shadow-none"
-                                                    name="shipping_name" id="name" value=""
+                                                    name="shipping_name" id="name" value="{{ Auth::check() ? Auth::user()->name : "" }}"
                                                     placeholder="Name">
                                                 {{-- <label for="name" class="ps-4">{{ BanglaText('name') }}</label> --}}
                                             </div>
@@ -292,7 +292,7 @@
 
                                             <div class="col-lg-12 col-12 mb-3 form-floating">
                                                 <input type="tel" class="form-control shadow-none" maxlength="11"
-                                                    minlength="11" name="order_phone" value="" id="phone"
+                                                    minlength="11" name="order_phone" value="{{ Auth::check() ? Auth::user()->phone : "" }}" id="phone"
                                                     placeholder="Enter Phone Number" aria-describedby="phone-help">
                                                 {{-- <label for="phone" class="ps-4">
                                                     {{ BanglaText('mobile') }}

@@ -134,11 +134,19 @@ class CheckoutController extends Controller
           	'ip_address' => '',
         ]);
 
-        $user = User::create([
-          'name' => $request->shipping_name,
-          'phone' => $request->order_phone,
-          'address' => $request->shipping_address
-        ]);
+        $phone = $request->order_phone;
+
+        if(User::where('phone', $phone)->exists()){
+            $user = User::where('phone', $phone)->first();
+        } else{
+            $user = User::create([
+                'name' => $request->shipping_name,
+                'phone' => $request->order_phone,
+                'address' => $request->shipping_address
+              ]);
+
+        }
+
 
         // $user = Auth::user();
         // if(empty($user))
