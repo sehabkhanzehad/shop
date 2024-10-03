@@ -279,7 +279,7 @@
                                                 <li class="border-top border-bottom"><a
                                                         href="{{ route('front.profile') }}">Profile</a></li>
                                                 {{-- <li class="border-bottom"><a href="{{ route("front.dashboard") }}">Dashboard</a></li> --}}
-                                                <li class="border-bottom"><a href="">Order</a></li>
+                                                <li class="border-bottom"><a href="{{ route("front.order.index") }}">Order</a></li>
                                                 {{-- <li class="border-bottom"><a href="{{ route('front.wishlist.index') }}">Wishlist</a></li> --}}
                                                 <li class="border-bottom"><a
                                                         href="{{ route('front.logout') }}">Logout</a></li>
