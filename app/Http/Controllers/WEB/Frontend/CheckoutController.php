@@ -43,7 +43,6 @@ class CheckoutController extends Controller
         $this->bkash_password = $bkash->password;
         $this->bkash_app_key = $bkash->app_key;
         $this->bkash_app_secret = $bkash->app_secret;
-
     }
 
     public function index()
@@ -53,9 +52,9 @@ class CheckoutController extends Controller
         // return $cart;
 
         $totalPrice = 0;
-            foreach ($cart as $item) {
-                $totalPrice += $item['price'] * $item['quantity'];
-            }
+        foreach ($cart as $item) {
+            $totalPrice += $item['price'] * $item['quantity'];
+        }
 
         if (count($cart) <= 0) {
             return redirect()->route('front.home');
@@ -65,9 +64,9 @@ class CheckoutController extends Controller
         $countries = Country::select('id', 'name')->orderBy('name')->get();
         $shippings = Shipping::with('city')->orderBy('id', 'asc')->get();
         $setting = Setting::first();
-        $bkash_payment =  BkashPayment::firstWhere(['status'=>1]);
-        $ssl_payment =  SslcommerzPayment::firstWhere(['status'=>1]);
-        return view('frontend2.pages.checkout', compact('cart', 'countries', 'user', 'shippings', 'setting', 'bkash_payment', 'ssl_payment','totalPrice'));
+        $bkash_payment =  BkashPayment::firstWhere(['status' => 1]);
+        $ssl_payment =  SslcommerzPayment::firstWhere(['status' => 1]);
+        return view('frontend2.pages.checkout', compact('cart', 'countries', 'user', 'shippings', 'setting', 'bkash_payment', 'ssl_payment', 'totalPrice'));
     }
 
     public function checkoutsing($product_id)
@@ -78,9 +77,9 @@ class CheckoutController extends Controller
         $cart = [$product_id => [
             'name' => $product->name,
             'price' => $product->price,
-          	'variation_color_id' => $product->variation_color_id,
-          	'variation_color_id' => $item['variation_color_id'],
-             'variation' => $item['variation'],
+            'variation_color_id' => $product->variation_color_id,
+            'variation_color_id' => $item['variation_color_id'],
+            'variation' => $item['variation'],
             'quantity' => 1, // Assuming you want to add only 1 quantity
             // Other product details
         ]];
@@ -92,23 +91,6 @@ class CheckoutController extends Controller
         return view('frontend.cart.index', compact('cart', 'countries', 'user', 'shippings', 'setting'));
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // public function create()
-    // {
-
-    // }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $inputs = $request->validate([
@@ -131,20 +113,19 @@ class CheckoutController extends Controller
             'payment_method' => 'required',
             'shipping_method' => 'required',
             'transection_id' => '',
-          	'ip_address' => '',
+            'ip_address' => '',
         ]);
 
         $phone = $request->order_phone;
 
-        if(User::where('phone', $phone)->exists()){
+        if (User::where('phone', $phone)->exists()) {
             $user = User::where('phone', $phone)->first();
-        } else{
+        } else {
             $user = User::create([
                 'name' => $request->shipping_name,
                 'phone' => $request->order_phone,
                 'address' => $request->shipping_address
-              ]);
-
+            ]);
         }
 
 
@@ -158,13 +139,12 @@ class CheckoutController extends Controller
         //     ]);
         // }
 
-        if(!$user->email)
-        {
-            $user->email = $user->name."_".rand(111111,999999)."@gmail.com";
+        if (!$user->email) {
+            $user->email = $user->name . "_" . rand(111111, 999999) . "@gmail.com";
             $user->save();
         }
 
-        $data['user_id']=$user->id;
+        $data['user_id'] = $user->id;
         $shipping_id = $inputs['shipping_method'];
         $couponCode = isset($coupon['code']) ? $coupon['code'] : null;
         $lastOrder = Order::latest()->first();
@@ -186,8 +166,8 @@ class CheckoutController extends Controller
         $data = [];
         $data['order_id'] = $newOrderNumber;
         $data['user_id'] =  $user->id;
-      	$data['order_phone'] = $user->phone;
-      	$data['ip_address'] =  $request->ip_address;
+        $data['order_phone'] = $user->phone;
+        $data['ip_address'] =  $request->ip_address;
         $data['product_qty'] = cartTotalAmount()['total_qty'];
 
         // $data['payment_method'] = 'cash_on_delivery';
@@ -206,42 +186,37 @@ class CheckoutController extends Controller
 
         // Order Assign Among Users Start
 
-        $assign_user_id=1;
-        $users=User::whereHas('roles', function($query){
-                          $query->where('roles.name','Employee');
-                        })->where('active_status',1)
-                        ->select('id')
-                        ->pluck('id')->toArray();
+        $assign_user_id = 1;
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('roles.name', 'Employee');
+        })->where('active_status', 1)
+            ->select('id')
+            ->pluck('id')->toArray();
 
-        $ordering=count($users)-1;
-        if(count($users)==1){
-            $assign_user_id=$users[0];
+        $ordering = count($users) - 1;
+        if (count($users) == 1) {
+            $assign_user_id = $users[0];
             $data['assign_user_id'] = $assign_user_id;
-        }else if($ordering>0){
-            $order=Order::latest()->take($ordering)->get()->pluck('assign_user_id')->toArray();
+        } else if ($ordering > 0) {
+            $order = Order::latest()->take($ordering)->get()->pluck('assign_user_id')->toArray();
 
             $output = array_merge(array_diff($order, $users), array_diff($users, $order));
 
-            if(!empty($output)){
-                $assign_user_id=$output[0];
+            if (!empty($output)) {
+                $assign_user_id = $output[0];
+                $data['assign_user_id'] = $assign_user_id;
+            } else {
                 $data['assign_user_id'] = $assign_user_id;
             }
-
-            else {
-                $data['assign_user_id'] = $assign_user_id;
-            }
-
         }
 
         // Order Assign Among Users End.
-        try{
+        try {
             DB::beginTransaction();
             $order = Order::create($data);
-            if($order)
-            {
+            if ($order) {
                 $cart = session()->get('cart', []);
-                foreach($cart as $key => $item)
-                {
+                foreach ($cart as $key => $item) {
                     $unit_price = $item['price'];
 
                     $orderProduct = OrderProduct::create([
@@ -250,21 +225,21 @@ class CheckoutController extends Controller
                         'seller_id' => 0,
                         'product_name' => $item['name'],
                         'product_image' => $item['image'],
-                      	'variation_color_id' => $item['variation_color'],
-                      	'variation' =>  $item['variation_size'],
-                      	'size_id'=>$item['variation_size_id'],
-                      	'color_id'=>$item['variation_color_id'],
+                        'variation_color_id' => $item['variation_color'],
+                        'variation' =>  $item['variation_size'],
+                        'size_id' => $item['variation_size_id'],
+                        'color_id' => $item['variation_color_id'],
                         'unit_price' => $unit_price,
                         'total_discount' => (int)$item['quantity'] * (int)$item['discount_price'],
                         'qty' => $item['quantity']
                     ]);
 
                     // dd($orderProduct);
-                       $single_product = Product::find($item['product_id']);
-                       $single_product->sold_qty = $single_product->sold_qty + $item['quantity'];
-                       $single_product->qty = $single_product->qty - $item['quantity'];
-                       $single_product->save();
-                    }
+                    $single_product = Product::find($item['product_id']);
+                    $single_product->sold_qty = $single_product->sold_qty + $item['quantity'];
+                    $single_product->qty = $single_product->qty - $item['quantity'];
+                    $single_product->save();
+                }
 
                 $order->orderAddress()->create([
                     'billing_name' =>  $request->billing_name,
@@ -287,28 +262,24 @@ class CheckoutController extends Controller
                     'shipping_method' => $request->shipping_method,
                     'transection_id' => $request->transection_id,
                 ]);
-                foreach($cart as $key => $item)
-                {
+                foreach ($cart as $key => $item) {
 
-                // dd($item['quantity']);
-                if($item['variation_color_id'] > 0 || $item['variation_size_id'] > 0)
-                {
-                    $chekckVarSingle = Product::where('id',  $item['product_id'])->first();
+                    // dd($item['quantity']);
+                    if ($item['variation_color_id'] > 0 || $item['variation_size_id'] > 0) {
+                        $chekckVarSingle = Product::where('id',  $item['product_id'])->first();
 
-                    $stockCheck = ProductStock::where('color_id', $item['variation_color_id'])->where('size_id', $item['variation_size_id'])->where('product_id', $item['product_id'])->first();
-                    // dd( $stockCheck->quantity);
-                    $ultimate_stock = $stockCheck->quantity - $item['quantity'];
-                    $stockCheck->update([
-                        'quantity'=> $ultimate_stock,
-                    ]);
-                }
-
-                else{
+                        $stockCheck = ProductStock::where('color_id', $item['variation_color_id'])->where('size_id', $item['variation_size_id'])->where('product_id', $item['product_id'])->first();
+                        // dd( $stockCheck->quantity);
+                        $ultimate_stock = $stockCheck->quantity - $item['quantity'];
+                        $stockCheck->update([
+                            'quantity' => $ultimate_stock,
+                        ]);
+                    } else {
                         $chekckVarSingle = Product::where('id',  $item['product_id'])->first();
                         $stockCheck = ProductStock::where('color_id', 1)->where('size_id', 1)->where('product_id', $item['product_id'])->first();
                         $ultimate_stock = $stockCheck->quantity - $item['quantity'];
                         $stockCheck->update([
-                            'quantity'=> $ultimate_stock,
+                            'quantity' => $ultimate_stock,
                         ]);
                     }
                 }
@@ -317,45 +288,35 @@ class CheckoutController extends Controller
             DB::commit();
             session()->put('cart', []);
             session()->put('coupon', []);
-
-        }catch(\Exception $e)
-        {
+        } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
                 'status' => false,
                 'msg' => $e->getMessage(),
             ]);
         }
-        if($request->payment_method == 'cash_on_delivery')
-        {
+        if ($request->payment_method == 'cash_on_delivery') {
             return response()->json([
                 'status' => true,
                 'msg' => 'Order placed successfully',
                 'url' => route('front.order-thanks-page', $user->phone),
-                'invoiceId'=>$order->id
+                'invoiceId' => $order->id
             ], 200);
-        }
-        else if($request->payment_method == 'ssl_commerz')
-        {
-           return response()->json([
+        } else if ($request->payment_method == 'ssl_commerz') {
+            return response()->json([
                 'status' => true,
-                'msg' => 'Please complete your SSLCommerz payment!',
+                'msg' => 'Order placed successfully! Please complete payment!',
                 'url' => route('user.checkout.sslcommerz-web-view')
             ], 200);
-        }
-        else if($request->payment_method == 'bkash')
-        {
-           return response()->json([
+        } else if ($request->payment_method == 'bkash') {
+            return response()->json([
                 'status' => true,
                 'msg' => 'Order placed successfully! Please complete your bkash payment!',
                 'url' => route('user.checkout.bkash-url-pay')
             ], 200);
-        }
-
-        else{
+        } else {
             dd($request->all());
         }
-
     }
 
     public function storelandData(Request $request)
@@ -388,8 +349,7 @@ class CheckoutController extends Controller
 
         $user = Auth::user();
 
-        if($user == null)
-        {
+        if ($user == null) {
             $user = User::create([
                 'name'  =>   $inputs['shipping_name'],
                 // 'email'  =>   $inputs['shipping_email'],
@@ -401,12 +361,12 @@ class CheckoutController extends Controller
 
         $checkinguser = User::where('phone', $inputs['shipping_phone'])->first();
 
-        if($checkinguser == null) {
+        if ($checkinguser == null) {
 
-                   $ord_phn = $user->phone;
-                } else {
-                   $ord_phn = $checkinguser->phone;
-                }
+            $ord_phn = $user->phone;
+        } else {
+            $ord_phn = $checkinguser->phone;
+        }
 
         $shipping_rule = Shipping::find($inputs['shipping_method'])->shipping_rule;
         $shipping_id = $inputs['shipping_method'];
@@ -437,51 +397,47 @@ class CheckoutController extends Controller
 
         // Order Assign Among Users Start
 
-        $assign_user_id=1;
-        $users=User::whereHas('roles', function($query){
-                          $query->where('roles.name','Employee');
-                        })->where('active_status',1)
-                        ->select('id')
-                        ->pluck('id')->toArray();
+        $assign_user_id = 1;
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('roles.name', 'Employee');
+        })->where('active_status', 1)
+            ->select('id')
+            ->pluck('id')->toArray();
 
-        $ordering=count($users)-1;
-        if(count($users)==1){
-            $assign_user_id=$users[0];
-        }else if($ordering>0){
-            $order=Order::latest()->take($ordering)->get()->pluck('assign_user_id')->toArray();
+        $ordering = count($users) - 1;
+        if (count($users) == 1) {
+            $assign_user_id = $users[0];
+        } else if ($ordering > 0) {
+            $order = Order::latest()->take($ordering)->get()->pluck('assign_user_id')->toArray();
 
             $output = array_merge(array_diff($order, $users), array_diff($users, $order));
 
-            if(!empty($output)){
-                $assign_user_id=$output[0];
+            if (!empty($output)) {
+                $assign_user_id = $output[0];
+                $data['assign_user_id'] = $assign_user_id;
+            } else {
                 $data['assign_user_id'] = $assign_user_id;
             }
-
-            else {
-                $data['assign_user_id'] = $assign_user_id;
-            }
-
         }
 
 
         // Order Assign Among Users End.
-        try{
+        try {
             DB::beginTransaction();
             $order = Order::create($data);
-            if($order)
-            {
+            if ($order) {
 
                 $cart = session()->get('cart', []);
-                    $orderProduct = OrderProduct::create([
-                        'order_id' => $order->id,
-                        'product_id' => $request->product_id,
-                        'seller_id' => 0,
-                        'product_name' => $request['product_name'],
-                        'unit_price' => $request['price'],
-                        'qty' => $request->product_qty,
-                        'variation_color_id' => $request->variation_color,
-                        'variation' => $request->variation_size
-                    ]);
+                $orderProduct = OrderProduct::create([
+                    'order_id' => $order->id,
+                    'product_id' => $request->product_id,
+                    'seller_id' => 0,
+                    'product_name' => $request['product_name'],
+                    'unit_price' => $request['price'],
+                    'qty' => $request->product_qty,
+                    'variation_color_id' => $request->variation_color,
+                    'variation' => $request->variation_size
+                ]);
 
 
 
@@ -511,7 +467,6 @@ class CheckoutController extends Controller
                     'shipping_method' => $request->shipping_method,
                     'transection_id' => $request->transection_id,
                 ]);
-
             }
 
             DB::commit();
@@ -522,18 +477,15 @@ class CheckoutController extends Controller
             return response()->json([
                 'success' => true,
                 'msg' => 'Order placed successfully',
-                'url' => route('front.order-thanks-page',$ord_phn)
+                'url' => route('front.order-thanks-page', $ord_phn)
             ], 200);
-
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             DB::rollback();
             return response()->json([
                 'status' => false,
                 'msg' => $e->getMessage(),
             ]);
         }
-
-
     }
 
     /**
@@ -581,34 +533,32 @@ class CheckoutController extends Controller
         //
     }
 
-    public function stateByCountry($id){
+    public function stateByCountry($id)
+    {
         $states = CountryState::where(['status' => 1, 'country_id' => $id])->get();
         $html = "<option value=''>Please Select One</option>";
-        foreach($states as $state)
-        {
-            $html .= "<option value='".$state->id."'>".$state->name."</option>";
+        foreach ($states as $state) {
+            $html .= "<option value='" . $state->id . "'>" . $state->name . "</option>";
         }
-        return response()->json(['states'=>$states, 'html' => $html]);
+        return response()->json(['states' => $states, 'html' => $html]);
     }
 
-    public function cityByState($id){
+    public function cityByState($id)
+    {
         $cities = City::where(['status' => 1, 'country_state_id' => $id])->get();
         $html = "<option value=''>Please Select One</option>";
-        foreach($cities as $city)
-        {
-            $html .= "<option value='".$city->id."'>".$city->name."</option>";
+        foreach ($cities as $city) {
+            $html .= "<option value='" . $city->id . "'>" . $city->name . "</option>";
         }
 
-        return response()->json(['cities'=>$cities, 'html' => $html]);
+        return response()->json(['cities' => $cities, 'html' => $html]);
     }
 
     public function calculateCartTotal(
         $user,
         $request_coupon,
         $request_shipping_method_id
-    )
-
-    {
+    ) {
         $total_price = 0;
         $coupon_price = 0;
         $shipping_fee = 0;
@@ -619,7 +569,7 @@ class CheckoutController extends Controller
         if (count($cart) == 0) {
             $notification = trans("Your shopping cart is empty");
 
-            return response()->json(["status"=>false, "msg" => $notification]);
+            return response()->json(["status" => false, "msg" => $notification]);
         }
 
         foreach ($cart as $index => $cartProduct) {
@@ -627,14 +577,13 @@ class CheckoutController extends Controller
 
             if (!empty($cartProduct['check_variation'])) {
 
-                    $item = ProductVariant::where('product_id', $cartProduct['product_id'])->where('size_id', $cartProduct['variation_size_id'])->first();
+                $item = ProductVariant::where('product_id', $cartProduct['product_id'])->where('size_id', $cartProduct['variation_size_id'])->first();
 
-                    if ($item) {
-                        $variantPrice = $item->sell_price;
-                    }
-                } else {
-
+                if ($item) {
+                    $variantPrice = $item->sell_price;
                 }
+            } else {
+            }
 
             $product = Product::select(
                 "id",
@@ -670,7 +619,6 @@ class CheckoutController extends Controller
 
             $price = $price * $cartProduct['quantity'];
             $total_price += $price;
-
         }
 
 
@@ -702,7 +650,6 @@ class CheckoutController extends Controller
                     }
                 }
             }
-
         }
 
         $shipping = Shipping::find($request_shipping_method_id);
@@ -736,29 +683,28 @@ class CheckoutController extends Controller
         $arr["shipping_fee"] = $shipping_fee;
         $arr["shipping"] = $shipping;
         return $arr;
-}
-
-    public function storeOrder()
-    {
-
     }
 
+    public function storeOrder() {}
+
     //Bkash Payment
-     public function authHeaders(){
+    public function authHeaders()
+    {
         return array(
             'Content-Type:application/json',
-            'Authorization:' .Session::get('bkash_token'),
-            'X-APP-Key:'.$this->bkash_app_key,
+            'Authorization:' . Session::get('bkash_token'),
+            'X-APP-Key:' . $this->bkash_app_key,
         );
     }
 
-    public function curlWithBody($url,$header,$method,$body_data_json){
-        $curl = curl_init($this->base_url.$url);
-        curl_setopt($curl,CURLOPT_HTTPHEADER, $header);
-        curl_setopt($curl,CURLOPT_CUSTOMREQUEST, $method);
-        curl_setopt($curl,CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl,CURLOPT_POSTFIELDS, $body_data_json);
-        curl_setopt($curl,CURLOPT_FOLLOWLOCATION, 1);
+    public function curlWithBody($url, $header, $method, $body_data_json)
+    {
+        $curl = curl_init($this->base_url . $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $body_data_json);
+        curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($curl, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
         $response = curl_exec($curl);
         curl_close($curl);
@@ -768,16 +714,16 @@ class CheckoutController extends Controller
     public function grant()
     {
         $header = array(
-                'Content-Type:application/json',
-                'username:'.$this->bkash_username,
-                'password:'.$this->bkash_password,
-                );
-        $header_data_json=json_encode($header);
+            'Content-Type:application/json',
+            'username:' . $this->bkash_username,
+            'password:' . $this->bkash_password,
+        );
+        $header_data_json = json_encode($header);
 
-        $body_data = array('app_key'=> $this->bkash_app_key, 'app_secret'=>$this->bkash_app_secret);
-        $body_data_json=json_encode($body_data);
+        $body_data = array('app_key' => $this->bkash_app_key, 'app_secret' => $this->bkash_app_secret);
+        $body_data_json = json_encode($body_data);
 
-        $response = $this->curlWithBody('/tokenized/checkout/token/grant',$header,'POST',$body_data_json);
+        $response = $this->curlWithBody('/tokenized/checkout/token/grant', $header, 'POST', $body_data_json);
 
         $token = json_decode($response)->id_token;
 
@@ -797,7 +743,7 @@ class CheckoutController extends Controller
         $token = $this->grant();
         Session::put('bkash_token', $token);
 
-        $header =$this->authHeaders();
+        $header = $this->authHeaders();
 
         $body_data = array(
             'mode' => '0011',
@@ -808,8 +754,8 @@ class CheckoutController extends Controller
             'intent' => 'sale',
             'merchantInvoiceNumber' => Session::get('invoice_number')
         );
-        $body_data_json=json_encode($body_data);
-        $response = $this->curlWithBody('/tokenized/checkout/create',$header,'POST',$body_data_json);
+        $body_data_json = json_encode($body_data);
+        $response = $this->curlWithBody('/tokenized/checkout/create', $header, 'POST', $body_data_json);
         // dd($response);
         Session::forget('paymentID');
         Session::forget(['total_order_amount', 'invoice_number']);
@@ -821,28 +767,28 @@ class CheckoutController extends Controller
     public function execute($paymentID)
     {
 
-        $header =$this->authHeaders();
+        $header = $this->authHeaders();
 
         $body_data = array(
             'paymentID' => $paymentID
         );
-        $body_data_json=json_encode($body_data);
+        $body_data_json = json_encode($body_data);
 
-        $response = $this->curlWithBody('/tokenized/checkout/execute',$header,'POST',$body_data_json);
+        $response = $this->curlWithBody('/tokenized/checkout/execute', $header, 'POST', $body_data_json);
         return $response;
     }
 
     public function query($paymentID)
     {
 
-        $header =$this->authHeaders();
+        $header = $this->authHeaders();
 
         $body_data = array(
             'paymentID' => $paymentID,
         );
-        $body_data_json=json_encode($body_data);
+        $body_data_json = json_encode($body_data);
 
-        $response = $this->curlWithBody('/tokenized/checkout/payment/status',$header,'POST',$body_data_json);
+        $response = $this->curlWithBody('/tokenized/checkout/payment/status', $header, 'POST', $body_data_json);
         return $response;
     }
 
@@ -850,43 +796,36 @@ class CheckoutController extends Controller
     {
         $allRequest = $request->all();
         // dd($allRequest);
-        if(isset($allRequest['status']) && $allRequest['status'] == 'failure'){
+        if (isset($allRequest['status']) && $allRequest['status'] == 'failure') {
             return view('CheckoutURL.fail')->with([
                 'response' => 'Payment Failure'
             ]);
-
-        }else if(isset($allRequest['status']) && $allRequest['status'] == 'cancel'){
+        } else if (isset($allRequest['status']) && $allRequest['status'] == 'cancel') {
             return view('CheckoutURL.fail')->with([
                 'response' => 'Payment Cancell'
             ]);
-
-        }else{
+        } else {
 
             $response = $this->execute($allRequest['paymentID']);
 
-            $arr = json_decode($response,true);
+            $arr = json_decode($response, true);
 
-            if(array_key_exists("statusCode",$arr) && $arr['statusCode'] != '0000')
-            {
+            if (array_key_exists("statusCode", $arr) && $arr['statusCode'] != '0000') {
                 return view('CheckoutURL.fail')->with([
                     'statusMessage' => $arr['statusMessage'],
                 ]);
-            }else if(array_key_exists("message",$arr))
-            {
+            } else if (array_key_exists("message", $arr)) {
                 // if execute api failed to response
                 sleep(1);
                 $queryResponse = $this->query($allRequest['paymentID']);
                 // dd($queryResponse);
-                if($queryResponse['transactionStatus'] == 'Completed' && $queryResponse['statusMessage'] == 'Successful')
-                {
-                    try{
-                        $order = Order::firstWhere(['order_id'=>$queryResponse['merchantInvoice']]);
-                        if($order)
-                        {
+                if ($queryResponse['transactionStatus'] == 'Completed' && $queryResponse['statusMessage'] == 'Successful') {
+                    try {
+                        $order = Order::firstWhere(['order_id' => $queryResponse['merchantInvoice']]);
+                        if ($order) {
                             $order->transection_id = $queryResponse['trxID'];
                             $order->payment_status = 1;
-                            if($order->save())
-                            {
+                            if ($order->save()) {
                                 $order_payment = OrderPayment::create([
                                     'order_no' => $queryResponse['merchantInvoice'],
                                     'amount' => $queryResponse['amount'],
@@ -894,20 +833,18 @@ class CheckoutController extends Controller
                                     'transaction_type' => 'bkash_payment',
                                     'transaction_id' => $queryResponse['trxID'],
                                     'transaction_date' => $queryResponse['paymentExecuteTime'],
-                                    'account_no' =>$queryResponse['payerReference'],
+                                    'account_no' => $queryResponse['payerReference'],
                                     'currency' => $queryResponse['currency'],
                                     'status' => $queryResponse['transactionStatus'],
                                 ]);
 
-                                if($order_payment)
-                                {
+                                if ($order_payment) {
                                     return to_route('front.order-thanks-page', $order->order_phone);
                                 }
                             }
                         }
-                    }catch(\Exception $e)
-                    {
-                         return view('CheckoutURL.fail')->with([
+                    } catch (\Exception $e) {
+                        return view('CheckoutURL.fail')->with([
                             'statusMessage' => 'Payment Transaction Failed!',
                         ]);
                     }
@@ -920,9 +857,7 @@ class CheckoutController extends Controller
             return view('CheckoutURL.success')->with([
                 'response' => $response
             ]);
-
         }
-
     }
 
     public function getRefund(Request $request)
@@ -936,7 +871,7 @@ class CheckoutController extends Controller
         $token = $this->grant();
         Session::put('bkash_token', $token);
 
-        $header =$this->authHeaders();
+        $header = $this->authHeaders();
 
         $body_data = array(
             'paymentID' => $request->paymentID,
@@ -946,9 +881,9 @@ class CheckoutController extends Controller
             'reason' => 'Quality issue'
         );
 
-        $body_data_json=json_encode($body_data);
+        $body_data_json = json_encode($body_data);
 
-        $response = $this->curlWithBody('/tokenized/checkout/payment/refund',$header,'POST',$body_data_json);
+        $response = $this->curlWithBody('/tokenized/checkout/payment/refund', $header, 'POST', $body_data_json);
         // your database operation
         return view('CheckoutURL.refund')->with([
             'response' => $response,
@@ -967,7 +902,7 @@ class CheckoutController extends Controller
         $token = $this->grant();
         Session::put('bkash_token', $token);
 
-        $header =$this->authHeaders();
+        $header = $this->authHeaders();
 
         $body_data = array(
             'paymentID' => $request->paymentID,
@@ -975,7 +910,7 @@ class CheckoutController extends Controller
         );
         $body_data_json = json_encode($body_data);
 
-        $response = $this->curlWithBody('/tokenized/checkout/payment/refund',$header,'POST',$body_data_json);
+        $response = $this->curlWithBody('/tokenized/checkout/payment/refund', $header, 'POST', $body_data_json);
 
         return view('CheckoutURL.refund-status')->with([
             'response' => $response,
@@ -991,7 +926,7 @@ class CheckoutController extends Controller
         $token = Str::random(32);
         Session::put("coupon", $request->coupon);
         $total_price = Session::get('total_order_amount');
-        return view("sslcommerz_webview", compact("total_price", "sslcommerzPaymentInfo", "token", "user") );
+        return view("sslcommerz_webview", compact("total_price", "sslcommerzPaymentInfo", "token", "user"));
     }
 
     public function sslcommerz(Request $request)
@@ -1036,12 +971,12 @@ class CheckoutController extends Controller
 
         config([
             "sslcommerz.apiCredentials.store_id" =>
-                $sslcommerzPaymentInfo->store_id,
+            $sslcommerzPaymentInfo->store_id,
         ]);
 
         config([
             "sslcommerz.apiCredentials.store_password" =>
-                $sslcommerzPaymentInfo->store_password,
+            $sslcommerzPaymentInfo->store_password,
         ]);
 
         config([
@@ -1070,12 +1005,12 @@ class CheckoutController extends Controller
 
         config([
             "sslcommerz.apiCredentials.store_id" =>
-                $sslcommerzPaymentInfo->store_id,
+            $sslcommerzPaymentInfo->store_id,
         ]);
 
         config([
             "sslcommerz.apiCredentials.store_password" =>
-                $sslcommerzPaymentInfo->store_password,
+            $sslcommerzPaymentInfo->store_password,
         ]);
 
         config([
@@ -1085,7 +1020,7 @@ class CheckoutController extends Controller
         config(["sslcommerz.failed_url" => "/user/checkout/sslcommerz-failed"]);
         $sslc = new SslCommerzNotification(config("sslcommerz"));
         $invoice_no = Session::get('invoice_number');
-        $order = Order::firstWhere(['order_id'=>$invoice_no]);
+        $order = Order::firstWhere(['order_id' => $invoice_no]);
         $payment_id = $request->get("payment_id");
         $validation = $sslc->orderValidate(
             $request->all(),
@@ -1094,16 +1029,13 @@ class CheckoutController extends Controller
             $currency
         );
 
-        if($validation == true)
-        {
-           try{
-                if($order)
-                {
+        if ($validation == true) {
+            try {
+                if ($order) {
                     // $order->transection_id = $payment_id;
                     $order->transection_id = $tran_id;
                     $order->payment_status = 1;
-                    if($order->save())
-                    {
+                    if ($order->save()) {
                         $order_payment = OrderPayment::create([
                             'order_no' => $invoice_no,
                             'amount' => $amount,
@@ -1118,8 +1050,7 @@ class CheckoutController extends Controller
 
                         // dd($order_payment);
 
-                        if($order_payment)
-                        {
+                        if ($order_payment) {
                             return to_route('front.order-thanks-page', $order->order_phone);
                         }
                         // return response()->json(
@@ -1127,25 +1058,22 @@ class CheckoutController extends Controller
                         //     );
                     }
                 }
-            }catch(\Exception $e)
-            {
-                 return response()->json(
+            } catch (\Exception $e) {
+                return response()->json(
                     ["message" => $e->getMessage()],
                     403
                 );
             }
+        } else {
+            // return response()->json(
+            //     ["message" => trans("Payment Failed")],
+            //     403
+            // );
 
-        }
-        else {
-                // return response()->json(
-                //     ["message" => trans("Payment Failed")],
-                //     403
-                // );
-
-                return view('CheckoutURL.fail')->with([
-                    'statusMessage' => 'Payment Transaction Failed!',
-                    'order_inv' => $order,
-                ]);
+            return view('CheckoutURL.fail')->with([
+                'statusMessage' => 'Payment Transaction Failed!',
+                'order_inv' => $order,
+            ]);
         }
     }
 
@@ -1153,5 +1081,4 @@ class CheckoutController extends Controller
     {
         return response()->json(["message" => trans("Payment Failed")], 403);
     }
-
 }

@@ -127,6 +127,7 @@ Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
 
     Route::group(['as' => 'checkout.', 'prefix' => 'checkout'], function () {
 
+        // Paypal
         Route::get('/paypal-web-view', [PaypalController::class, 'paypalWebView'])->name('paypal-web-view');
         Route::get('/pay-with-paypal', [PaypalController::class, 'payWithPaypal'])->name('pay-with-paypal');
         Route::get('/paypal-payment-success', [PaypalController::class, 'paypalPaymentSuccess'])->name('paypal-payment-success');
@@ -137,6 +138,7 @@ Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
         Route::get('/paypal-payment-success-from-react', [PaypalController::class, 'paypalPaymentSuccessFromReact'])->name('paypal-payment-success-from-react');
         Route::get('/paypal-payment-cancled-from-react', [PaypalController::class, 'paypalPaymentCancledFromReact'])->name('paypal-payment-cancled-from-react');
 
+        // Razorpay
         Route::get('/razorpay-order', [PaymentController::class, 'razorpayOrder'])->name('razorpay-order');
         Route::get('/razorpay-web-view', [PaymentController::class, 'razorpayWebView'])->name('razorpay-web-view');
         Route::post('razorpay/pay/verify', [PaymentController::class, 'razorpayVerify'])->name('razorpay-pay-verify');
@@ -153,8 +155,24 @@ Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
         Route::get('/paystack-web-view', [PaymentController::class, 'paystackWebView'])->name('paystack-web-view');
         Route::post('/pay-with-paystack', [PaymentController::class, 'payWithPayStack'])->name('pay-with-paystack');
 
+        // SSLCOMMERZ Start
+        // Route::get('/example1', [SslCommerzPaymentController::class, 'exampleEasyCheckout']);
+        // Route::get('/example2', [SslCommerzPaymentController::class, 'exampleHostedCheckout']);
+
+        // Route::post('/pay', [SslCommerzPaymentController::class, 'index']);
+        // Route::post('/pay-via-ajax', [SslCommerzPaymentController::class, 'payViaAjax']);
+
+        // Route::post('/success', [SslCommerzPaymentController::class, 'success']);
+        // Route::post('/fail', [SslCommerzPaymentController::class, 'fail']);
+        // Route::post('/cancel', [SslCommerzPaymentController::class, 'cancel']);
+
+        Route::post('/ipn', [SslCommerzPaymentController::class, 'ipn']);
+        //SSLCOMMERZ END
+
+
         // Route::get('/sslcommerz-web-view', [PaymentController::class,   'sslcommerzWebView'])->name('sslcommerz-web-view');
         // Route::post('/sslcommerz-pay',     [PaymentController::class,   'sslcommerz'])->name('sslcommerz-pay');
+        
         // Route::post('/sslcommerz-success', [PaymentController::class,   'sslcommerz_success'])->name('sslcommerz-success');
 
         // Route::post('/sslcommerz-failed', [PaymentController::class,   'sslcommerz_failed'])->name('sslcommerz-failed');
@@ -190,7 +208,6 @@ Route::group(['as' => 'user.', 'prefix' => 'user'], function () {
         })->name('order-fail-url-for-mobile-app');
     });
 });
-
 
 Route::group(['middleware' => ['demo', 'XSS']], function () {
     Route::group(['middleware' => ['maintainance']], function () {

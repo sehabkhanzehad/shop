@@ -279,7 +279,8 @@
                                         <div class="row">
                                             <div class="col-lg-12 col-12 mb-3 form-floating">
                                                 <input type="text" class="form-control shadow-none"
-                                                    name="shipping_name" id="name" value="{{ Auth::check() ? Auth::user()->name : "" }}"
+                                                    name="shipping_name" id="name"
+                                                    value="{{ Auth::check() ? Auth::user()->name : '' }}"
                                                     placeholder="Name">
                                                 {{-- <label for="name" class="ps-4">{{ BanglaText('name') }}</label> --}}
                                             </div>
@@ -292,7 +293,8 @@
 
                                             <div class="col-lg-12 col-12 mb-3 form-floating">
                                                 <input type="tel" class="form-control shadow-none" maxlength="11"
-                                                    minlength="11" name="order_phone" value="{{ Auth::check() ? Auth::user()->phone : "" }}" id="phone"
+                                                    minlength="11" name="order_phone"
+                                                    value="{{ Auth::check() ? Auth::user()->phone : '' }}" id="phone"
                                                     placeholder="Enter Phone Number" aria-describedby="phone-help">
                                                 {{-- <label for="phone" class="ps-4">
                                                     {{ BanglaText('mobile') }}
@@ -363,17 +365,13 @@
                                                     {{ $free_shippings->shipping_fee }}{{ $setting->currency_icon }}</b></label>
                                         </div>
 
-                                        <?php
-                             }
-
-                           ?>
+                                        <?php } ?>
                                         <input type="hidden" name="total_amount" id="total_amount"
                                             value="{{ number_format($sub_total, 2) }}">
                                         <input type="hidden" name="shipCharge" id="shipCharge" value="">
-
                                         <hr>
                                         @if ($bkash_payment || $ssl_payment)
-                                            <div class="input-group" style="margin-bottom: 25px;">
+                                            <div class="input-group">
                                                 <label>
                                                     <input type="radio" name="payment_method" id="payment_method"
                                                         value="cash_on_delivery" checked> Cash On Delivery
@@ -385,21 +383,23 @@
                                         @endif
 
                                         @if ($ssl_payment)
-                                            <div class="input-group" style="margin-bottom: 25px;">
+                                            <div class="input-group">
                                                 <label>
                                                     <input type="radio" name="payment_method" id="payment_method"
-                                                        value="ssl_commerz"> SSLCommerz
+                                                        value="ssl_commerz">
+                                                        {{-- SSLCommerz --}}
+                                                        Online Payment
                                                 </label>
                                             </div>
                                         @endif
-                                        @if ($bkash_payment)
+                                        {{-- @if ($bkash_payment)
                                             <div class="input-group" style="margin-bottom: 25px;">
                                                 <label>
                                                     <input type="radio" name="payment_method" id="payment_method"
                                                         value="bkash"> Bkash
                                                 </label>
                                             </div>
-                                        @endif
+                                        @endif --}}
                                         <button type="submit" class="btn btn-normal">{{ BanglaText('confirm_order') }}
                                             <i class="fas fa-arrow-right"></i></button>
                                     </form>
