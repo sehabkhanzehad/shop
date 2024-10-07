@@ -342,7 +342,7 @@
                                     <span>call us<span>{{ $footer->phone }}</span></span>
                                 </div>
                             </div>
-                            <div class="btn-group">
+                            {{-- <div class="btn-group">
                                 <div class="gift-block" data-toggle="dropdown">
                                     <div class="grif-icon">
                                         <i class="icon-gift"></i>
@@ -403,7 +403,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
