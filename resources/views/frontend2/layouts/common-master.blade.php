@@ -773,6 +773,7 @@
     <script src="{{ asset('assets/js/include/axios.min.js') }}"></script>
     <script src="{{ asset('assets/js/include/toastify-js.js') }}"></script>
     <script src="{{ asset('assets/js/include/custom.js') }}"></script>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.0/jquery-ui.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"
         integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw=="

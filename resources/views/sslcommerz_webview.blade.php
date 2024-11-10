@@ -10,27 +10,27 @@
 
     <div style="background-color: #ffffff; border-radius: 10px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); padding: 25px; width: 280px; ">
         <h2 style="margin-bottom: 20px; text-align: center; color: #333;">Payment Details</h2>
-        
+
         {{-- <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
             <span style="font-weight: 600; color: #555;">Name:</span>
             <span style="color: #007bff;">John Doe</span>
         </div> --}}
-        
+
         <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
             <span style="font-weight: 600; color: #555;">Email:</span>
             <span style="color: #007bff;">{{ $user->email }}</span>
         </div>
-        
+
         <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
             <span style="font-weight: 600; color: #555;">Phone:</span>
             <span style="color: #007bff;">{{ $user->phone }}</span>
         </div>
-        
+
         <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
             <span style="font-weight: 600; color: #555;">Total Amount:</span>
             <span style="color: #28a745; font-weight: bold;">{{ $total_price }}</span>
         </div>
-        
+
         <button style="width: 100%; padding: 12px 0; background-color: #007bff; color: #ffffff; border: none; border-radius: 6px; cursor: pointer; font-size: 16px;" id="sslczPayBtn"
         token="if you have any token validation" postdata=""
         order="{{json_encode([
@@ -44,7 +44,7 @@
             Next
         </button>
     </div>
-{{-- 
+{{--
 <div class="tab-pane fade" id="v-sslcommerz-payment" role="tabpanel" aria-labelledby="v-sslcommerz-payment-tab">
     <button style="width:280px !important" class="btn btn-primary btn-lg btn-block" id="sslczPayBtn"
         token="if you have any token validation" postdata=""
@@ -90,9 +90,9 @@
     </script>
 @endif
 <script>
-    // when load this page/ready this page click sslcommerz button don't need to show this page 
+    // when load this page/ready this page click sslcommerz button don't need to show this page
     document.getElementById('sslczPayBtn').click();
-    
+
 </script>
 </body>
 </html>

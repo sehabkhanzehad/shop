@@ -16,11 +16,11 @@ class LandingPageController extends Controller
     {
     //   if(auth()->user()->can('product.landingPage.index')){
     //         abort(403, 'Unauthorized action.');
-    //     } 
+    //     }
         $items=LandingPage::with('product')->paginate(10);
         return view('admin.LandingPage.index', compact('items'));
     }
-    
+
     public function index_two()
     {
     //   if(auth()->user()->can('product.landingPage.index')){
@@ -29,22 +29,22 @@ class LandingPageController extends Controller
         $items=LandingPage::with('product')->where('page_type', '2')->paginate(10);
         return view('admin.LandingPage.index_two', compact('items'));
     }
-    
+
     public function create(){
 
         return view('admin.LandingPage.create');
     }
-    
+
     public function create_two() {
         return view('admin.LandingPage.create_two');
     }
-    
-    
+
+
     public function store(Request $request)
     {
     //   if(auth()->user()->can('product.landingPage.store')){
     //         abort(403, 'Unauthorized action.');
-    //     } 
+    //     }
         // dd($request->all());
         $data=$request->validate([
              'title1'=> 'required',
@@ -71,7 +71,7 @@ class LandingPageController extends Controller
              'top_heading_text' => '',
              'left_product_details' => ''
         ]);
-        
+
             if($request->hasFile('image'))
             {
                 $originName = $request->file('image')->getClientOriginalName();
@@ -81,7 +81,7 @@ class LandingPageController extends Controller
                 $request->file('image')->move(public_path('landing_pages'), $fileName);
                 $data['image']=$fileName;
             }
-            
+
             if($request->hasFile('landing_bg'))
             {
                 $originName = $request->file('landing_bg')->getClientOriginalName();
@@ -91,10 +91,10 @@ class LandingPageController extends Controller
                 $request->file('landing_bg')->move(public_path('landing_pages'), $fileName);
                 $data['landing_bg']=$fileName;
             }
-            
+
             if($request->hasFile('right_product_image'))
             {
-                
+
                 $originName = $request->file('right_product_image')->getClientOriginalName();
                 $fileName = pathinfo($originName, PATHINFO_FILENAME);
                 $extension = $request->file('right_product_image')->getClientOriginalExtension();
@@ -122,7 +122,7 @@ class LandingPageController extends Controller
                    $landPage->images()->createMany($image_data);
             }
         }
-        
+
         if(isset($request->review_product_image)) {
 
             $review_image_data=[];
@@ -152,7 +152,7 @@ class LandingPageController extends Controller
         // ]);
 
     }
-    
+
     public function store_two(Request $request) {
         //   if(auth()->user()->can('product.landingPage.store')){
     //         abort(403, 'Unauthorized action.');
@@ -268,13 +268,13 @@ class LandingPageController extends Controller
 
      public function getOrderProduct(Request $request)
     {
-        
+
         $data = Product::where('products.name', 'LIKE', '%'. $request->get('search'). '%')
         ->get();
 return response()->json($data);
 
     }
-    
+
     public function getOrderProduct2(Request $request){
 
         $data = Product::where('products.name', 'LIKE', '%'. $request->get('search'). '%')
@@ -283,18 +283,18 @@ return response()->json($data);
         return response()->json($data);
 
     }
-    
-    public function orderProductEntry(Request $request){ 
+
+    public function orderProductEntry(Request $request){
 
         $id=$request->id;
         $variation=Product::find($id);
         $data=Product::all;
 
-        if ($variation) { 
+        if ($variation) {
             $html='<tr><td><img src="/products/'.$variation->thumb_image.'" height="50" width="50"/></td>
             		<td>'.$variation->name.'</td>
-                    
-                  
+
+
                     <td class="row_total">'.$data['price'].'</td>
                     <td>
                         <a class="remove btn btn-sm btn-danger"> <i class="mdi mdi-delete"></i> </a>
@@ -306,7 +306,7 @@ return response()->json($data);
             return response()->json(['success'=>false,'msg'=>'Product Note Found !!']);
         }
     }
-    
+
     public function landingProductEntry(Request $request){
 
         $id=$request->id;
@@ -328,8 +328,8 @@ return response()->json($data);
                                    <tr><td><img src="'.$image_source.'" height="50" width="50"/></td>
             		<td>'.$variation->name.'</td>
                     <td>'.$variation->price.'</td>
-                    
-                    
+
+
                         <a class="remove btn btn-sm btn-danger"> <i class="mdi mdi-delete"></i> </a>
                     </td>
                     </tr>
@@ -341,7 +341,7 @@ return response()->json($data);
 
             $htmldfhgdf='<tr><td><img src="$variation->thumb_image" height="50" width="50"/></td>
             		<td>'.$variation->name.'</td>
-                    
+
                     <td>
                         <a class="remove btn btn-sm btn-danger"> <i class="mdi mdi-delete"></i> </a>
                     </td>
@@ -361,15 +361,15 @@ return response()->json($data);
             $fileName = pathinfo($originName, PATHINFO_FILENAME);
             $extension = $request->file('upload')->getClientOriginalExtension();
             $fileName = $fileName.'_'.time().'.'.$extension;
-        
+
             $request->file('upload')->move(public_path('ck-images'), $fileName);
-   
+
             $CKEditorFuncNum = $request->input('CKEditorFuncNum');
-            $url = asset('ck-images/'.$fileName); 
-            $msg = 'Image uploaded successfully'; 
+            $url = asset('ck-images/'.$fileName);
+            $msg = 'Image uploaded successfully';
             $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";
-               
-            @header('Content-type: text/html; charset=utf-8'); 
+
+            @header('Content-type: text/html; charset=utf-8');
             echo $response;
         }
 
@@ -381,9 +381,9 @@ return response()->json($data);
         $title = $ln_pg->title1;
         $shippings = Shipping::with('city')->orderBy('id', 'asc')->get();
         // dd($ln_pg);
-        return view('admin.LandingPage.land_page', compact('ln_pg', 'shippings','title'));
+        return view('admin.LandingPage.ld', compact('ln_pg', 'shippings','title'));
     }
-    
+
     public function landing_page_two($id)
     {
         $ln_pg = LandingPage::with('product')->where('id', $id)->first();
@@ -398,18 +398,18 @@ return response()->json($data);
     {
     //   if(!auth()->user()->can('product.landingPage.edit')){
     //         abort(403, 'Unauthorized action.');
-    //     } 
+    //     }
         $item=LandingPage::with('product','review_images')->find($id);
         foreach($item->review_images() as $image) {
-            
+
         }
-        
+
         $review_images = reviewProductImage::where('landing_page_id', $id)->get();
         $single_product = Product::find($item->product_id);
         // dd($single_product);
         return view('admin.LandingPage.edit', compact('item', 'single_product','review_images'));
     }
-    
+
     public function landing_page_edit_two($id)
     {
     //   if(!auth()->user()->can('product.landingPage.edit')){
@@ -417,7 +417,7 @@ return response()->json($data);
     //     }
         $item=LandingPage::with('product','review_images')->find($id);
         foreach($item->review_images() as $image) {
-            
+
         }
 
         $review_images = reviewProductImage::where('landing_page_id', $id)->get();
@@ -425,7 +425,7 @@ return response()->json($data);
         // dd($single_product);
         return view('admin.LandingPage.edit_two', compact('item', 'single_product','review_images'));
     }
-    
+
     public function delete_slider($id)
     {
         $item = LandingPageSlider::find($id);
@@ -433,7 +433,7 @@ return response()->json($data);
         $item->delete();
         return back();
     }
-    
+
     public function delete_review(Request $request, $id) {
         $delete_item = reviewProductImage::find($id);
         deleteImage('review_landing_sliders', $delete_item->review_image);
@@ -441,16 +441,16 @@ return response()->json($data);
         return back();
     }
 
-    
+
 
    public function update(Request $request, $id)
     {
     //   if(!auth()->user()->can('product.landingPage.update')){
     //         abort(403, 'Unauthorized action.');
-    //     } 
+    //     }
 
         $updatePage = LandingPage::find($id);
-      
+
       	$data=$request->validate([
              'title1'=> 'required',
             //  'title2'=> 'required',
@@ -475,13 +475,13 @@ return response()->json($data);
              'top_heading_text' => '',
              'left_product_details' => ''
         ]);
-       
+
        if($request->new_product_id != null)
       {
           $data['product_id'] = $request->new_product_id;
       }
-      
-      
+
+
       if($request->hasFile('landing_bg'))
             {
                 $originName = $request->file('landing_bg')->getClientOriginalName();
@@ -491,10 +491,10 @@ return response()->json($data);
                 $request->file('landing_bg')->move(public_path('landing_pages'), $fileName);
                 $data['landing_bg']=$fileName;
             }
-      
+
       if($request->hasFile('right_product_image'))
             {
-                
+
                 $originName = $request->file('right_product_image')->getClientOriginalName();
                 $fileName = pathinfo($originName, PATHINFO_FILENAME);
                 $extension = $request->file('right_product_image')->getClientOriginalExtension();
@@ -502,7 +502,7 @@ return response()->json($data);
                 $request->file('right_product_image')->move(public_path('landing_pages'), $fileName);
                 $data['right_product_image']=$fileName;
             }
-      
+
 
            if(isset($request->sliderimage)) {
 
@@ -523,7 +523,7 @@ return response()->json($data);
            }
 
        }
-       
+
        if(isset($request->review_product_image)) {
 
             $review_image_data=[];
@@ -544,13 +544,13 @@ return response()->json($data);
         }
 
        $updatePage->update($data);
-       
+
        $notification = trans('admin_validation.Update Successfully');
        $notification = array('messege'=>$notification,'alert-type'=>'success');
        return redirect()->back()->with($notification);
     }
-    
-    
+
+
     public function update_two(Request $request, $id) {
         //   if(!auth()->user()->can('product.landingPage.update')){
      //         abort(403, 'Unauthorized action.');
@@ -662,9 +662,9 @@ return response()->json($data);
     {
           if(!auth()->user()->can('landin-product-distroy')){
             abort(403, 'Unauthorized action.');
-        } 
-      	
-      
+        }
+
+
         $single_page = LandingPage::with('images')->find($id);
 
         if($single_page)
@@ -679,13 +679,13 @@ return response()->json($data);
         }
 
         $single_page->delete();
-        
+
         $notification = trans('admin_validation.Deleted Successfully');
        $notification = array('messege'=>$notification,'alert-type'=>'success');
        return redirect()->back()->with($notification);
 
-        
+
 
     }
-    
+
 }

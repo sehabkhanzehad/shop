@@ -31,7 +31,6 @@
     @include('frontend2.components.layout.footer')
     <!--footer end-->
 
-
     <!-- tap to top -->
     <div class="tap-top">
         <div>
@@ -436,10 +435,12 @@
                                     <a id="addWishList" class="addWishList btn btn-normal">add to wishlist</a>
                                     <a id="wishViewDetails" class="btn btn-normal">view detail</a>
                                     <input type="hidden" id="wishProductId">
-                                    @if(Auth::check())
-                                    <input type="hidden" data-user_id = "{{ Auth::user()->id }}" value="{{ Auth::user()->id }}" name="" id="wishUserId">
+                                    @if (Auth::check())
+                                        <input type="hidden" data-user_id = "{{ Auth::user()->id }}"
+                                            value="{{ Auth::user()->id }}" name="" id="wishUserId">
                                     @else
-                                    <input type="hidden" data-user_id = "0" value="0" name="" id="wishUserId">
+                                        <input type="hidden" data-user_id = "0" value="0" name=""
+                                            id="wishUserId">
                                     @endif
                                 </div>
 

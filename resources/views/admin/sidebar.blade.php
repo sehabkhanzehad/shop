@@ -199,10 +199,10 @@
                             class="{{ Route::is('admin.landing.index') || Route::is('admin.landing.index') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('admin.landing.index') }}">Landing Page</a>
                         </li>
-                        <li
+                        {{-- <li
                             class="{{ Route::is('admin.landing.index') || Route::is('admin.landing.index') ? 'active' : '' }}">
                             <a class="nav-link" href="{{ route('admin.landing.index2') }}">Landing Page2</a>
-                        </li>
+                        </li> --}}
                     </ul>
 
                 </li>
