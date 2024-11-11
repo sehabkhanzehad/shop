@@ -7,7 +7,13 @@
     <title>{{ $ln_pg->title1 }}</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    @php
+    $siteInfo = DB::table('informations')->first();
+@endphp
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Favicons -->
     {{-- <link href="{{ asset('landing') }}/img/favicon.png" rel="icon">
     <link href="{{ asset('landing') }}/img/apple-touch-icon.png" rel="apple-touch-icon"> --}}
@@ -58,7 +64,7 @@
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
 
-            <a class="btn-getstarted" href="{{ route('front.product.show', [$ln_pg->product_id]) }}">Order Now</a>
+            <a class="btn-getstarted" href="#contact">Order Now</a>
 
         </div>
     </header>
@@ -66,7 +72,9 @@
     <main class="main">
 
         <!-- Hero Section -->
-        <section id="hero" style="background:url({{asset('landing_pages/'. $ln_pg->landing_bg)}}) no-repeat center center; background-size:cover; " class="hero section dark-background">
+        <section id="hero"
+            style="background:url({{ asset('landing_pages/' . $ln_pg->landing_bg) }}) no-repeat center center; background-size:cover; "
+            class="hero section dark-background">
 
             <div class="container">
                 <div class="row gy-4">
@@ -74,7 +82,7 @@
                         data-aos="zoom-out">
 
                         <div class="col-md-7 price_top_section"
-                        style="border: 2px solid #FFA500;
+                            style="border: 2px solid #FFA500;
 text-align: center;
 padding-top: 8px;
 color: #ffffff;
@@ -82,13 +90,14 @@ border-radius: 5px;
 font-size: 20px;
 font-family: 'Hind Siliguri', sans-serif !important;
 background: #FFA500">
-                        <div class="offer_price" style="font-family: 'Hind Siliguri', sans-serif !important;">
-                            {{ BanglaText('offer') }} {{ $ln_pg->regular_price_text }} {{ BanglaText('tk') }}
-                        </div>
+                            <div class="offer_price" style="font-family: 'Hind Siliguri', sans-serif !important;">
+                                {{ BanglaText('offer') }} {{ $ln_pg->regular_price_text }} {{ BanglaText('tk') }}
+                            </div>
 
-                    </div>
+                        </div>
                         <div class="d-flex mt-4">
-                            <a href="{{ route('front.product.show', [$ln_pg->product_id]) }}" class="btn-get-started">Order Now</a>
+                            <a href="#contact"
+                                class="btn-get-started">Order Now</a>
                             <a href="{{ $ln_pg->video_url }}"
                                 class="glightbox btn-watch-video d-flex align-items-center"><i
                                     class="bi bi-play-circle"></i><span>Watch Video</span></a>
@@ -660,11 +669,11 @@ background: #FFA500">
                 <div class="swiper small-slider-swiper">
                     <div class="swiper-wrapper">
                         @foreach ($ln_pg->images as $slider)
-
-                        <div class="swiper-slide text-center">
-                            <img src="{{ asset('landing_sliders/' . $slider->image) }}" class="img-fluid" alt="Slide 1" style="width: 550px; height: 400px;">
-                        </div>
-                     @endforeach
+                            <div class="swiper-slide text-center">
+                                <img src="{{ asset('landing_sliders/' . $slider->image) }}" class="img-fluid"
+                                    alt="Slide 1" style="width: 550px; height: 400px;">
+                            </div>
+                        @endforeach
                     </div>
                     <div class="swiper-pagination"></div>
                 </div>
@@ -672,7 +681,7 @@ background: #FFA500">
         </section>
 
         <script>
-            document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('DOMContentLoaded', function() {
                 new Swiper('.small-slider-swiper', {
                     loop: true,
                     speed: 600,
@@ -687,99 +696,444 @@ background: #FFA500">
             });
         </script>
 
-        <!-- Contact Section -->
-        {{-- <section id="contact" class="contact section">
-
-            <!-- Section Title -->
-            <div class="container section-title" data-aos="fade-up">
-                <h2>Contact</h2>
-                <p>Necessitatibus eius consequatur ex aliquid fuga eum quidem sint consectetur velit</p>
-            </div><!-- End Section Title -->
-
-            <div class="container" data-aos="fade-up" data-aos-delay="100">
-
-                <div class="row gy-4">
-
-                    <div class="col-lg-5">
-
-                        <div class="info-wrap">
-                            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
-                                <i class="bi bi-geo-alt flex-shrink-0"></i>
-                                <div>
-                                    <h3>Address</h3>
-                                    <p>A108 Adam Street, New York, NY 535022</p>
+        <section id="contact" class="contact section">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div id="element_widget" class="element-widget-cover">
+                            <div class="element-widget-wrap">
+                                <div class="element-widget ord" style="margin-bottom: 25px;">
+                                    <h2 class="top-heading-title bg-light-green">
+                                        {{ BanglaText('land_instruction') }}
+                                    </h2>
                                 </div>
-                            </div><!-- End Info Item -->
+                                <div class="form-wrapper">
+                                    <form action="{{ route('front.storelandData') }}" method="POST"
+                                        id="checkout_land_form">
+                                        <div class="row">
+                                            <div class="address_section col-md-6" style="width: 50%;float: left;">
+                                                <div class="form-address">
+                                                    <div class="address-col">
+                                                        <h3
+                                                            style="font-family: 'Hind Siliguri', sans-serif !important;">
+                                                            Billing Address</h3>
+                                                        <div class="billing-fields">
 
-                            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
-                                <i class="bi bi-telephone flex-shrink-0"></i>
-                                <div>
-                                    <h3>Call Us</h3>
-                                    <p>+1 5589 55488 55</p>
+                                                            <div class="form-group">
+                                                                <label for="">
+                                                                    {{ BanglaText('name') }}
+                                                                    <span>*</span></label>
+                                                                <input type="text" name="shipping_name"
+                                                                    class="form-control" required>
+                                                                @if (isset($ln_pg->product))
+                                                                    <input type="hidden"
+                                                                        value="{{ $ln_pg->product->id }}"
+                                                                        name="product_id" class="form-control">
+                                                                @endif
+                                                            </div>
+
+                                                            <div class="form-group mt-3">
+                                                                <label for="">
+                                                                    {{ BanglaText('mobile') }}
+                                                                    <span>*</span></label>
+                                                                <input type="text" name="shipping_phone"
+                                                                    class="form-control" required>
+                                                            </div>
+
+                                                            <div class="form-group mt-3">
+                                                                <label for="exampleInputPassword1"
+                                                                    style="float: left;">
+                                                                    {{ BanglaText('delivery_zone') }}
+                                                                </label>
+                                                                <select required name="shipping_method"
+                                                                    style="min-height: 30px !important;"
+                                                                    onchange="getCharge()" id="delivery_charge_id"
+                                                                    class="form-control"
+                                                                    style="font-size:12px !important;">
+                                                                    @if (isset($ln_pg->product))
+                                                                        @if ($ln_pg->product->is_free_shipping == '')
+                                                                            @foreach ($shippings as $key => $charge)
+                                                                                @if ($charge->shipping_rule != 'Free')
+                                                                                    <option
+                                                                                        value="{{ $charge->id }}"
+                                                                                        id="charge"
+                                                                                        data-charge="{{ $charge->shipping_fee }}">
+                                                                                        {{ $charge->shipping_rule }} -
+                                                                                        {{ $charge->shipping_fee }}
+                                                                                    </option>
+                                                                                @endif
+                                                                            @endforeach
+                                                                        @else
+                                                                            @php($free_shipping = App\Models\Shipping::where('shipping_rule', 'Free')->first());
+                                                                            <option value="{{ $free_shipping->id }}"
+                                                                                selected id="charge"
+                                                                                data-charge="{{ $free_shipping->shipping_fee }}">
+                                                                                {{ $free_shipping->shipping_rule }} -
+                                                                                {{ $free_shipping->shipping_fee }}
+                                                                            </option>
+                                                                        @endif
+                                                                    @endif
+                                                                </select>
+                                                            </div>
+
+                                                            @if (isset($ln_pg->product))
+                                                                <input type="hidden" id="variation_id"
+                                                                    name="variation_id"
+                                                                    value="{{ $ln_pg->product->id }}">
+                                                            @endif
+                                                            <input type="hidden" id="total_price_val"
+                                                                name="total_amount" value="">
+                                                            <input type="hidden" id="shipping_cost"
+                                                                name="shipping_cost">
+                                                            @if (isset($ln_pg->product))
+                                                                <input type="hidden" id="product_type"
+                                                                    value="{{ $ln_pg->product->type }}">
+                                                            @endif
+                                                            @if (isset($ln_pg->product))
+                                                                @if ($ln_pg->product->type != 'variable')
+                                                                    @if ($ln_pg->product->offer_price != 0)
+                                                                        <!--<input type="text" id="price_val" value="0">-->
+                                                                        <input type="hidden" id="product_price"
+                                                                            name="price"
+                                                                            value="{{ $ln_pg->product->offer_price }}">
+                                                                    @else
+                                                                        <!--<input type="text" id="price_val" value="0">-->
+                                                                        <input type="hidden" id="product_price"
+                                                                            name="price"
+                                                                            value="{{ $ln_pg->product->price }}">
+                                                                    @endif
+                                                                @else
+                                                                    <input type="hidden" id="price_val"
+                                                                        name="price">
+                                                                    <input type="hidden" id="size"
+                                                                        name="variation_size">
+                                                                    <input type="hidden" id="color"
+                                                                        name="variation_color">
+                                                                @endif
+                                                            @endif
+                                                            <input type="hidden" id="product_quantity"
+                                                                name="product_qty">
+                                                            @if (isset($ln_pg->product))
+                                                                <input type="hidden" id="product_name"
+                                                                    value="{{ $ln_pg->product->name }}"
+                                                                    name="product_name">
+                                                            @endif
+                                                            <div class="form-group mt-3">
+                                                                <label for="">
+                                                                    {{ BanglaText('address') }}
+                                                                    <span>*</span></label>
+                                                                <input type="text" name="shipping_address"
+                                                                    class="form-control" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <style>
+                                                .sizes {
+                                                    display: flex;
+                                                }
+
+                                                .sizes .size {
+                                                    padding: 3px;
+                                                    margin: 5px;
+                                                    border: 1px solid #c2050b;
+                                                    width: auto;
+                                                    text-align: center;
+                                                    cursor: pointer;
+                                                }
+
+                                                .sizes .size.active {
+                                                    background: #c2050b;
+                                                    color: white;
+                                                }
+
+                                                .colors {
+                                                    /*display: flex;*/
+                                                }
+
+                                                .colors .color {
+                                                    padding: 5px;
+                                                    margin: 5px;
+                                                    border: 1px solid #FE9017;
+                                                    width: auto;
+                                                    text-align: center;
+                                                    cursor: pointer;
+                                                    display: inline-block;
+                                                    height: 35px;
+                                                    width: 35px;
+                                                }
+
+                                                .colors .color.active {
+                                                    background: #0d6efd;
+                                                    color: white;
+                                                    font-weight: bold;
+                                                    padding: 6px;
+                                                    border: 4px solid white;
+                                                    outline: 2px solid red;
+                                                }
+
+                                                .increase-qty {
+                                                    width: 32px;
+                                                    display: block;
+                                                    float: left;
+                                                    line-height: 26px;
+                                                    cursor: pointer;
+                                                    text-align: center;
+                                                    font-size: 16px;
+                                                    font-weight: 300;
+                                                    color: #000;
+                                                    height: 32px;
+                                                    background: #f6f7fb;
+                                                    border-radius: 50%;
+                                                    transition: .3s;
+                                                    border: 2px solid rgba(0, 0, 0, 0);
+                                                    background: #ffffff;
+                                                    border: 1px solid #ddd;
+                                                    border-radius: 10%;
+                                                }
+
+                                                .decrease-qty {
+                                                    width: 32px;
+                                                    display: block;
+                                                    float: left;
+                                                    line-height: 26px;
+                                                    cursor: pointer;
+                                                    text-align: center;
+                                                    font-size: 16px;
+                                                    font-weight: 300;
+                                                    color: #000;
+                                                    height: 32px;
+                                                    background: #f6f7fb;
+                                                    border-radius: 50%;
+                                                    transition: .3s;
+                                                    border: 2px solid rgba(0, 0, 0, 0);
+                                                    background: #ffffff;
+                                                    border: 1px solid #ddd;
+                                                    border-radius: 10%;
+                                                }
+
+                                                .product-name {
+                                                    font-family: 'Hind Siliguri', sans-serif !important;
+                                                }
+
+                                                .product-total {
+                                                    font-family: 'Hind Siliguri', sans-serif !important;
+                                                }
+                                            </style>
+                                            <div class="col-md-6">
+                                                <div class="order-col" style="width: 100%;">
+                                                    <h3 style="font-family: 'Hind Siliguri', sans-serif !important;">
+                                                        Your Order
+                                                    </h3>
+                                                    <div id="order_review" class="review-order">
+                                                        <table class="shop_table review-order-table table table-borderd">
+                                                            <thead>
+                                                                <tr style="">
+                                                                    <th class="product-name">Product</th>
+                                                                    <th class="product-total">Subtotal</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr class="cart_item">
+                                                                    <td class="product-name">
+                                                                        <div class="product-image">
+                                                                            <div class="product-thumbnail">
+                                                                                @if (isset($ln_pg->product))
+                                                                                    <img width="100%"
+                                                                                        src="{{ asset($ln_pg->product->thumb_image) }}"
+                                                                                        class="" alt="">
+                                                                                @endif
+                                                                            </div>
+                                                                            @if (isset($ln_pg->product))
+                                                                                <div class="product-name-td">
+                                                                                    {{ $ln_pg->product->name }}</div>
+                                                                            @endif
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="product-total">
+                                                                        <span id="price"
+                                                                            class="price-amount amount">
+                                                                            @if (isset($ln_pg->product))
+                                                                                @if ($ln_pg->product->offer_price != 0)
+                                                                                    {{ $ln_pg->product->offer_price }}
+                                                                                @else
+                                                                                    {{ $ln_pg->product->price }}
+                                                                                @endif
+                                                                                <span
+                                                                                    class="price-currencySymbol">&nbsp;</span>
+                                                                        </span>
+                                                                        @if ($ln_pg->product->offer_price != 0)
+                                                                            <!--<input type="hidden" id="price_val" value="{{ $ln_pg->product->offer_price }}">-->
+                                                                        @else
+                                                                            <!--<input type="hidden" id="price_val" value="{{ $ln_pg->product->sell_price }}">-->
+                                                                        @endif
+                                                                        @endif
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                </tr>
+
+                                                                <tr style="display: none">
+                                                                    <td>
+                                                                        <span>Select Size: </span>
+                                                                    </td>
+                                                                    <td style="width: 45%;">
+                                                                        <div class="sizes" id="sizes">
+                                                                            @if (!empty($ln_pg->product))
+                                                                                @foreach ($ln_pg->product->variations as $v)
+                                                                                    @if ($v->size->id == 3)
+                                                                                    @else
+                                                                                        <div class="size"
+                                                                                            data-value="{{ $v->price }}"
+                                                                                            data-size="{{ $v->size->title }}"
+                                                                                            data-color="{{ isset($v->color->name) ? $v->color->name : '' }}"
+                                                                                            data-dis-value="{{ $v->after_discount_price }}"
+                                                                                            value="{{ $v->id }}">
+                                                                                            {{ $v->size->title == 'free' ? '' : $v->size->title }}
+                                                                                        </div>
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr style="display: none">
+                                                                    <td>Select Color: </td>
+                                                                    <td>
+                                                                        <div class="colors" id="colors">
+                                                                            @if (isset($ln_pg->product))
+                                                                                @foreach ($ln_pg->product->colorVariations as $v)
+                                                                                    @if (!empty($v->color->code))
+                                                                                        <div class="color"
+                                                                                            style="background: {{ $v->color->code }}"
+                                                                                            data-proid="{{ $v->product_id }}"
+                                                                                            data-colorid="{{ $v->color_id }}"
+                                                                                            data-varcolor="{{ $v->color->name }}"
+                                                                                            value="{{ $v->id }}"
+                                                                                            data-variationColorId="{{ $v->color_id }}">
+
+                                                                                            <!--<img src="{{ asset($v->var_images) }}" width="50px" height="50px" /> -->
+
+
+                                                                                        </div>
+                                                                                    @else
+                                                                                        Color Not Available
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            @endif
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+
+                                                                <tr>
+                                                                    <td>
+                                                                        <span
+                                                                            style="font-family: 'Hind Siliguri', sans-serif !important;">Select
+                                                                            Quantity: </span>
+                                                                    </td>
+                                                                    <td style="width: 45%;">
+                                                                        <div style="display: flex;"
+                                                                            class="pro-qty item-quantity">
+                                                                            <span
+                                                                                class="decrease-qty quantity-button">-</span>
+                                                                            <input type="text"
+                                                                                style="width: 25%;text-align: center;"
+                                                                                class="inner_qty qty-input quantity-input"
+                                                                                value="1" name="product_qty" />
+                                                                            <span
+                                                                                class="increase-qty quantity-button">+</span>
+                                                                        </div>
+                                                                        <!--    <div class="sizes" id="sizes">-->
+                                                                        <!--    <div class="pro-qty item-quantity">-->
+                                                                        <!--    <span class="dec qtybtn">-</span>-->
+                                                                        <!--    <input type="number" class="quantity-input" value="1" name="quantity">-->
+                                                                        <!--    <span class="inc qtybtn">+</span>-->
+                                                                        <!--</div>-->
+                                                                        <!--</div>-->
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                            <tfoot>
+                                                                <tr class="cart-subtotal">
+                                                                    <th
+                                                                        style="font-family: 'Hind Siliguri', sans-serif !important;">
+                                                                        Subtotal</th>
+                                                                    <td><span class="final-price-amount amount">
+                                                                            @if (isset($ln_pg->product))
+                                                                                @if ($ln_pg->product->offer_price != 0)
+                                                                                    {{ $ln_pg->product->offer_price }}
+                                                                                @else
+                                                                                    {{ $ln_pg->product->price }}
+                                                                                @endif
+                                                                            @endif
+                                                                            <span
+                                                                                class="price-currencySymbol">&nbsp;</span>
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="shipping-totals shipping">
+                                                                    <th
+                                                                        style="font-family: 'Hind Siliguri', sans-serif !important;">
+                                                                        Shipping</th>
+                                                                    <td>
+                                                                        <li style="list-style: none;">
+                                                                            <span id="delvry_charge">0</span>
+                                                                        </li>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr class="order-total">
+                                                                    <th
+                                                                        style="font-family: 'Hind Siliguri', sans-serif !important;">
+                                                                        Total</th>
+                                                                    <td><strong><span id="total"
+                                                                                class="Price-amount amount">
+                                                                                @if (isset($ln_pg->product))
+                                                                                    @if ($ln_pg->product->offer_price != 0)
+                                                                                        {{ $ln_pg->product->offer_price }}
+                                                                                    @else
+                                                                                        {{ $ln_pg->product->price }}
+                                                                                    @endif
+                                                                                @endif
+                                                                                <span
+                                                                                    class="Price-currencySymbol">&nbsp;</span>
+                                                                            </span></strong>
+                                                                    </td>
+                                                                </tr>
+                                                            </tfoot>
+                                                        </table>
+                                                        <div id="payment" class="checkout-payment">
+                                                            <input type="radio" data-order_button_text=""
+                                                                class="input-radio" id="payment_method_cod"
+                                                                name="payment_method" value="cod" checked>
+
+                                                            <label for="payment_method_cod"
+                                                                style="font-family: 'Hind Siliguri', sans-serif !important;">
+                                                                Cash on delivery </label>
+
+                                                            <p
+                                                                style="color: green;font-family: 'Hind Siliguri', sans-serif !important;">
+                                                                {{ BanglaText('order_ensure') }}
+                                                            </p>
+                                                            <div class="form-row place-order">
+                                                                <button type="submit" class="btn btn-primary" name="" id="">
+                                                                    {{ BanglaText('order') }}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
                                 </div>
-                            </div><!-- End Info Item -->
-
-                            <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
-                                <i class="bi bi-envelope flex-shrink-0"></i>
-                                <div>
-                                    <h3>Email Us</h3>
-                                    <p>info@example.com</p>
-                                </div>
-                            </div><!-- End Info Item -->
-
-                            <iframe
-                                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d48389.78314118045!2d-74.006138!3d40.710059!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a22a3bda30d%3A0xb89d1fe6bc499443!2sDowntown%20Conference%20Center!5e0!3m2!1sen!2sus!4v1676961268712!5m2!1sen!2sus"
-                                frameborder="0" style="border:0; width: 100%; height: 270px;" allowfullscreen=""
-                                loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="col-lg-7">
-                        <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up"
-                            data-aos-delay="200">
-                            <div class="row gy-4">
-
-                                <div class="col-md-6">
-                                    <label for="name-field" class="pb-2">Your Name</label>
-                                    <input type="text" name="name" id="name-field" class="form-control"
-                                        required="">
-                                </div>
-
-                                <div class="col-md-6">
-                                    <label for="email-field" class="pb-2">Your Email</label>
-                                    <input type="email" class="form-control" name="email" id="email-field"
-                                        required="">
-                                </div>
-
-                                <div class="col-md-12">
-                                    <label for="subject-field" class="pb-2">Subject</label>
-                                    <input type="text" class="form-control" name="subject" id="subject-field"
-                                        required="">
-                                </div>
-
-                                <div class="col-md-12">
-                                    <label for="message-field" class="pb-2">Message</label>
-                                    <textarea class="form-control" name="message" rows="10" id="message-field" required=""></textarea>
-                                </div>
-
-                                <div class="col-md-12 text-center">
-                                    <div class="loading">Loading</div>
-                                    <div class="error-message"></div>
-                                    <div class="sent-message">Your message has been sent. Thank you!</div>
-
-                                    <button type="submit">Send Message</button>
-                                </div>
-
-                            </div>
-                        </form>
-                    </div><!-- End Contact Form -->
-
                 </div>
-
             </div>
-
-        </section><!-- /Contact Section --> --}}
-
+        </section>
     </main>
 
     <footer id="footer" class="footer">
@@ -789,10 +1143,11 @@ background: #FFA500">
                 <div class="row justify-content-center text-center">
                     <div class="col-lg-6">
                         <h4>Get Latest Updates</h4>
-                        <form action="forms/newsletter.php" method="post" class="php-email-form" >
-                            <div class="newsletter-form"><input placeholder="example@example.com" type="email" name="phone" required>
-                                <input type="submit"
-                                    value="Submit"></div>
+                        <form action="forms/newsletter.php" method="post" class="php-email-form">
+                            <div class="newsletter-form"><input placeholder="example@example.com" type="email"
+                                    name="phone" required>
+                                <input type="submit" value="Submit">
+                            </div>
                             {{-- <div class="loading">Loading</div>
                             <div class="error-message"></div>
                             <div class="sent-message">Thank you !</div> --}}
@@ -831,6 +1186,258 @@ background: #FFA500">
 
     <!-- Main JS File -->
     <script src="{{ asset('landing') }}/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            getCharge();
+
+            $(".img-gallery").owlCarousel({
+                loop: true,
+                autoplay: true,
+                dots: false,
+                margin: 10,
+                nav: false,
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    700: {
+                        items: 3,
+                    },
+                    1200: {
+                        items: 3,
+                    },
+                },
+            });
+
+            $(".img-gallery2").owlCarousel({
+                loop: true,
+                autoplay: true,
+                dots: false,
+                margin: 10,
+                nav: false,
+                responsive: {
+                    0: {
+                        items: 1,
+                    },
+                    700: {
+                        items: 1,
+                    },
+                    1200: {
+                        items: 1,
+                    },
+                },
+            });
+        });
+
+        function getCharge() {
+
+            let delivery_charge = $('#delivery_charge_id').find("option:selected");
+            var crg_id = delivery_charge.val();
+            var testval = delivery_charge.data('charge');
+
+            $('span#delvry_charge').text(testval);
+            //   $('span#charge').text(Number(testval).toFixed(2));
+            $('#shipping_cost').val(Number(testval).toFixed(2));
+            var price = $('span.final-price-amount').text();
+            let total = Number(testval) + Number(price);
+            $('#total').text(total);
+            $('#total_price_val').val(total);
+        }
+
+        $("button#order_btn").click(function() {
+            $('html,body').animate({
+                    scrollTop: $("#element_widget").offset().top
+                },
+                'slow');
+        });
+
+        $("a#order_btn").click(function() {
+            $('html,body').animate({
+                    scrollTop: $("#element_widget").offset().top
+                },
+                'slow');
+        });
+
+
+        $(document).on('submit', 'form#checkout_land_form', function(e) {
+
+            e.preventDefault();
+            $('span.textdanger').text('');
+
+            let ele = $('form#checkout_land_form');
+
+            var url = ele.attr('action');
+            var method = ele.attr('method');
+            var formData = ele.serialize();
+
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: method,
+                url: url,
+                data: formData,
+                success: function(res) {
+                    if (res.success == true) {
+                        toastr.success(res.msg);
+                        if (res.url) {
+                            document.location.href = res.url;
+                        } else {
+                            window.location.reload();
+                        }
+
+                    } else if (res.success == false) {
+                        toastr.error(res.msg);
+                    }
+
+                },
+                error: function(response) {
+                    $.each(response.responseJSON.errors, function(field_name, error) {
+                        $(document).find('[name=' + field_name + ']').after(
+                            '<span class="textdanger" style="color:red">' + error +
+                            '</span>');
+                    })
+                }
+            });
+        });
+
+        AOS.init({
+            duration: 1200,
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            var firstSizeElement = $('#sizes .size:first');
+            var firstColorElement = $('#colors .color:first');
+            firstSizeElement.click();
+            // firstColorElement.click();
+        });
+
+        $('#colors .color').on('click', function() {
+            $('#colors .color').removeClass('active');
+            $(this).addClass('active');
+            let color = $(this).data('varcolor');
+            $('input#color').val(color);
+        });
+
+        $('#sizes .size').on('click', function() {
+
+            $('#sizes .size').removeClass('active');
+            $(this).addClass('active');
+            let size = $(this).data('size');
+            let color = $(this).data('color');
+            let value = $(this).attr('value');
+            let delivery_charge = $('#delivery_charge_id').find("option:selected");
+            var testval = delivery_charge.data('charge');
+            let varcolor = $('input#color').val();
+
+            $.ajax({
+                type: 'get',
+                url: '{{ route('front.product.get-variation_price') }}',
+                data: {
+                    value
+                },
+                success: function(res) {
+                    $('span#price').text(res.price);
+                    $('span.final-price-amount').text(res.price);
+                    $('input#price_val').val(res.price);
+                    var total_price = Number(res.price) + Number(testval);
+                    $('span#total').text(total_price);
+                    $('#total_price_val').val(total_price);
+                    $('input#color').val(varcolor);
+                }
+            });
+
+            $('input#size').val(size);
+            $('input#color').val(color);
+            let product_price = $(this).data('price');
+            $('.price-amount').text(product_price);
+            $('#price_val').val(product_price);
+
+
+            //   var price = $('span.final-price-amount').text();
+
+            //   var total_price = Number(variation_price) + Number(testval);
+            var total_price = Number(price) + Number(testval);
+
+            //   $('span#total').text(total_price);
+            $('#total_price_val').val(total_price);
+            //   $('#product_price').val(variation_price);
+
+            //   $('span.final-price-amount').text(variation_price);
+            //   $('#price_val').val(variation_price);
+            $("#variation_id").val(value);
+        });
+
+        $('.increase-qty').on('click', function() {
+            var sub_total_price = 0;
+            var product_type = $('input#product_type').val();
+
+            if (product_type == 'variable') {
+                var product_price = $('input#price_val').val();
+            } else {
+                var product_price = $('#product_price').val();
+            }
+
+            var qtyInput = $(this).siblings('.inner_qty');
+            var newQuantity = parseInt(qtyInput.val()) + 1;
+
+            $('input#product_quantity').val(newQuantity);
+            $('#product_name').val();
+            var delivery_charge = $('span#delvry_charge').text();
+
+            var sub_total_price = Number(product_price) * Number(newQuantity);
+
+            var total_with_delivery = Number(sub_total_price) + Number(delivery_charge);
+
+            // $('span#price').text(sub_total_price);
+            $('span.final-price-amount').text(sub_total_price);
+            $('span#total').text(total_with_delivery);
+            $('#total_price_val').val(total_with_delivery);
+            qtyInput.val(newQuantity);
+        });
+
+        $('.decrease-qty').on('click', function() {
+            var qtyInput = $(this).siblings('.inner_qty');
+            var product_type = $('input#product_type').val();
+            $qnty = parseInt(qtyInput.val());
+            var newQuantity = parseInt(qtyInput.val()) - 1;
+            if (newQuantity > 0) {
+                qtyInput.val(newQuantity);
+                $('#product_quantity').val(newQuantity);
+            }
+
+            if (product_type == 'variable') {
+                var product_price = $('input#price_val').val();
+            } else {
+                var product_price = $('#product_price').val();
+
+            }
+
+            //   var product_price = $('input#price_val').val();
+
+
+
+            var delivery_charge = $('span#delvry_charge').text();
+            if (newQuantity != '0') {
+                var sub_total_price = Number(product_price) * Number(newQuantity);
+                var total_with_delivery = Number(sub_total_price) + Number(delivery_charge);
+                $('#total_price_val').val(total_with_delivery);
+                $('span#total').text(total_with_delivery);
+                $('span.final-price-amount').text(sub_total_price);
+            }
+
+        });
+    </script>
 
 </body>
 
